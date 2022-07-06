@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace CoreUtils.Services
+namespace CoreUtilities.Services
 {
 	public class SqLiteDatabaseService
 	{
