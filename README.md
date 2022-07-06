@@ -1,5 +1,5 @@
 # CoreUtilities
-Technically a WPF app, but a library that implements several useful core functionality items including:
+Class library that implements several useful core functionality items including:
 - BlurHost: Wraps a UI element in xaml and will give appearance of blurring background behind it. Has to have a UI element given to it to blur through the 'BlurBackground' property. May also need aligning which can be done through the 'OffsetX' and 'OffsetY' properties.
 - A range of generic and useful converters for use in xaml UI.
 - Some MVVM helper classes including 'EnumerableExtensions' for cloning a list and 'RangeObservableCollection' extending ObservableCollection to allow adding a range, rather than single values.
