@@ -1,10 +1,10 @@
-﻿using CoreUtils.Interfaces;
+﻿using CoreUtilities.Interfaces;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CoreUtils.Services
+namespace CoreUtilities.Services
 {
 	public class RegistryService : IRegistryService
 	{
@@ -40,7 +40,7 @@ namespace CoreUtils.Services
 			key.Close();
 		}
 
-		public bool TryGetSetting<T>(string setting, out T value)
+		public bool TryGetSetting<T>(string setting, T defaultValue, out T value)
 		{
 			var success = false;
 			object? outOfRegistryValue = null;
@@ -53,7 +53,12 @@ namespace CoreUtils.Services
 				outOfRegistryValue = key.GetValue(setting);
 				success = outOfRegistryValue != null;
 			}
-			catch { }
+			catch 
+			{
+				value = defaultValue;
+				SetSetting(setting, defaultValue.ToString());
+				return false;
+			}
 			finally
 			{
 				key.Close();

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Data;
 
-namespace CoreUtils.Converters
+namespace CoreUtilities.Converters
 {
 	public class EnumDescriptionGetterConverter : IValueConverter
 	{

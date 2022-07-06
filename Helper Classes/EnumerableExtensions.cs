@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CoreUtils.HelperClasses
+namespace CoreUtilities.HelperClasses
 {
 	public static class EnumerableExtensions
 	{

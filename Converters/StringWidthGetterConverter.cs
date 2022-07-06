@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace CoreUtils.Converters
+namespace CoreUtilities.Converters
 {
 	public class StringWidthGetterConverter : IMultiValueConverter
 	{

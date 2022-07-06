@@ -1,4 +1,4 @@
-﻿namespace CoreUtils.Interfaces
+﻿namespace CoreUtilities.Interfaces
 {
 	public interface IRegistryService
 	{
@@ -8,7 +8,7 @@
 
 		void SetSetting(string setting, string value);
 
-		bool TryGetSetting<T>(string setting, out T value);
+		bool TryGetSetting<T>(string setting, T defaultValue, out T value);
 
 		void DeleteSetting(string setting);
 	}

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace CoreUtils.Converters
+namespace CoreUtilities.Converters
 {
 	public class StringNotEmptyVisibilityConverter : IValueConverter
 	{

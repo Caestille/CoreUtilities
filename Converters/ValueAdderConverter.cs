@@ -2,18 +2,18 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace CoreUtils.Converters
+namespace CoreUtilities.Converters
 {
-	public class ValueSubtract2Converter : IValueConverter
+	public class ValueAdderConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return (double)value - 2;
+			return (double)value + (double)System.Convert.ChangeType(parameter, typeof(double));
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return (double)value + 2;
+			return (double)value - (double)System.Convert.ChangeType(parameter, typeof(double));
 		}
 	}
 }

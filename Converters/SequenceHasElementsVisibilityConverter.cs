@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
-namespace CoreUtils.Converters
+namespace CoreUtilities.Converters
 {
 	public class SequenceHasElementsVisibilityConverter : IValueConverter
 	{
