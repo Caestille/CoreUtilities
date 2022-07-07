@@ -10,12 +10,22 @@
     <Company>Caestille</Company>
     <Description>A set of WPF helper classes including converters, WPF helpers, and a simple registry and database service</Description>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <PackageProjectUrl>https://github.com/Caestille/CoreUtilities</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Caestille/CoreUtilities</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Nugets\**" />
+    <EmbeddedResource Remove="Nugets\**" />
+    <None Remove="Nugets\**" />
+    <Page Remove="Nugets\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="LICENSE" />
-    <None Remove="README.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +35,10 @@
   <ItemGroup>
     <None Update="PublishNugetLocally.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 

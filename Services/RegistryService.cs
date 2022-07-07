@@ -64,7 +64,7 @@ namespace CoreUtilities.Services
 				key.Close();
 			}
 
-			value = (T)Convert.ChangeType(outOfRegistryValue, typeof(T));
+			value = success ? (T)Convert.ChangeType(outOfRegistryValue, typeof(T)) : defaultValue;
 			return success;
 		}
 

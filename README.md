@@ -6,6 +6,7 @@ Class library that defines several useful core functionality items including:
 - Registry Service: Makes setting and getting registry values convenient and easy.
 - SqLiteDatabaseService: Custom implementation of SQlite database which removes need to frequently re-setup SQlite commands.
 - Binding proxy: Used for binding to data when the DataContext is not inherited.
+- FrameworkElementExtensions: Currently simply provides ability to find all FrameworkElement children of a parent control
 
 # Getting started
 - Add nuget CoreUtilities to your project
