@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CoreUtilites.HelperClasses
+namespace CoreUtilities.HelperClasses
 {
 	public class BindingProxy : Freezable
 	{
