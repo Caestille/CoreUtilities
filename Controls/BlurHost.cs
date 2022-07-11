@@ -75,7 +75,7 @@ namespace CoreUtilities.Controls
                 {
                     Radius = 20,
                     KernelType = KernelType.Gaussian,
-                    RenderingBias = RenderingBias.Performance
+                    RenderingBias = RenderingBias.Quality
                 }));
 
         private Border PART_BlurDecorator { get; set; }

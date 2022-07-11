@@ -2,8 +2,6 @@
 {
 	public interface IRegistryService
 	{
-		void SetKeyLocation(string location);
-
 		void AddSubPath(string key, string path);
 
 		void SetSetting(string setting, string value);

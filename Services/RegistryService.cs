@@ -11,19 +11,14 @@ namespace CoreUtilities.Services
 		private static string keyLocation;
 		private static Dictionary<string, string> subPaths = new ();
 
-		public RegistryService()
+		public RegistryService(string keyDirectory)
 		{
 			if (!File.Exists("AppGuid.txt"))
 			{
 				File.WriteAllText("AppGuid.txt", Guid.NewGuid().ToString());
 			}
 			string appGuid = File.ReadAllText("AppGuid.txt");
-			keyLocation = $@"SOFTWARE\{appGuid}";
-		}
-
-		public void SetKeyLocation(string location)
-		{
-			keyLocation = location;
+			keyLocation = $@"{keyDirectory}\{appGuid}";
 		}
 
 		public void AddSubPath(string key, string path)
