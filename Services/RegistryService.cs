@@ -8,11 +8,12 @@ namespace CoreUtilities.Services
 {
 	public class RegistryService : IRegistryService
 	{
-		private static string keyLocation;
+		private string keyLocation;
 		private static Dictionary<string, string> subPaths = new ();
 
 		public RegistryService(string keyDirectory, bool addGuid=false)
 		{
+			keyLocation = keyDirectory;
 			if (addGuid)
 			{
 				if (!File.Exists("AppGuid.txt"))
