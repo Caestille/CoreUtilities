@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
@@ -31,7 +32,7 @@ namespace CoreUtilities.Controls
               "OffsetX",
               typeof(double),
               typeof(BlurHost),
-              new PropertyMetadata(0d, OnBlurBackgroundChanged));
+              new PropertyMetadata(0d));
 
         public double OffsetY
         {
@@ -44,7 +45,7 @@ namespace CoreUtilities.Controls
               "OffsetY",
               typeof(double),
               typeof(BlurHost),
-              new PropertyMetadata(0d, OnBlurBackgroundChanged));
+              new PropertyMetadata(0d));
 
         public double BlurOpacity
         {
@@ -58,6 +59,45 @@ namespace CoreUtilities.Controls
               typeof(double),
               typeof(BlurHost),
               new PropertyMetadata(1.0));
+
+        public bool PreventResample
+        {
+            get => (bool)GetValue(PreventResampleProperty);
+            set => SetValue(PreventResampleProperty, value);
+        }
+
+        public static readonly DependencyProperty PreventResampleProperty =
+            DependencyProperty.Register(
+              "PreventResample",
+              typeof(bool),
+              typeof(BlurHost),
+              new PropertyMetadata(false));
+
+        public bool BlurEnabled
+        {
+            get => (bool)GetValue(BlurEnabledProperty);
+            set => SetValue(BlurEnabledProperty, value);
+        }
+
+        public static readonly DependencyProperty BlurEnabledProperty =
+            DependencyProperty.Register(
+              "BlurEnabled",
+              typeof(bool),
+              typeof(BlurHost),
+              new PropertyMetadata(true));
+
+        public object RedrawTrigger
+        {
+            get => GetValue(RedrawTriggerProperty);
+            set => SetValue(RedrawTriggerProperty, value);
+        }
+
+        public static readonly DependencyProperty RedrawTriggerProperty =
+            DependencyProperty.Register(
+              "RedrawTrigger",
+              typeof(object),
+              typeof(BlurHost),
+              new PropertyMetadata(new object(), Draw));
 
         public BlurEffect BlurEffect
         {
@@ -73,7 +113,7 @@ namespace CoreUtilities.Controls
               new PropertyMetadata(
                 new BlurEffect()
                 {
-                    Radius = 20,
+                    Radius = 30,
                     KernelType = KernelType.Gaussian,
                     RenderingBias = RenderingBias.Performance
                 }));
@@ -97,8 +137,11 @@ namespace CoreUtilities.Controls
             };
         }
 
-        private void DrawBlurredElementBackground()
+        public void DrawBlurredElementBackground()
         {
+            if (!BlurEnabled)
+                return;
+
             if (!TryFindVisualRootContainer(this, out FrameworkElement rootContainer))
             {
                 return;
@@ -128,6 +171,9 @@ namespace CoreUtilities.Controls
 
         public override void OnApplyTemplate()
         {
+            if (!BlurEnabled)
+                return;
+
             base.OnApplyTemplate();
             this.PART_BlurDecorator = GetTemplateChild("PART_BlurDecorator") as Border;
             this.PART_BlurDecorator.Effect = this.BlurEffect;
@@ -137,12 +183,28 @@ namespace CoreUtilities.Controls
         private static void OnBlurBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var this_ = d as BlurHost;
+
+            if (!this_.BlurEnabled)
+                return;
+
             this_.BlurDecoratorBrush.Visual = e.NewValue as Visual;
             this_.DrawBlurredElementBackground();
         }
 
+        private static void Draw(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+            var this_ = d as BlurHost;
+            this_.DrawBlurredElementBackground();
+        }
+
         private void OnRootContainerElementResized(object sender, SizeChangedEventArgs e)
-          => DrawBlurredElementBackground();
+        {
+            if (!BlurEnabled)
+                return;
+
+            if (!PreventResample)
+                DrawBlurredElementBackground();
+        }
 
         private bool TryFindVisualRootContainer(DependencyObject child, out FrameworkElement rootContainerElement)
         {

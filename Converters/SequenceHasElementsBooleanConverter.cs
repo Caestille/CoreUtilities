@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Windows;
+using System.Linq;
 using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
-	public class StringNotEmptyVisibilityConverter : IValueConverter
+	public class SequenceHasElementsBooleanConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return string.IsNullOrEmpty((string)value) ? Visibility.Hidden : Visibility.Visible;
+			IEnumerable<object> list = (IEnumerable<object>)value;
+			return list.Any();
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

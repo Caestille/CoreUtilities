@@ -22,6 +22,7 @@
 	<converters:PercentFormatterConverter x:Key="PercentFormatterConverter" />
 	<converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 	<converters:SequenceHasElementsVisibilityConverter x:Key="SequenceHasElementsVisibilityConverter" />
+	<converters:SequenceHasElementsBooleanConverter x:Key="SequenceHasElementsBooleanConverter" />
 	<converters:DoubleInverterConverter x:Key="DoubleInverterConverter" />
 	<converters:ValueIfTrueValueIfFalseConverter x:Key="ValueIfTrueValueIfFalseConverter" />
 
