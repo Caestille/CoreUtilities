@@ -9,9 +9,8 @@ namespace CoreUtilities.Services
 	public class RegistryService : IRegistryService
 	{
 		private string keyLocation;
-		private static Dictionary<string, string> subPaths = new ();
 
-		public RegistryService(string keyDirectory, bool addGuid=false)
+		public RegistryService(string keyDirectory, bool addGuid = false)
 		{
 			keyLocation = keyDirectory;
 			if (addGuid)
@@ -25,27 +24,20 @@ namespace CoreUtilities.Services
 			}
 		}
 
-		public void AddSubPath(string key, string path)
+		public void SetSetting(string setting, string value, string pathAfterKeyLocation = "")
 		{
-			subPaths[key] = path;
-		}
-
-		public void SetSetting(string setting, string value)
-		{
-			var keyPath = keyLocation + (subPaths.ContainsKey(setting) ? subPaths[setting] : "");
 			// Despite name, this will open the key if it already exists
-			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath);
+			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
 			key.SetValue(setting, value);
 			key.Close();
 		}
 
-		public bool TryGetSetting<T>(string setting, T defaultValue, out T value)
+		public bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = "")
 		{
 			var success = false;
 			object? outOfRegistryValue = null;
-			var keyPath = keyLocation + (subPaths.ContainsKey(setting) ? subPaths[setting] : "");
 			// Despite name, this will open the key if it already exists
-			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath);
+			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
 
 			try
 			{
@@ -67,11 +59,29 @@ namespace CoreUtilities.Services
 			return success;
 		}
 
-		public void DeleteSetting(string setting)
+		public Dictionary<string, object> GetAllSettingsInPath(string pathAfterKeyLocation)
 		{
-			var keyPath = keyLocation + (subPaths.ContainsKey(setting) ? subPaths[setting] : "");
+			var valuesBynames = new Dictionary<string, object>();
+			using (RegistryKey rootKey = Registry.CurrentUser.OpenSubKey(keyLocation + pathAfterKeyLocation))
+			{
+				if (rootKey != null)
+				{
+					string[] valueNames = rootKey.GetValueNames();
+					foreach (string currSubKey in valueNames)
+					{
+						object value = rootKey.GetValue(currSubKey);
+						valuesBynames.Add(currSubKey, value);
+					}
+					rootKey.Close();
+				}
+			}
+			return valuesBynames;
+		}
+
+		public void DeleteSetting(string setting, string pathAfterKeyLocation = "")
+		{
 			// Despite name, this will open the key if it already exists
-			var key = Registry.CurrentUser.CreateSubKey(keyPath);
+			var key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
 
 			try
 			{
@@ -82,6 +92,15 @@ namespace CoreUtilities.Services
 			{
 				key.Close();
 			}
+		}
+
+		public void DeleteSubTree(string pathAfterKeyLocation)
+		{
+			try
+			{
+				Registry.CurrentUser.DeleteSubKeyTree(keyLocation + pathAfterKeyLocation);
+			}
+			catch { }
 		}
 	}
 }

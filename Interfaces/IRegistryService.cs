@@ -1,13 +1,17 @@
-﻿namespace CoreUtilities.Interfaces
+﻿using System.Collections.Generic;
+
+namespace CoreUtilities.Interfaces
 {
 	public interface IRegistryService
 	{
-		void AddSubPath(string key, string path);
+		void SetSetting(string setting, string value, string pathAfterKeyLocation = "");
 
-		void SetSetting(string setting, string value);
+		bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = "");
 
-		bool TryGetSetting<T>(string setting, T defaultValue, out T value);
+		Dictionary<string, object> GetAllSettingsInPath(string pathAfterKeyLocation);
 
-		void DeleteSetting(string setting);
+		void DeleteSetting(string setting, string pathAfterKeyLocation = "");
+
+		void DeleteSubTree(string pathAfterKeyLocation);
 	}
 }
