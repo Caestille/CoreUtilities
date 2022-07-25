@@ -118,7 +118,7 @@ namespace CoreUtilities.Controls
                     RenderingBias = RenderingBias.Performance
                 }));
 
-        private Border? PART_BlurDecorator { get; set; }
+        private Border PART_BlurDecorator { get; set; }
         private VisualBrush BlurDecoratorBrush { get; set; }
 
         static BlurHost()
@@ -142,7 +142,7 @@ namespace CoreUtilities.Controls
             if (!BlurEnabled)
                 return;
 
-            if (!TryFindVisualRootContainer(this, out FrameworkElement? rootContainer))
+            if (!TryFindVisualRootContainer(this, out FrameworkElement rootContainer))
             {
                 return;
             }
@@ -161,7 +161,7 @@ namespace CoreUtilities.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (TryFindVisualRootContainer(this, out FrameworkElement? rootContainer) && rootContainer != null)
+            if (TryFindVisualRootContainer(this, out FrameworkElement rootContainer))
             {
                 rootContainer.SizeChanged += OnRootContainerElementResized;
             }
@@ -176,18 +176,15 @@ namespace CoreUtilities.Controls
 
             base.OnApplyTemplate();
             this.PART_BlurDecorator = GetTemplateChild("PART_BlurDecorator") as Border;
-            if (this.PART_BlurDecorator != null)
-            {
-                this.PART_BlurDecorator.Effect = this.BlurEffect;
-                this.PART_BlurDecorator.Background = this.BlurDecoratorBrush;
-            }
+            this.PART_BlurDecorator.Effect = this.BlurEffect;
+            this.PART_BlurDecorator.Background = this.BlurDecoratorBrush;
         }
 
         private static void OnBlurBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var this_ = d as BlurHost;
 
-            if (this_ == null || !this_.BlurEnabled)
+            if (!this_.BlurEnabled)
                 return;
 
             this_.BlurDecoratorBrush.Visual = e.NewValue as Visual;
@@ -197,7 +194,7 @@ namespace CoreUtilities.Controls
         private static void Draw(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
             var this_ = d as BlurHost;
-            this_?.DrawBlurredElementBackground();
+            this_.DrawBlurredElementBackground();
         }
 
         private void OnRootContainerElementResized(object sender, SizeChangedEventArgs e)
@@ -209,7 +206,7 @@ namespace CoreUtilities.Controls
                 DrawBlurredElementBackground();
         }
 
-        private bool TryFindVisualRootContainer(DependencyObject child, out FrameworkElement? rootContainerElement)
+        private bool TryFindVisualRootContainer(DependencyObject child, out FrameworkElement rootContainerElement)
         {
             rootContainerElement = null;
             DependencyObject parent = VisualTreeHelper.GetParent(child);
@@ -223,10 +220,7 @@ namespace CoreUtilities.Controls
                 return TryFindVisualRootContainer(parent, out rootContainerElement);
             }
 
-            if (rootContainerElement != null)
-            {
-                rootContainerElement = visualRoot.Content as FrameworkElement;
-            }
+            rootContainerElement = visualRoot.Content as FrameworkElement;
             return true;
         }
     }

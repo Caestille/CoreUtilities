@@ -110,7 +110,7 @@ namespace CoreUtilities.Services
 			return Convert.ToInt32(cmd.ExecuteScalar());
 		}
 
-		public void ExecuteUpdateCommand(string commandName, List<KeyValuePair<string, string>> paramsToUpdate, KeyValuePair<string, string> conditionalParamToUpdate, SQLiteTransaction? transaction = null)
+		public void ExecuteUpdateCommand(string commandName, List<KeyValuePair<string, string>> paramsToUpdate, KeyValuePair<string, string> conditionalParamToUpdate, SQLiteTransaction transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToUpdate)
 				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
@@ -123,7 +123,7 @@ namespace CoreUtilities.Services
 			command.ExecuteNonQuery();
 		}
 
-		public void ExecuteInsertCommand(string commandName, List<KeyValuePair<string, string>> paramsToInsert, SQLiteTransaction? transaction = null)
+		public void ExecuteInsertCommand(string commandName, List<KeyValuePair<string, string>> paramsToInsert, SQLiteTransaction transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToInsert)
 				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
@@ -142,7 +142,7 @@ namespace CoreUtilities.Services
 			cmd.ExecuteNonQuery();
 		}
 
-		public void AddRowToTable(string tableName, List<KeyValuePair<string, string>> namedValues, SQLiteTransaction? transaction = null)
+		public void AddRowToTable(string tableName, List<KeyValuePair<string, string>> namedValues, SQLiteTransaction transaction = null)
 		{
 			SQLiteCommand cmd = new SQLiteCommand(writeConnection);
 			string columnNames = "";
@@ -206,7 +206,7 @@ namespace CoreUtilities.Services
 					cmd.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {dataType};";
 					cmd.ExecuteNonQuery();
 				}
-				catch (SQLiteException)
+				catch (SQLiteException e)
 				{
 					// column already existed in table. Do nothing
 				}
