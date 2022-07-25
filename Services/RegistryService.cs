@@ -24,15 +24,15 @@ namespace CoreUtilities.Services
 			}
 		}
 
-		public void SetSetting(string setting, string value, string pathAfterKeyLocation = "")
+		public void SetSetting(string setting, string? value, string pathAfterKeyLocation = "")
 		{
 			// Despite name, this will open the key if it already exists
 			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
-			key.SetValue(setting, value);
+			key.SetValue(setting, value ?? "");
 			key.Close();
 		}
 
-		public bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = "")
+		public bool TryGetSetting<T>(string setting, T defaultValue, out T? value, string pathAfterKeyLocation = "")
 		{
 			var success = false;
 			object? outOfRegistryValue = null;
@@ -47,7 +47,8 @@ namespace CoreUtilities.Services
 			catch 
 			{
 				value = defaultValue;
-				SetSetting(setting, defaultValue.ToString());
+				if (defaultValue != null)
+					SetSetting(setting, defaultValue.ToString() ?? "");
 				return false;
 			}
 			finally
@@ -55,22 +56,25 @@ namespace CoreUtilities.Services
 				key.Close();
 			}
 
-			value = success ? (T)Convert.ChangeType(outOfRegistryValue, typeof(T)) : defaultValue;
+			value = success ?
+				outOfRegistryValue != null ? (T)Convert.ChangeType(outOfRegistryValue, typeof(T)) : defaultValue 
+				: defaultValue;
 			return success;
 		}
 
 		public Dictionary<string, object> GetAllSettingsInPath(string pathAfterKeyLocation)
 		{
 			var valuesBynames = new Dictionary<string, object>();
-			using (RegistryKey rootKey = Registry.CurrentUser.OpenSubKey(keyLocation + pathAfterKeyLocation))
+			using (RegistryKey? rootKey = Registry.CurrentUser.OpenSubKey(keyLocation + pathAfterKeyLocation))
 			{
 				if (rootKey != null)
 				{
 					string[] valueNames = rootKey.GetValueNames();
 					foreach (string currSubKey in valueNames)
 					{
-						object value = rootKey.GetValue(currSubKey);
-						valuesBynames.Add(currSubKey, value);
+						object? value = rootKey.GetValue(currSubKey);
+						if (value != null)
+							valuesBynames.Add(currSubKey, value);
 					}
 					rootKey.Close();
 				}

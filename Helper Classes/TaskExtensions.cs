@@ -28,7 +28,7 @@ namespace CoreUtilities.HelperClasses
                     {
                         tcs.TrySetCanceled();
                     }
-                    else if (task.IsFaulted)
+                    else if (task.IsFaulted && t.Exception != null)
                     {
                         tcs.TrySetException(t.Exception);
                     }
@@ -39,7 +39,8 @@ namespace CoreUtilities.HelperClasses
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously,
-                TaskScheduler.Default);
+                TaskScheduler.Default
+            );
 
             return tcs.Task;
         }
