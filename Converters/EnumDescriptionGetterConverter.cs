@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreUtilities.HelperClasses;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -10,8 +11,8 @@ namespace CoreUtilities.Converters
 	{
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (value is Enum)
-				return GetEnumDescription((Enum)value);
+			if (value is Enum enumObject)
+				return enumObject.GetEnumDescription();
 
 			return Binding.DoNothing;
 		}
@@ -21,19 +22,6 @@ namespace CoreUtilities.Converters
 			return Binding.DoNothing;
 		}
 
-		private string GetEnumDescription(Enum enumObj)
-		{
-			FieldInfo? fieldInfo = enumObj.GetType().GetField(enumObj.ToString());
-
-			object[] attribArray = fieldInfo!.GetCustomAttributes(false);
-
-			if (attribArray.Length == 0)
-			{
-				return enumObj.ToString();
-			}
-
-			DescriptionAttribute attrib = (attribArray[0] as DescriptionAttribute)!;
-			return attrib.Description;
-		}
+		
 	}
 }
