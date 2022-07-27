@@ -25,6 +25,10 @@
 	<converters:SequenceHasElementsBooleanConverter x:Key="SequenceHasElementsBooleanConverter" />
 	<converters:DoubleInverterConverter x:Key="DoubleInverterConverter" />
 	<converters:ValueIfTrueValueIfFalseConverter x:Key="ValueIfTrueValueIfFalseConverter" />
+	<converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
+	<converters:MultiBoolAndToVisibilityConverter x:Key="MultiBoolAndToVisibilityConverter" />
+	<converters:MultiBoolOrToVisibilityConverter x:Key="MultiBoolOrToVisibilityConverter" />
+	<converters:VisibilityInverterConverter x:Key="VisibilityInverterConverter" />
 
 	<!--#endregion End Converters-->
 
