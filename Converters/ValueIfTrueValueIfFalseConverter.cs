@@ -8,7 +8,7 @@ namespace CoreUtilities.Converters
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if ((bool)values[0])
+			if (values[0] is bool value && value)
 			{
 				return values[1];
 			}
