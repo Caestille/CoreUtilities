@@ -34,7 +34,7 @@ namespace CoreUtilities.HelperClasses
                     }
                     else
                     {
-                        tcs.TrySetResult(t.Result);
+                        var result = tcs.TrySetResult(t.Result);
                     }
                 },
                 CancellationToken.None,
