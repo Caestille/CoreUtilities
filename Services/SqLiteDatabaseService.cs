@@ -227,6 +227,10 @@ namespace CoreUtilities.Services
 			SQLiteConnection.ClearAllPools();
 			readConnection.Close();
 			writeConnection.Close();
+			foreach (var command in commands.Values)
+			{
+				command.Dispose();
+			}
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
 		}
