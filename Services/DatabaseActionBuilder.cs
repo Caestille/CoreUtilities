@@ -1,53 +1,53 @@
-﻿using System;
+﻿using CoreUtilities.HelperClasses;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
 namespace CoreUtilities.Services
 {
-	public enum ReaderType
+	public class DatabaseActionBuilder<TReturn> : IDatabaseActionBuilder<TReturn>
 	{
-		All,
-		Filtered
-	}
+		private IDatabaseWrapperService<TReturn> database;
 
-	public class DatabaseActionBuilder<T>
-	{
-		private DatabaseWrapperService<T> database;
-
-		public DatabaseActionBuilder(string fullPath, bool recreate, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<T, List<KeyValuePair<string, string>>> valueConverter, Func<T, DateTime> dateGetter, Func<T, bool> isFilteredOutGetter, Func<T, string> primaryKeyGetter, Func<IDataRecord, T> dbItemConverter)
+		public DatabaseActionBuilder(IDatabaseWrapperService<TReturn> databaseWrapper)
 		{
-			database = new DatabaseWrapperService<T>(fullPath, recreate, columns, columnsToIndex, valueConverter, dateGetter, isFilteredOutGetter, primaryKeyGetter, dbItemConverter);
+			database = databaseWrapper;
 		}
 
-		public WriteTransactionWrapper<T> GetWriteTransaction()
+		public void Init(string path, bool recreate)
+		{
+			database.Init(path, recreate);
+		}
+
+		public WriteTransactionWrapper<TReturn> GetWriteTransaction()
 		{
 			database.OpenWriteTransaction();
-			return new WriteTransactionWrapper<T>(database);
+			return new WriteTransactionWrapper<TReturn>(database);
 		}
 
-		public UpdateTransactionWrapper<T> GetUpdateTransaction()
+		public UpdateTransactionWrapper<TReturn> GetUpdateTransaction()
 		{
 			database.OpenWriteTransaction();
-			return new UpdateTransactionWrapper<T>(database);
+			return new UpdateTransactionWrapper<TReturn>(database);
 		}
 
-		public ReaderInstanceWrapper<T> GetReader(ReaderType readerType)
+		public ReaderInstanceWrapper<TReturn> GetReader(ReaderType readerType)
 		{
-			return new ReaderInstanceWrapper<T>(database, readerType == ReaderType.Filtered);
+			return new ReaderInstanceWrapper<TReturn>(database, readerType == ReaderType.Filtered);
 		}
 
-		public ReaderInstanceWrapper<T, TReturn> GetReader<TReturn>(ReaderType readerType)
+		public ReaderInstanceWrapper<TReturn, T> GetReader<T>(ReaderType readerType)
 		{
-			return new ReaderInstanceWrapper<T, TReturn>(database, readerType == ReaderType.Filtered);
+			return new ReaderInstanceWrapper<TReturn, T>(database, readerType == ReaderType.Filtered);
 		}
 
-		public IEnumerable<T> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex)
+		public IEnumerable<TReturn> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex)
 		{
 			var result = database.GetConvertedRowsBetweenIndices(startIndex, endIndex, readerType == ReaderType.Filtered);
 			return result;
 		}
 
-		public IEnumerable<T> GetConvertedInstances(ReaderType readerType)
+		public IEnumerable<TReturn> GetConvertedInstances(ReaderType readerType)
 		{
 			return database.GetConvertedRows(readerType == ReaderType.Filtered);
 		}
@@ -66,133 +66,6 @@ namespace CoreUtilities.Services
 		public void Disconnect()
 		{
 			database.Disconnect();
-		}
-
-		public class WriteTransactionWrapper<T>
-		{
-			private DatabaseWrapperService<T> database;
-
-			public WriteTransactionWrapper(DatabaseWrapperService<T> database)
-			{
-				this.database = database;
-			}
-
-			public WriteTransactionWrapper<T> WithEntry(T entry)
-			{
-				database.Add(entry);
-				return this;
-			}
-
-			public WriteTransactionWrapper<T> WithEntryRange(IEnumerable<T> entries)
-			{
-				database.AddRange(entries);
-				return this;
-			}
-
-			public void ExecuteWrite()
-			{
-				database.CloseWriteTransaction();
-			}
-		}
-
-		public class UpdateTransactionWrapper<T>
-		{
-			private DatabaseWrapperService<T> database;
-
-			public UpdateTransactionWrapper(DatabaseWrapperService<T> database)
-			{
-				this.database = database;
-			}
-
-			public UpdateTransactionWrapper<T> UpdateEntry(T entry)
-			{
-				database.UpdateRow(entry);
-				return this;
-			}
-
-			public UpdateTransactionWrapper<T> UpdateIsEntryFiltered(T entry)
-			{
-				database.UpdateRowFilterStatus(entry);
-				return this;
-			}
-
-			public void ExecuteWrite()
-			{
-				database.CloseWriteTransaction();
-			}
-		}
-
-		public class ReaderInstanceWrapper<T>
-		{
-			private DatabaseWrapperService<T> database;
-			private IEnumerable<object> rows;
-			private bool isFiltered;
-
-			private object result;
-
-			public ReaderInstanceWrapper(DatabaseWrapperService<T> database, bool isFiltered)
-			{
-				this.database = database;
-				rows = isFiltered ? database.FilteredRows() : database.AllRows();
-			}
-
-			public ReaderInstanceWrapper<T> WithAction(Action<IEnumerable<object>> execute)
-			{
-				execute(rows);
-				return this;
-			}
-
-			public ReaderInstanceWrapper<T> WithAction<X>(Func<IEnumerable<object>, X> execute)
-			{
-				result = execute(rows);
-				return this;
-			}
-
-			public void Close()
-			{
-				if (isFiltered)
-				{
-					database.CloseFilteredRowReader();
-				}
-				else
-				{
-					database.CloseRowReader();
-				}
-			}
-		}
-
-		public class ReaderInstanceWrapper<T, X>
-		{
-			private DatabaseWrapperService<T> database;
-			private IEnumerable<object> rows;
-			private bool isFiltered;
-
-			private X result;
-
-			public ReaderInstanceWrapper(DatabaseWrapperService<T> database, bool isFiltered)
-			{
-				this.database = database;
-				rows = isFiltered ? database.FilteredRows() : database.AllRows();
-			}
-
-			public ReaderInstanceWrapper<T, X> WithAction(Func<IEnumerable<object>, X> execute)
-			{
-				result = execute(rows);
-				return this;
-			}
-
-			public X Close()
-			{
-				if (isFiltered)
-				{
-					database.CloseFilteredRowReader();
-				}
-				else
-				{
-					database.CloseRowReader();
-				}
-				return result;
-			}
 		}
 	}
 }

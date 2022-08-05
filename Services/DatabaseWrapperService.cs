@@ -1,39 +1,33 @@
 ﻿using CoreUtilities.HelperClasses;
+using CoreUtilities.HelperClasses;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 
 namespace CoreUtilities.Services
 {
-	public enum ColumnType
+	public class DatabaseWrapperService<TReturn, TTransaction> : IDatabaseWrapperService<TReturn> where TTransaction : DbTransaction
 	{
-		[Description("TEXT")]
-		Text,
-
-		[Description("INTEGER")]
-		Int,
-	}
-
-	public class DatabaseWrapperService<T>
-	{
-		private readonly SqLiteDatabaseService database;
+		private readonly IDatabaseService<TTransaction> database;
 
 		private const string tableName = "MainTable";
-		public const string IsFilteredOutColumnName = "IsFilteredOut";
+		public const string IsFilteredOutColumnName = IDatabaseWrapperService<TReturn>.IsFilteredOutColumnName;
 		private const string dateTimeColumnName = "DateTime";
 		private const string primaryKeyColumnName = "Id";
 
 		private int rowCount;
+		private KeyValuePair<string, string>[] columnsToAdd;
+		private string[] columnsToIndex;
 
-		private Func<T, List<KeyValuePair<string, string>>> valueConverter;
-		private Func<T, DateTime> dateGetter;
-		private Func<T, bool> isFilteredOutGetter;
-		private Func<T, string> primaryKeyGetter;
-		private Func<IDataRecord, T> dbItemConverter;
+		private Func<TReturn, List<KeyValuePair<string, string>>> valueConverter;
+		private Func<TReturn, DateTime> dateGetter;
+		private Func<TReturn, bool> isFilteredOutGetter;
+		private Func<TReturn, string> primaryKeyGetter;
+		private Func<IDataRecord, TReturn> dbItemConverter;
 
 		private Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
 
@@ -44,24 +38,23 @@ namespace CoreUtilities.Services
 		private const string insertRowCommandName = "insertRow";
 		private const string updateRowFilterStatusCommandName = "updateRowFilterStatus";
 
-		private SQLiteTransaction writeTransaction;
+		private TTransaction writeTransaction;
 
 		private bool breakOperation;
 
-		private enum Ordering
+		public string DatabaseName { get; set; }
+
+		public DatabaseWrapperService(IDatabaseService<TTransaction> databaseService, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<TReturn, List<KeyValuePair<string, string>>> valueConverter, Func<TReturn, DateTime> dateGetter, Func<TReturn, bool> isFilteredOutGetter, Func<TReturn, string> primaryKeyGetter, Func<IDataRecord, TReturn> dbItemConverter)
 		{
-			Ascending,
-			Descending
-		}
+			database = databaseService;
 
-		public string DatabaseName { get; private set; }
+			this.valueConverter = valueConverter;
+			this.dateGetter = dateGetter;
+			this.isFilteredOutGetter = isFilteredOutGetter;
+			this.primaryKeyGetter = primaryKeyGetter;
+			this.dbItemConverter = dbItemConverter;
 
-		public DatabaseWrapperService(string fullPath, bool recreate, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<T, List<KeyValuePair<string, string>>> valueConverter, Func<T, DateTime> dateGetter, Func<T, bool> isFilteredOutGetter, Func<T, string> primaryKeyGetter, Func<IDataRecord, T> dbItemConverter)
-		{
-			DatabaseName = new FileInfo(fullPath).Name;
-			database = new SqLiteDatabaseService(fullPath, recreate);
-
-			var columnsToAdd = columns.Select(x => new KeyValuePair<string, string>(x.Key, x.Value.GetEnumDescription()))
+			columnsToAdd = columns.Select(x => new KeyValuePair<string, string>(x.Key, x.Value.GetEnumDescription()))
 				.Union(new List<KeyValuePair<string, string>>()
 					{
 						new KeyValuePair<string, string>(dateTimeColumnName, "TEXT"),
@@ -69,17 +62,19 @@ namespace CoreUtilities.Services
 						new KeyValuePair<string, string>(primaryKeyColumnName, "INTEGER"),
 					})
 				.ToArray();
+			this.columnsToIndex = columnsToIndex;
+		}
+
+		public void Init(string path, bool recreate)
+		{
+			DatabaseName = new FileInfo(path).Name;
+
+			database.Init(path, recreate);
 
 			database.AddTableAndColumns(tableName, columnsToAdd, columnsToIndex);
 			database.SetUpUpdateCommand(tableName, updateRowCommandName, columnsToAdd.Select(x => x.Key).ToList(), primaryKeyColumnName);
 			database.SetUpUpdateCommand(tableName, updateRowFilterStatusCommandName, new List<string>() { IsFilteredOutColumnName }, primaryKeyColumnName);
 			database.SetUpInsertCommand(tableName, insertRowCommandName, columnsToAdd.Select(x => x.Key).ToList());
-
-			this.valueConverter = valueConverter;
-			this.dateGetter = dateGetter;
-			this.isFilteredOutGetter = isFilteredOutGetter;
-			this.primaryKeyGetter = primaryKeyGetter;
-			this.dbItemConverter = dbItemConverter;
 
 			if (recreate)
 				return;
@@ -136,10 +131,10 @@ namespace CoreUtilities.Services
 			return (int)database.RowCount(tableName, $"WHERE NOT({IsFilteredOutColumnName})");
 		}
 
-		public void AddRange(IEnumerable<T> list)
+		public void AddRange(IEnumerable<TReturn> list)
 		{
-			SQLiteTransaction transaction = database.GetAndOpenWriteTransaction();
-			foreach (T row in list)
+			TTransaction transaction = database.GetAndOpenWriteTransaction();
+			foreach (TReturn row in list)
 			{
 				if (breakOperation)
 					break;
@@ -160,7 +155,7 @@ namespace CoreUtilities.Services
 			transaction.Dispose();
 		}
 
-		public void Add(T row)
+		public void Add(TReturn row)
 		{
 			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 				{
@@ -175,7 +170,7 @@ namespace CoreUtilities.Services
 			rowCount++;
 		}
 
-		public IEnumerable<T> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered)
+		public IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered)
 		{
 			SQLiteDataReader reader = 
 				(database.GetReaderWithRowsBetweenIndices(
@@ -186,7 +181,7 @@ namespace CoreUtilities.Services
 					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
 				as SQLiteDataReader)!;
 
-			List<T> list = new List<T>();
+			List<TReturn> list = new List<TReturn>();
 
 			while (reader.Read())
 			{
@@ -199,7 +194,7 @@ namespace CoreUtilities.Services
 			return list;
 		}
 
-		public IEnumerable<T> GetConvertedRows(bool isFiltered)
+		public IEnumerable<TReturn> GetConvertedRows(bool isFiltered)
 		{
 			SQLiteDataReader reader =
 				(database.GetReaderWithRowsBetweenIndices(
@@ -210,7 +205,7 @@ namespace CoreUtilities.Services
 					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
 				as SQLiteDataReader)!;
 
-			List<T> list = new List<T>();
+			List<TReturn> list = new List<TReturn>();
 
 			while (reader.Read())
 			{
@@ -228,7 +223,7 @@ namespace CoreUtilities.Services
 			writeTransaction = database.GetAndOpenWriteTransaction();
 		}
 
-		public void UpdateRow(T row)
+		public void UpdateRow(TReturn row)
 		{
 			if (breakOperation)
 				return;
@@ -242,7 +237,7 @@ namespace CoreUtilities.Services
 			database.ExecuteUpdateCommand(updateRowCommandName, itemValues, new KeyValuePair<string, string>(primaryKeyColumnName, primaryKeyGetter(row)), writeTransaction);
 		}
 
-		public void UpdateRowFilterStatus(T row)
+		public void UpdateRowFilterStatus(TReturn row)
 		{
 			if (breakOperation)
 				return;

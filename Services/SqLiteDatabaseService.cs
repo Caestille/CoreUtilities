@@ -5,25 +5,30 @@ using System.Data.SQLite;
 
 namespace CoreUtilities.Services
 {
-	public class SqLiteDatabaseService
+	public class SqLiteDatabaseService : IDatabaseService<SQLiteTransaction>
 	{
-		private readonly string connectionString;
+		private string connectionString;
 
-		private readonly SQLiteConnection readConnection;
-		private readonly SQLiteConnection writeConnection;
+		private SQLiteConnection readConnection;
+		private SQLiteConnection writeConnection;
 
-		private readonly Dictionary<string, List<string>> currentTablesAndColumns = new();
+		private Dictionary<string, List<string>> currentTablesAndColumns = new();
 
-		private readonly Dictionary<string, SQLiteCommand> commands = new();
-		private readonly Dictionary<string, List<SQLiteParameter>> commandParameters = new();
-		private readonly Dictionary<string, SQLiteParameter> commandCondtionalParameters = new();
+		private Dictionary<string, SQLiteCommand> commands = new();
+		private Dictionary<string, List<SQLiteParameter>> commandParameters = new();
+		private Dictionary<string, SQLiteParameter> commandCondtionalParameters = new();
 
-		public SqLiteDatabaseService(string fullPath, bool newDatabase)
+		public SqLiteDatabaseService()
 		{
-			connectionString = $"Data Source={fullPath};Version=3;";
+			
+		}
 
-			if (newDatabase)
-				SQLiteConnection.CreateFile(fullPath);
+		public void Init(string path, bool recreate)
+		{
+			connectionString = $"Data Source={path};Version=3;";
+
+			if (recreate)
+				SQLiteConnection.CreateFile(path);
 
 			readConnection = new SQLiteConnection(connectionString);
 			writeConnection = new SQLiteConnection(connectionString);
