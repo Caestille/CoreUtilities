@@ -6,8 +6,6 @@ namespace CoreUtilities.Services
 	{
 		const string IsFilteredOutColumnName = "IsFilteredOut";
 
-		void Init(string path, bool recreate);
-
 		string DatabaseName { get; set; }
 
 		IEnumerable<object> AllRows();

@@ -6,7 +6,6 @@ namespace CoreUtilities.Services
 {
 	public interface IDatabaseService<T> where T : DbTransaction
 	{
-		void Init(string path, bool recreate);
 		void AddTableAndColumns(string tableName, KeyValuePair<string, string>[] columnNamesAndDataTypes, string[] columnsToIndex);
 
 		void SetUpUpdateCommand(string tableName, string commandName, List<string> parametersToAdd, string conditionalMatchParameter);

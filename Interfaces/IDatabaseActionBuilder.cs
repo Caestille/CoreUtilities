@@ -134,7 +134,6 @@ namespace CoreUtilities.Services
 
 	public interface IDatabaseActionBuilder<T>
 	{
-		void Init(string path, bool recreate);
 		WriteTransactionWrapper<T> GetWriteTransaction();
 
 		UpdateTransactionWrapper<T> GetUpdateTransaction();

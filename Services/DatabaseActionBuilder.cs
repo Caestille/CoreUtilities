@@ -14,11 +14,6 @@ namespace CoreUtilities.Services
 			database = databaseWrapper;
 		}
 
-		public void Init(string path, bool recreate)
-		{
-			database.Init(path, recreate);
-		}
-
 		public WriteTransactionWrapper<TReturn> GetWriteTransaction()
 		{
 			database.OpenWriteTransaction();

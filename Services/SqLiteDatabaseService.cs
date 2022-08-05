@@ -18,12 +18,7 @@ namespace CoreUtilities.Services
 		private Dictionary<string, List<SQLiteParameter>> commandParameters = new();
 		private Dictionary<string, SQLiteParameter> commandCondtionalParameters = new();
 
-		public SqLiteDatabaseService()
-		{
-			
-		}
-
-		public void Init(string path, bool recreate)
+		public SqLiteDatabaseService(string path, bool recreate)
 		{
 			connectionString = $"Data Source={path};Version=3;";
 

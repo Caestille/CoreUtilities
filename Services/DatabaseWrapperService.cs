@@ -20,8 +20,6 @@ namespace CoreUtilities.Services
 		private const string primaryKeyColumnName = "Id";
 
 		private int rowCount;
-		private KeyValuePair<string, string>[] columnsToAdd;
-		private string[] columnsToIndex;
 
 		private Func<TReturn, List<KeyValuePair<string, string>>> valueConverter;
 		private Func<TReturn, DateTime> dateGetter;
@@ -44,9 +42,11 @@ namespace CoreUtilities.Services
 
 		public string DatabaseName { get; set; }
 
-		public DatabaseWrapperService(IDatabaseService<TTransaction> databaseService, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<TReturn, List<KeyValuePair<string, string>>> valueConverter, Func<TReturn, DateTime> dateGetter, Func<TReturn, bool> isFilteredOutGetter, Func<TReturn, string> primaryKeyGetter, Func<IDataRecord, TReturn> dbItemConverter)
+		public DatabaseWrapperService(string path, bool recreate, IDatabaseService<TTransaction> databaseService, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<TReturn, List<KeyValuePair<string, string>>> valueConverter, Func<TReturn, DateTime> dateGetter, Func<TReturn, bool> isFilteredOutGetter, Func<TReturn, string> primaryKeyGetter, Func<IDataRecord, TReturn> dbItemConverter)
 		{
 			database = databaseService;
+
+			DatabaseName = new FileInfo(path).Name;
 
 			this.valueConverter = valueConverter;
 			this.dateGetter = dateGetter;
@@ -54,7 +54,7 @@ namespace CoreUtilities.Services
 			this.primaryKeyGetter = primaryKeyGetter;
 			this.dbItemConverter = dbItemConverter;
 
-			columnsToAdd = columns.Select(x => new KeyValuePair<string, string>(x.Key, x.Value.GetEnumDescription()))
+			var columnsToAdd = columns.Select(x => new KeyValuePair<string, string>(x.Key, x.Value.GetEnumDescription()))
 				.Union(new List<KeyValuePair<string, string>>()
 					{
 						new KeyValuePair<string, string>(dateTimeColumnName, "TEXT"),
@@ -62,14 +62,6 @@ namespace CoreUtilities.Services
 						new KeyValuePair<string, string>(primaryKeyColumnName, "INTEGER"),
 					})
 				.ToArray();
-			this.columnsToIndex = columnsToIndex;
-		}
-
-		public void Init(string path, bool recreate)
-		{
-			DatabaseName = new FileInfo(path).Name;
-
-			database.Init(path, recreate);
 
 			database.AddTableAndColumns(tableName, columnsToAdd, columnsToIndex);
 			database.SetUpUpdateCommand(tableName, updateRowCommandName, columnsToAdd.Select(x => x.Key).ToList(), primaryKeyColumnName);
