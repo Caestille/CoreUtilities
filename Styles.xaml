@@ -23,6 +23,7 @@
 	<converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 	<converters:SequenceHasElementsVisibilityConverter x:Key="SequenceHasElementsVisibilityConverter" />
 	<converters:SequenceHasElementsBooleanConverter x:Key="SequenceHasElementsBooleanConverter" />
+	<converters:SequenceEmptyBooleanConverter x:Key="SequenceEmptyBooleanConverter" />
 	<converters:DoubleInverterConverter x:Key="DoubleInverterConverter" />
 	<converters:ValueIfTrueValueIfFalseConverter x:Key="ValueIfTrueValueIfFalseConverter" />
 	<converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
