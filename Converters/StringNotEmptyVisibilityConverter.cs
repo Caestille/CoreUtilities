@@ -9,6 +9,9 @@ namespace CoreUtilities.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			if (value is not string)
+				return Visibility.Visible;
+
 			return string.IsNullOrEmpty((string)value) ? Visibility.Collapsed : Visibility.Visible;
 		}
 
