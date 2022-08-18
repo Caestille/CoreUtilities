@@ -34,6 +34,7 @@
 	<converters:StringIsEmptyConverter x:Key="StringIsEmptyConverter" />
 	<converters:StringIsValueConverter x:Key="StringIsValueConverter" />
 	<converters:StringIsNotValueConverter x:Key="StringIsNotValueConverter" />
+	<converters:IsIntegerConverter x:Key="IsIntegerConverter" />
 
 	<!--#endregion End Converters-->
 
