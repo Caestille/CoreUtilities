@@ -8,9 +8,9 @@ namespace CoreUtilities.Interfaces
 	{
 		void RegisterViewForViewModel(Type viewType, Type vmType);
 
-		Task OpenCustomDialogue(object? dataContext = null);
+		Task OpenCustomDialogue(object? dataContext = null, Size? dialogueSize = null);
 
-		void OpenFileDialogue();
+		string OpenFileDialogue();
 
 		void ShowMessageBox(string title, string message, MessageBoxButton button);
 	}
