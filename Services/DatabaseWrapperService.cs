@@ -89,8 +89,9 @@ namespace CoreUtilities.Services
 
 		public void CloseRowReader()
 		{
-			lastRowReader.Close();
-			lastRowReader.Dispose();
+			if (lastRowReader == null) return;
+			lastRowReader?.Close();
+			lastRowReader?.Dispose();
 			lastRowReader = null;
 		}
 
