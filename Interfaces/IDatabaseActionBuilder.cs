@@ -62,14 +62,12 @@ namespace CoreUtilities.Services
 	{
 		private IDatabaseWrapperService<T> database;
 		private IEnumerable<object> rows;
-		private bool isFiltered;
-
-		private object result;
+		private int reference;
 
 		public ReaderInstanceWrapper(IDatabaseWrapperService<T> database, bool isFiltered)
 		{
 			this.database = database;
-			rows = isFiltered ? database.FilteredRows() : database.AllRows();
+			(reference, rows) = isFiltered ? database.FilteredRows() : database.AllRows();
 		}
 
 		public ReaderInstanceWrapper<T> WithAction(Action<IEnumerable<object>> execute)
@@ -80,20 +78,13 @@ namespace CoreUtilities.Services
 
 		public ReaderInstanceWrapper<T> WithAction<X>(Func<IEnumerable<object>, X> execute)
 		{
-			result = execute(rows);
+			var result = execute(rows);
 			return this;
 		}
 
 		public void Close()
 		{
-			if (isFiltered)
-			{
-				database.CloseFilteredRowReader();
-			}
-			else
-			{
-				database.CloseRowReader();
-			}
+			database.CloseRowReader(reference);
 		}
 	}
 
@@ -101,14 +92,14 @@ namespace CoreUtilities.Services
 	{
 		private IDatabaseWrapperService<T> database;
 		private IEnumerable<object> rows;
-		private bool isFiltered;
+		private int reference;
 
 		private X result;
 
 		public ReaderInstanceWrapper(IDatabaseWrapperService<T> database, bool isFiltered)
 		{
 			this.database = database;
-			rows = isFiltered ? database.FilteredRows() : database.AllRows();
+			(reference, rows) = isFiltered ? database.FilteredRows() : database.AllRows();
 		}
 
 		public ReaderInstanceWrapper<T, X> WithAction(Func<IEnumerable<object>, X> execute)
@@ -119,14 +110,7 @@ namespace CoreUtilities.Services
 
 		public X Close()
 		{
-			if (isFiltered)
-			{
-				database.CloseFilteredRowReader();
-			}
-			else
-			{
-				database.CloseRowReader();
-			}
+			database.CloseRowReader(reference);
 			return result;
 		}
 

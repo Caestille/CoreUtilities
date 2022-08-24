@@ -8,12 +8,11 @@ namespace CoreUtilities.Services
 
 		string DatabaseName { get; set; }
 
-		IEnumerable<object> AllRows();
-		void CloseRowReader();
+		(int reference, IEnumerable<object> rows) AllRows();
 
-		IEnumerable<object> FilteredRows();
+		void CloseRowReader(int reference);
 
-		void CloseFilteredRowReader();
+		(int reference, IEnumerable<object> rows) FilteredRows();
 
 		void ClearAllRows();
 

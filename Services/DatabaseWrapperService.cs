@@ -1,5 +1,4 @@
 ﻿using CoreUtilities.HelperClasses;
-using CoreUtilities.HelperClasses;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,8 +28,7 @@ namespace CoreUtilities.Services
 
 		private Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
 
-		private SQLiteDataReader lastRowReader;
-		private SQLiteDataReader lastFilteredRowReader;
+		private List<SQLiteDataReader> rowReaders = new List<SQLiteDataReader>();
 
 		private const string updateRowCommandName = "updateRow";
 		private const string insertRowCommandName = "insertRow";
@@ -71,7 +69,7 @@ namespace CoreUtilities.Services
 			if (recreate)
 				return;
 
-			foreach (object item in AllRows())
+			foreach (object item in AllRows().rows)
 			{
 				var reader = item as IDataRecord;
 				primaryKeyMappings[primaryKeyGetter(dbItemConverter(reader))] = Convert.ToInt32(reader[primaryKeyColumnName]);
@@ -80,33 +78,26 @@ namespace CoreUtilities.Services
 			rowCount = primaryKeyMappings.Count();
 		}
 
-		public IEnumerable<object> AllRows()
+		public (int reference, IEnumerable<object> rows) AllRows()
 		{
 			SQLiteDataReader reader = (database.GetRows(tableName, "", GenerateOrderingString(dateTimeColumnName, Ordering.Ascending)) as SQLiteDataReader)!;
-			lastRowReader = reader;
-			return reader.Cast<object>();
+			rowReaders.Add(reader);
+			return (rowReaders.Count(), reader.Cast<object>());
 		}
 
-		public void CloseRowReader()
+		public void CloseRowReader(int reference)
 		{
-			if (lastRowReader == null) return;
-			lastRowReader?.Close();
-			lastRowReader?.Dispose();
-			lastRowReader = null;
+			var reader = rowReaders[reference - 1];
+			reader.Close();
+			reader.Dispose();
+			rowReaders.Remove(reader);
 		}
 
-		public IEnumerable<object> FilteredRows()
+		public (int reference, IEnumerable<object> rows) FilteredRows()
 		{
 			SQLiteDataReader reader = (database.GetRows(tableName, $"WHERE NOT({IsFilteredOutColumnName})", GenerateOrderingString(dateTimeColumnName, Ordering.Ascending)) as SQLiteDataReader)!;
-			lastFilteredRowReader = reader;
-			return reader.Cast<object>();
-		}
-
-		public void CloseFilteredRowReader()
-		{
-			lastFilteredRowReader.Close();
-			lastFilteredRowReader.Dispose();
-			lastFilteredRowReader = null;
+			rowReaders.Add(reader);
+			return (rowReaders.Count(), reader.Cast<object>());
 		}
 
 		public void ClearAllRows()
@@ -255,8 +246,15 @@ namespace CoreUtilities.Services
 		public void Disconnect()
 		{
 			breakOperation = true;
-			if (lastRowReader != null) CloseRowReader();
-			if (lastFilteredRowReader != null) CloseFilteredRowReader();
+			if (rowReaders.Any())
+			{
+				foreach (var reader in rowReaders)
+				{
+					reader.Close();
+					reader.Dispose();
+				}
+				rowReaders.Clear();
+			}
 			// Closing connections with transactions open should simply roll them back
 			database.Disconnect();
 		}
