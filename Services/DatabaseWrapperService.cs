@@ -1,9 +1,11 @@
 ﻿using CoreUtilities.HelperClasses;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -28,7 +30,8 @@ namespace CoreUtilities.Services
 
 		private Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
 
-		private List<SQLiteDataReader> rowReaders = new List<SQLiteDataReader>();
+		private int count = 0;
+		private ConcurrentDictionary<int, SQLiteDataReader> rowReaders = new();
 
 		private const string updateRowCommandName = "updateRow";
 		private const string insertRowCommandName = "insertRow";
@@ -81,23 +84,35 @@ namespace CoreUtilities.Services
 		public (int reference, IEnumerable<object> rows) AllRows()
 		{
 			SQLiteDataReader reader = (database.GetRows(tableName, "", GenerateOrderingString(dateTimeColumnName, Ordering.Ascending)) as SQLiteDataReader)!;
-			rowReaders.Add(reader);
-			return (rowReaders.Count(), reader.Cast<object>());
+			var success = rowReaders.TryAdd(count, reader);
+			if (!success)
+			{
+				Debug.WriteLine("Failed to add row reader");
+			}
+			var result = (count, reader.Cast<object>());
+			count++;
+			return result;
 		}
 
 		public void CloseRowReader(int reference)
 		{
-			var reader = rowReaders[reference - 1];
+			var reader = rowReaders[reference];
 			reader.Close();
 			reader.Dispose();
-			rowReaders.Remove(reader);
+			rowReaders.Remove(reference, out _);
 		}
 
 		public (int reference, IEnumerable<object> rows) FilteredRows()
 		{
 			SQLiteDataReader reader = (database.GetRows(tableName, $"WHERE NOT({IsFilteredOutColumnName})", GenerateOrderingString(dateTimeColumnName, Ordering.Ascending)) as SQLiteDataReader)!;
-			rowReaders.Add(reader);
-			return (rowReaders.Count(), reader.Cast<object>());
+			var success = rowReaders.TryAdd(count, reader);
+			if (!success)
+			{
+				Debug.WriteLine("Failed to add row reader");
+			}
+			var result = (count, reader.Cast<object>());
+			count++;
+			return result;
 		}
 
 		public void ClearAllRows()
@@ -248,7 +263,7 @@ namespace CoreUtilities.Services
 			breakOperation = true;
 			if (rowReaders.Any())
 			{
-				foreach (var reader in rowReaders)
+				foreach (var reader in rowReaders.Values)
 				{
 					reader.Close();
 					reader.Dispose();
