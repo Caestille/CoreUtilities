@@ -233,7 +233,11 @@ namespace CoreUtilities.Services
 					new KeyValuePair<string, string>(IsFilteredOutColumnName, Convert.ToInt16(isFilteredOutGetter(row)).ToString()),
 				}).ToList();
 
-			database.ExecuteUpdateCommand(updateRowCommandName, itemValues, new KeyValuePair<string, string>(primaryKeyColumnName, primaryKeyGetter(row)), writeTransaction);
+			database.ExecuteUpdateCommand(
+				updateRowCommandName, 
+				itemValues,
+				new KeyValuePair<string, string>(primaryKeyColumnName, primaryKeyMappings[primaryKeyGetter(row)].ToString()),
+				writeTransaction);
 		}
 
 		public void UpdateRowFilterStatus(TReturn row)
