@@ -1,4 +1,5 @@
 ﻿using CoreUtilities.HelperClasses;
+using CoreUtilities.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,22 +12,20 @@ using System.Linq;
 
 namespace CoreUtilities.Services
 {
-	public class DatabaseWrapperService<TReturn, TTransaction> : IDatabaseWrapperService<TReturn> where TTransaction : DbTransaction
+	public class DatabaseWrapperService<TData, TTransaction> : IDatabaseWrapperService<TData> where TTransaction : DbTransaction
 	{
 		private readonly IDatabaseService<TTransaction> database;
 
 		private const string tableName = "MainTable";
-		public const string IsFilteredOutColumnName = IDatabaseWrapperService<TReturn>.IsFilteredOutColumnName;
 		private const string dateTimeColumnName = "DateTime";
 		private const string primaryKeyColumnName = "Id";
 
 		private int rowCount;
 
-		private Func<TReturn, List<KeyValuePair<string, string>>> valueConverter;
-		private Func<TReturn, DateTime> dateGetter;
-		private Func<TReturn, bool> isFilteredOutGetter;
-		private Func<TReturn, string> primaryKeyGetter;
-		private Func<IDataRecord, TReturn> dbItemConverter;
+		private Func<TData, List<KeyValuePair<string, string>>> valueConverter;
+		private Func<TData, DateTime> dateGetter;
+		private Func<TData, string> primaryKeyGetter;
+		private Func<IDataRecord, TData> dbItemConverter;
 
 		private Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
 
@@ -35,7 +34,6 @@ namespace CoreUtilities.Services
 
 		private const string updateRowCommandName = "updateRow";
 		private const string insertRowCommandName = "insertRow";
-		private const string updateRowFilterStatusCommandName = "updateRowFilterStatus";
 
 		private TTransaction writeTransaction;
 
@@ -43,7 +41,7 @@ namespace CoreUtilities.Services
 
 		public string DatabaseName { get; set; }
 
-		public DatabaseWrapperService(string path, bool recreate, IDatabaseService<TTransaction> databaseService, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<TReturn, List<KeyValuePair<string, string>>> valueConverter, Func<TReturn, DateTime> dateGetter, Func<TReturn, bool> isFilteredOutGetter, Func<TReturn, string> primaryKeyGetter, Func<IDataRecord, TReturn> dbItemConverter)
+		public DatabaseWrapperService(string path, bool recreate, IDatabaseService<TTransaction> databaseService, KeyValuePair<string, ColumnType>[] columns, string[] columnsToIndex, Func<TData, List<KeyValuePair<string, string>>> valueConverter, Func<TData, DateTime> dateGetter, Func<TData, string> primaryKeyGetter, Func<IDataRecord, TData> dbItemConverter)
 		{
 			database = databaseService;
 
@@ -51,7 +49,6 @@ namespace CoreUtilities.Services
 
 			this.valueConverter = valueConverter;
 			this.dateGetter = dateGetter;
-			this.isFilteredOutGetter = isFilteredOutGetter;
 			this.primaryKeyGetter = primaryKeyGetter;
 			this.dbItemConverter = dbItemConverter;
 
@@ -59,14 +56,12 @@ namespace CoreUtilities.Services
 				.Union(new List<KeyValuePair<string, string>>()
 					{
 						new KeyValuePair<string, string>(dateTimeColumnName, "TEXT"),
-						new KeyValuePair<string, string>(IsFilteredOutColumnName, "INTEGER"),
 						new KeyValuePair<string, string>(primaryKeyColumnName, "INTEGER"),
 					})
 				.ToArray();
 
 			database.AddTableAndColumns(tableName, columnsToAdd, columnsToIndex);
 			database.SetUpUpdateCommand(tableName, updateRowCommandName, columnsToAdd.Select(x => x.Key).ToList(), primaryKeyColumnName);
-			database.SetUpUpdateCommand(tableName, updateRowFilterStatusCommandName, new List<string>() { IsFilteredOutColumnName }, primaryKeyColumnName);
 			database.SetUpInsertCommand(tableName, insertRowCommandName, columnsToAdd.Select(x => x.Key).ToList());
 
 			if (recreate)
@@ -102,38 +97,43 @@ namespace CoreUtilities.Services
 			rowReaders.Remove(reference, out _);
 		}
 
-		public (int reference, IEnumerable<object> rows) FilteredRows()
-		{
-			SQLiteDataReader reader = (database.GetRows(tableName, $"WHERE NOT({IsFilteredOutColumnName})", GenerateOrderingString(dateTimeColumnName, Ordering.Ascending)) as SQLiteDataReader)!;
-			var success = rowReaders.TryAdd(count, reader);
-			if (!success)
-			{
-				Debug.WriteLine("Failed to add row reader");
-			}
-			var result = (count, reader.Cast<object>());
-			count++;
-			return result;
-		}
-
 		public void ClearAllRows()
 		{
 			database.Clear(tableName);
 		}
 
-		public int RowCount()
+		public int RowCount(Func<TData, bool> selector = null)
 		{
-			return (int)database.RowCount(tableName, "");
+			if (selector == null)
+			{
+				return (int)database.RowCount(tableName, "");
+			}
+			else
+			{
+				int count = 0;
+
+				SQLiteDataReader reader =
+				(database.GetRows(
+					tableName,
+					"",
+					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
+				as SQLiteDataReader)!;
+
+				while (reader.Read())
+				{
+					if (selector(dbItemConverter(reader)))
+					{
+						count++;
+					}
+				}
+				return count;
+			}
 		}
 
-		public int FilteredRowCount()
-		{
-			return (int)database.RowCount(tableName, $"WHERE NOT({IsFilteredOutColumnName})");
-		}
-
-		public void AddRange(IEnumerable<TReturn> list)
+		public void AddRange(IEnumerable<TData> list)
 		{
 			TTransaction transaction = database.GetAndOpenWriteTransaction();
-			foreach (TReturn row in list)
+			foreach (TData row in list)
 			{
 				if (breakOperation)
 					break;
@@ -141,7 +141,6 @@ namespace CoreUtilities.Services
 				var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 					{
 						new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).ToString()),
-						new KeyValuePair<string, string>(IsFilteredOutColumnName, Convert.ToInt16(isFilteredOutGetter(row)).ToString()),
 						new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
 					}).ToList();
 
@@ -154,12 +153,11 @@ namespace CoreUtilities.Services
 			transaction.Dispose();
 		}
 
-		public void Add(TReturn row)
+		public void Add(TData row)
 		{
 			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 				{
 					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).ToString()),
-					new KeyValuePair<string, string>(IsFilteredOutColumnName, Convert.ToInt16(isFilteredOutGetter(row)).ToString()),
 					new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
 				}).ToList();
 
@@ -169,28 +167,31 @@ namespace CoreUtilities.Services
 			rowCount++;
 		}
 
-		public IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered, Func<TReturn> defaultCreator, Func<TReturn, bool> selectionCriteria = null)
+		public IEnumerable<TData> GetConvertedRowsBetweenIndices(
+			int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selector = null)
 		{
-			if (selectionCriteria == null)
-			{
-				selectionCriteria = (item) => true;
-			}
-
 			SQLiteDataReader reader = 
 				(database.GetRows(
 					tableName,
-					isFiltered ? $"WHERE NOT({IsFilteredOutColumnName})" : "",
+					"",
 					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
 				as SQLiteDataReader)!;
 
-			List<TReturn> list = new List<TReturn>();
+			List<TData> list = new List<TData>();
+			var doSelection = selector != null;
 
 			int i = 0;
 			while (reader.Read())
 			{
+				var item = dbItemConverter(reader);
+				var allowed = !doSelection || selector(item);
+
 				if (i < startIndex)
 				{
-					i++;
+					if (allowed)
+					{
+						i++;
+					}
 					continue;
 				}
 
@@ -199,8 +200,6 @@ namespace CoreUtilities.Services
 					break;
 				}
 
-				var item = dbItemConverter(reader);
-				var allowed = selectionCriteria(item);
 				if (allowed)
 				{
 					list.Add(dbItemConverter(reader));
@@ -208,36 +207,42 @@ namespace CoreUtilities.Services
 				}
 			}
 
-			if (list.Count() < (endIndex - startIndex))
+			reader.Close();
+			reader.Dispose();
+
+			var count = list.Count();
+			if (count < (endIndex - startIndex))
 			{
-				for (i = 0; i < endIndex - startIndex; i++)
+				for (i = 0; i < endIndex - startIndex - count; i++)
 				{
 					list.Add(defaultCreator());
 				}
 			}
 
-			reader.Close();
-			reader.Dispose();
-
 			return list;
 		}
 
-		public IEnumerable<TReturn> GetConvertedRows(bool isFiltered)
+		public IEnumerable<TData> GetConvertedRows(Func<TData, bool> selector = null)
 		{
 			SQLiteDataReader reader =
 				(database.GetReaderWithRowsBetweenIndices(
 					tableName,
 					0,
 					rowCount,
-					isFiltered ? $"WHERE NOT({IsFilteredOutColumnName})" : "",
+					"",
 					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
 				as SQLiteDataReader)!;
 
-			List<TReturn> list = new List<TReturn>();
+			List<TData> list = new List<TData>();
+			var doSelection = selector != null;
 
 			while (reader.Read())
 			{
-				list.Add(dbItemConverter(reader));
+				var item = dbItemConverter(reader);
+				if (!doSelection || selector(item))
+				{
+					list.Add(item);
+				}
 			}
 
 			reader.Close();
@@ -251,7 +256,7 @@ namespace CoreUtilities.Services
 			writeTransaction = database.GetAndOpenWriteTransaction();
 		}
 
-		public void UpdateRow(TReturn row)
+		public void UpdateRow(TData row)
 		{
 			if (breakOperation)
 				return;
@@ -259,27 +264,11 @@ namespace CoreUtilities.Services
 			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 				{
 					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).ToString()),
-					new KeyValuePair<string, string>(IsFilteredOutColumnName, Convert.ToInt16(isFilteredOutGetter(row)).ToString()),
 				}).ToList();
 
 			database.ExecuteUpdateCommand(
 				updateRowCommandName, 
 				itemValues,
-				new KeyValuePair<string, string>(primaryKeyColumnName, primaryKeyMappings[primaryKeyGetter(row)].ToString()),
-				writeTransaction);
-		}
-
-		public void UpdateRowFilterStatus(TReturn row)
-		{
-			if (breakOperation)
-				return;
-
-			database.ExecuteUpdateCommand(
-				updateRowFilterStatusCommandName, 
-				new List<KeyValuePair<string, string>>()
-				{
-					new KeyValuePair<string, string>(IsFilteredOutColumnName, Convert.ToInt16(isFilteredOutGetter(row)).ToString())
-				},
 				new KeyValuePair<string, string>(primaryKeyColumnName, primaryKeyMappings[primaryKeyGetter(row)].ToString()),
 				writeTransaction);
 		}

@@ -1,39 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoreUtilities.Services
+namespace CoreUtilities.Interfaces
 {
-	public interface IDatabaseWrapperService<TReturn>
+	public interface IDatabaseWrapperService<TData>
 	{
-		const string IsFilteredOutColumnName = "IsFilteredOut";
-
 		string DatabaseName { get; set; }
 
 		(int reference, IEnumerable<object> rows) AllRows();
 
 		void CloseRowReader(int reference);
 
-		(int reference, IEnumerable<object> rows) FilteredRows();
-
 		void ClearAllRows();
 
-		int RowCount();
+		int RowCount(Func<TData, bool> selector = null);
 
-		int FilteredRowCount();
+		void AddRange(IEnumerable<TData> list);
 
-		void AddRange(IEnumerable<TReturn> list);
+		void Add(TData row);
 
-		void Add(TReturn row);
+		IEnumerable<TData> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selector = null);
 
-		IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered, Func<TReturn> defaultCreator, Func<TReturn, bool> selectionCriteria = null);
-
-		IEnumerable<TReturn> GetConvertedRows(bool isFiltered);
+		IEnumerable<TData> GetConvertedRows(Func<TData, bool> selector = null);
 
 		void OpenWriteTransaction();
 
-		void UpdateRow(TReturn row);
-
-		void UpdateRowFilterStatus(TReturn row);
+		void UpdateRow(TData row);
 
 		void CloseWriteTransaction();
 

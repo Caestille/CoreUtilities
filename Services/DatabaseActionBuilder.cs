@@ -1,56 +1,56 @@
-﻿using CoreUtilities.HelperClasses;
+﻿using CoreUtilities.HelperClasses.Database;
+using CoreUtilities.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
 namespace CoreUtilities.Services
 {
-	public class DatabaseActionBuilder<TReturn> : IDatabaseActionBuilder<TReturn>
+	public class DatabaseActionBuilder<TData> : IDatabaseActionBuilder<TData>
 	{
-		private IDatabaseWrapperService<TReturn> database;
+		private IDatabaseWrapperService<TData> database;
 
-		public DatabaseActionBuilder(IDatabaseWrapperService<TReturn> databaseWrapper)
+		public DatabaseActionBuilder(IDatabaseWrapperService<TData> databaseWrapper)
 		{
 			database = databaseWrapper;
 		}
 
-		public WriteTransactionWrapper<TReturn> GetWriteTransaction()
+		public WriteTransactionWrapper<TData> GetWriteTransaction()
 		{
 			database.OpenWriteTransaction();
-			return new WriteTransactionWrapper<TReturn>(database);
+			return new WriteTransactionWrapper<TData>(database);
 		}
 
-		public UpdateTransactionWrapper<TReturn> GetUpdateTransaction()
+		public UpdateTransactionWrapper<TData> GetUpdateTransaction()
 		{
 			database.OpenWriteTransaction();
-			return new UpdateTransactionWrapper<TReturn>(database);
+			return new UpdateTransactionWrapper<TData>(database);
 		}
 
-		public ReaderInstanceWrapper<TReturn> GetReader(ReaderType readerType)
+		public ReaderInstanceWrapper<TData> GetReader()
 		{
-			return new ReaderInstanceWrapper<TReturn>(database, readerType == ReaderType.Filtered);
+			return new ReaderInstanceWrapper<TData>(database);
 		}
 
-		public ReaderInstanceWrapper<TReturn, T> GetReader<T>(ReaderType readerType)
+		public ReaderInstanceWrapper<TData, TReturn> GetReader<TReturn>()
 		{
-			return new ReaderInstanceWrapper<TReturn, T>(database, readerType == ReaderType.Filtered);
+			return new ReaderInstanceWrapper<TData, TReturn>(database);
 		}
 
-		public IEnumerable<TReturn> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex, Func<TReturn> defaultCreator, Func<TReturn, bool> selectionCriteria = null)
+		public IEnumerable<TData> GetConvertedInstancesBetweenIndices(int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selectionCriteria = null)
 		{
-			var result = database.GetConvertedRowsBetweenIndices(startIndex, endIndex, readerType == ReaderType.Filtered, defaultCreator, selectionCriteria);
+			var result = database.GetConvertedRowsBetweenIndices(startIndex, endIndex, defaultCreator, selectionCriteria);
 			return result;
 		}
 
-		public IEnumerable<TReturn> GetConvertedInstances(ReaderType readerType)
+		public IEnumerable<TData> GetConvertedInstances(Func<TData, bool> selectionCriteria = null)
 		{
-			return database.GetConvertedRows(readerType == ReaderType.Filtered);
+			return database.GetConvertedRows(selectionCriteria);
 		}
 
-		public int RowCount(ReaderType readerType)
+		public int RowCount(Func<TData, bool> selector = null)
 		{
-			var result = readerType == ReaderType.Filtered ? database.RowCount() : database.FilteredRowCount();
-			return result;
+			return database.RowCount(selector);
 		}
 
 		public void ClearDatabase()

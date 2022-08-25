@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace CoreUtilities.Services
+namespace CoreUtilities.Interfaces
 {
 	public interface IDatabaseService<T> where T : DbTransaction
 	{
