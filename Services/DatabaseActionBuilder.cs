@@ -36,9 +36,9 @@ namespace CoreUtilities.Services
 			return new ReaderInstanceWrapper<TReturn, T>(database, readerType == ReaderType.Filtered);
 		}
 
-		public IEnumerable<TReturn> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex)
+		public IEnumerable<TReturn> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex, Func<TReturn> defaultCreator, Func<TReturn, bool> selectionCriteria = null)
 		{
-			var result = database.GetConvertedRowsBetweenIndices(startIndex, endIndex, readerType == ReaderType.Filtered);
+			var result = database.GetConvertedRowsBetweenIndices(startIndex, endIndex, readerType == ReaderType.Filtered, defaultCreator, selectionCriteria);
 			return result;
 		}
 

@@ -169,22 +169,51 @@ namespace CoreUtilities.Services
 			rowCount++;
 		}
 
-		public IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered)
+		public IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered, Func<TReturn> defaultCreator, Func<TReturn, bool> selectionCriteria = null)
 		{
+			if (selectionCriteria == null)
+			{
+				selectionCriteria = (item) => true;
+			}
+
 			SQLiteDataReader reader = 
-				(database.GetReaderWithRowsBetweenIndices(
+				(database.GetRows(
 					tableName,
-					startIndex,
-					endIndex,
 					isFiltered ? $"WHERE NOT({IsFilteredOutColumnName})" : "",
 					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
 				as SQLiteDataReader)!;
 
 			List<TReturn> list = new List<TReturn>();
 
+			int i = 0;
 			while (reader.Read())
 			{
-				list.Add(dbItemConverter(reader));
+				if (i < startIndex)
+				{
+					i++;
+					continue;
+				}
+
+				if (i > endIndex)
+				{
+					break;
+				}
+
+				var item = dbItemConverter(reader);
+				var allowed = selectionCriteria(item);
+				if (allowed)
+				{
+					list.Add(dbItemConverter(reader));
+					i++;
+				}
+			}
+
+			if (list.Count() < (endIndex - startIndex))
+			{
+				for (i = 0; i < endIndex - startIndex; i++)
+				{
+					list.Add(defaultCreator());
+				}
 			}
 
 			reader.Close();

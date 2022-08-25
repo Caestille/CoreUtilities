@@ -126,7 +126,7 @@ namespace CoreUtilities.Services
 
 		ReaderInstanceWrapper<T, TReturn> GetReader<TReturn>(ReaderType readerType);
 
-		IEnumerable<T> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex);
+		IEnumerable<T> GetConvertedInstancesBetweenRows(ReaderType readerType, int startIndex, int endIndex, Func<T> defaultCreator, Func<T, bool> selectionCriteria = null);
 
 		IEnumerable<T> GetConvertedInstances(ReaderType readerType);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CoreUtilities.Services
 {
@@ -24,7 +25,7 @@ namespace CoreUtilities.Services
 
 		void Add(TReturn row);
 
-		IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered);
+		IEnumerable<TReturn> GetConvertedRowsBetweenIndices(int startIndex, int endIndex, bool isFiltered, Func<TReturn> defaultCreator, Func<TReturn, bool> selectionCriteria = null);
 
 		IEnumerable<TReturn> GetConvertedRows(bool isFiltered);
 
