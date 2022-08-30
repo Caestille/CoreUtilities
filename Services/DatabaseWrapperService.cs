@@ -78,7 +78,7 @@ namespace CoreUtilities.Services
 
 		public (int reference, IEnumerable<object> rows) AllRows()
 		{
-			SQLiteDataReader reader = (database.GetRows(tableName, "", GenerateOrderingString(dateTimeColumnName, Ordering.Ascending)) as SQLiteDataReader)!;
+			SQLiteDataReader reader = (database.GetRows(tableName, "", GenerateOrderingString(dateTimeColumnName, Ordering.Descending)) as SQLiteDataReader)!;
 			var success = rowReaders.TryAdd(count, reader);
 			if (!success)
 			{
@@ -116,7 +116,7 @@ namespace CoreUtilities.Services
 				(database.GetRows(
 					tableName,
 					"",
-					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
+					GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
 				as SQLiteDataReader)!;
 
 				while (reader.Read())
@@ -140,7 +140,7 @@ namespace CoreUtilities.Services
 
 				var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 					{
-						new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).ToString()),
+						new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).Ticks.ToString()),
 						new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
 					}).ToList();
 
@@ -157,7 +157,7 @@ namespace CoreUtilities.Services
 		{
 			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 				{
-					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).ToString()),
+					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).Ticks.ToString()),
 					new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
 				}).ToList();
 
@@ -174,7 +174,7 @@ namespace CoreUtilities.Services
 				(database.GetRows(
 					tableName,
 					"",
-					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
+					GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
 				as SQLiteDataReader)!;
 
 			List<TData> list = new List<TData>();
@@ -230,7 +230,7 @@ namespace CoreUtilities.Services
 					0,
 					rowCount,
 					"",
-					GenerateOrderingString(dateTimeColumnName, Ordering.Ascending))
+					GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
 				as SQLiteDataReader)!;
 
 			List<TData> list = new List<TData>();
@@ -263,7 +263,7 @@ namespace CoreUtilities.Services
 
 			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
 				{
-					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).ToString()),
+					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).Ticks.ToString()),
 				}).ToList();
 
 			database.ExecuteUpdateCommand(
