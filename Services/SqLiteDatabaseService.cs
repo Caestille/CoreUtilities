@@ -6,6 +6,9 @@ using System.Data.SQLite;
 
 namespace CoreUtilities.Services
 {
+	/// <summary>
+	/// Implementation of <see cref="IDatabaseService{T}"/> using SQlite.
+	/// </summary>
 	public class SqLiteDatabaseService : IDatabaseService<SQLiteTransaction>
 	{
 		private string connectionString;
@@ -19,6 +22,13 @@ namespace CoreUtilities.Services
 		private Dictionary<string, List<SQLiteParameter>> commandParameters = new();
 		private Dictionary<string, SQLiteParameter> commandCondtionalParameters = new();
 
+		/// <summary>
+		/// Constructor for the <see cref="SqLiteDatabaseService"/>. Creates the database if needed and opens read and
+		/// write connections.
+		/// </summary>
+		/// <param name="path">The path on which to create the database.</param>
+		/// <param name="recreate">Whether initialisation should recreate the database (will overwrite if exists
+		/// and true).</param>
 		public SqLiteDatabaseService(string path, bool recreate)
 		{
 			connectionString = $"Data Source={path};Version=3;";
@@ -32,6 +42,7 @@ namespace CoreUtilities.Services
 			writeConnection.Open();
 		}
 
+		/// <inheritdoc/>
 		public void AddTableAndColumns(string tableName, KeyValuePair<string, string>[] columnNamesAndDataTypes,
 			string[] columnsToIndex)
 		{
@@ -47,12 +58,15 @@ namespace CoreUtilities.Services
 			}
 		}
 
-		public void SetUpUpdateCommand(string tableName, string commandName, List<string> parametersToAdd, string conditionalMatchParameter)
+		/// <inheritdoc/>
+		public void SetUpUpdateCommand(
+			string tableName, string commandName, List<string> parametersToAdd, string conditionalMatchParameter)
 		{
 			SQLiteCommand command = new SQLiteCommand(writeConnection);
 			string updateText = "";
 			foreach (string name in parametersToAdd)
-				updateText += $"{name} = ${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
+				updateText += 
+					$"{name} = ${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
 			string conditionalText = $"{conditionalMatchParameter} = ${conditionalMatchParameter}";
 			string commandText = $"UPDATE {tableName} SET {updateText} WHERE {conditionalText};";
 			command.CommandText = commandText;
@@ -74,6 +88,7 @@ namespace CoreUtilities.Services
 			commands[commandName] = command;
 		}
 
+		/// <inheritdoc/>
 		public void SetUpInsertCommand(string tableName, string commandName, List<string> parametersToAdd)
 		{
 			SQLiteCommand command = new SQLiteCommand(writeConnection);
@@ -98,11 +113,13 @@ namespace CoreUtilities.Services
 			commands[commandName] = command;
 		}
 
+		/// <inheritdoc/>
 		public SQLiteTransaction GetAndOpenWriteTransaction()
 		{
 			return writeConnection.BeginTransaction();
 		}
 
+		/// <inheritdoc/>
 		public long RowCount(string tableName, string condition)
 		{
 			SQLiteCommand cmd = new SQLiteCommand(readConnection);
@@ -111,7 +128,12 @@ namespace CoreUtilities.Services
 			return Convert.ToInt32(cmd.ExecuteScalar());
 		}
 
-		public void ExecuteUpdateCommand(string commandName, List<KeyValuePair<string, string>> paramsToUpdate, KeyValuePair<string, string> conditionalParamToUpdate, SQLiteTransaction transaction = null)
+		/// <inheritdoc/>
+		public void ExecuteUpdateCommand(
+			string commandName,
+			List<KeyValuePair<string, string>> paramsToUpdate,
+			KeyValuePair<string, string> conditionalParamToUpdate,
+			SQLiteTransaction transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToUpdate)
 				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
@@ -124,7 +146,10 @@ namespace CoreUtilities.Services
 			command.ExecuteNonQuery();
 		}
 
-		public void ExecuteInsertCommand(string commandName, List<KeyValuePair<string, string>> paramsToInsert, SQLiteTransaction transaction = null)
+		/// <inheritdoc/>
+		public void ExecuteInsertCommand(string commandName,
+			List<KeyValuePair<string, string>> paramsToInsert,
+			SQLiteTransaction transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToInsert)
 				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
@@ -135,6 +160,7 @@ namespace CoreUtilities.Services
 			command.ExecuteNonQuery();
 		}
 
+		/// <inheritdoc/>
 		public void Clear(string tableName)
 		{
 			SQLiteCommand cmd = new SQLiteCommand(writeConnection);
@@ -143,38 +169,14 @@ namespace CoreUtilities.Services
 			cmd.ExecuteNonQuery();
 		}
 
-		public void AddRowToTable(string tableName, List<KeyValuePair<string, string>> namedValues, SQLiteTransaction transaction = null)
-		{
-			SQLiteCommand cmd = new SQLiteCommand(writeConnection);
-			string columnNames = "";
-			foreach (KeyValuePair<string, string> kvp in namedValues)
-				columnNames += $"{kvp.Key}" + (namedValues.IndexOf(kvp) != namedValues.Count - 1 ? ", " : "");
-
-			string values = "";
-			foreach (KeyValuePair<string, string> kvp in namedValues)
-				values += $"'{kvp.Value}'" + (namedValues.IndexOf(kvp) != namedValues.Count - 1 ? ", " : "");
-
-			cmd.CommandText = $"INSERT INTO {tableName} ({columnNames}) VALUES ({values});";
-			if (transaction != null)
-				cmd.Transaction = transaction;
-
-			cmd.ExecuteNonQuery();
-		}
-
+		/// <inheritdoc/>
 		public void CommitAndCloseTransaction(SQLiteTransaction transaction)
 		{
 			transaction.Commit();
 			transaction.Dispose();
 		}
 
-		public IEnumerable GetReaderWithRowsBetweenIndices(string tableName, int startIndex, int endIndex, string condition, string ordering)
-		{
-			SQLiteCommand cmd = new SQLiteCommand(readConnection);
-			cmd.CommandText = $"SELECT * FROM {tableName} {condition} {ordering} LIMIT {endIndex - startIndex} OFFSET {startIndex};";
-			SQLiteDataReader reader = cmd.ExecuteReader();
-			return reader;
-		}
-
+		/// <inheritdoc/>
 		public IEnumerable GetRows(string tableName, string rowCondition, string ordering)
 		{
 			SQLiteCommand cmd = new SQLiteCommand(readConnection);
@@ -185,6 +187,32 @@ namespace CoreUtilities.Services
 			return reader;
 		}
 
+		/// <inheritdoc/>
+		public void IndexColumn(string tableName, string indexName, string columnName)
+		{
+			SQLiteCommand cmd2 = new SQLiteCommand(writeConnection);
+			cmd2.CommandText = $"CREATE UNIQUE INDEX IF NOT EXISTS {indexName} ON {tableName} ({columnName});";
+			cmd2.ExecuteNonQuery();
+		}
+
+		/// <inheritdoc/>
+		public void Disconnect()
+		{
+			SQLiteConnection.ClearAllPools();
+			readConnection.Close();
+			writeConnection.Close();
+			foreach (var command in commands.Values)
+			{
+				command.Dispose();
+			}
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+		}
+
+		/// <summary>
+		/// Creates a table if it does not already exist
+		/// </summary>
+		/// <param name="tableName">The name of the table to create.</param>
 		private void CreateTableIfNeeded(string tableName)
 		{
 			if (!currentTablesAndColumns.ContainsKey(tableName))
@@ -196,6 +224,12 @@ namespace CoreUtilities.Services
 			}
 		}
 
+		/// <summary>
+		/// Adds a column of a given name to a table of a given name if it does not already exist.
+		/// </summary>
+		/// <param name="tableName">The name of the table to add a column to.</param>
+		/// <param name="columnName">The name of the column to add.</param>
+		/// <param name="dataType">The data type of the column to be added.</param>
 		private void AddColumnToTableIfNeeded(string tableName, string columnName, string dataType)
 		{
 			if (!currentTablesAndColumns[tableName].Contains(columnName))
@@ -214,26 +248,6 @@ namespace CoreUtilities.Services
 			}
 
 			currentTablesAndColumns[tableName].Add(columnName);
-		}
-
-		public void IndexColumn(string tableName, string indexName, string columnName)
-		{
-			SQLiteCommand cmd2 = new SQLiteCommand(writeConnection);
-			cmd2.CommandText = $"CREATE UNIQUE INDEX IF NOT EXISTS {indexName} ON {tableName} ({columnName});";
-			cmd2.ExecuteNonQuery();
-		}
-
-		public void Disconnect()
-		{
-			SQLiteConnection.ClearAllPools();
-			readConnection.Close();
-			writeConnection.Close();
-			foreach (var command in commands.Values)
-			{
-				command.Dispose();
-			}
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
 		}
 	}
 }

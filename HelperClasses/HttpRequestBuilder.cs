@@ -7,6 +7,10 @@ using System.Text;
 
 namespace CoreUtilities.HelperClasses
 {
+	/// <summary>
+	/// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a 
+	/// <see cref="HttpRequestMessage"/>.
+	/// </summary>
 	public class HttpRequestBuilder : IHttpRequestBuilder
 	{
 		private HttpRequestMessage currentRequest;
@@ -17,6 +21,7 @@ namespace CoreUtilities.HelperClasses
 		private Dictionary<string, string> content = new Dictionary<string, string>();
 		private string headerContentType;
 
+		/// <inheritdoc/>
 		public IHttpRequestBuilder CreateRequest(IHttpRequestBuilder.HttpCommandType commandType, string requestTo)
 		{
 			try { currentRequest?.Dispose(); } catch { /* Already disposed */ }
@@ -28,24 +33,28 @@ namespace CoreUtilities.HelperClasses
 			return this;
 		}
 
+		/// <inheritdoc/>
 		public IHttpRequestBuilder WithContent(string name, string value)
 		{
 			content[name] = value;
 			return this;
 		}
 
+		/// <inheritdoc/>
 		public IHttpRequestBuilder WithHeaderContentType(string type)
 		{
 			headerContentType = type;
 			return this;
 		}
 
+		/// <inheritdoc/>
 		public IHttpRequestBuilder WithUnvalidatedHeader(string header, string value)
 		{
 			unvalidatedHeaders[header] = value;
 			return this;
 		}
 
+		/// <inheritdoc/>
 		public HttpRequestMessage Build()
 		{
 			currentRequest = new HttpRequestMessage(new HttpMethod(requestType), requestTo);

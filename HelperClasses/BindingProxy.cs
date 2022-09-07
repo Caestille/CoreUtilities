@@ -2,6 +2,9 @@
 
 namespace CoreUtilities.HelperClasses
 {
+	/// <summary>
+	/// Proxy for a binding, allowing nested data contexts to access a parent binding.
+	/// </summary>
 	public class BindingProxy : Freezable
 	{
 		protected override Freezable CreateInstanceCore()
@@ -9,6 +12,9 @@ namespace CoreUtilities.HelperClasses
 			return new BindingProxy();
 		}
 
+		/// <summary>
+		/// The data.
+		/// </summary>
 		public object Data
 		{
 			get => GetValue(DataProperty);

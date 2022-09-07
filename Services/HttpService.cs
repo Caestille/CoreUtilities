@@ -9,22 +9,34 @@ using System.Threading.Tasks;
 
 namespace CoreUtilities.Services
 {
+	/// <summary>
+	/// Implementation of <see cref="IHttpService"/>. Implements handy ways to create and send 
+	/// <see cref="HttpRequestMessage"/>s.
+	/// </summary>
 	public class HttpService : IHttpService
 	{
 		private HttpClient httpClient = new HttpClient();
 		private Func<IHttpRequestBuilder> httpRequestBuilderCreator;
 
+		/// <summary>
+		/// Constructor for the <see cref="HttpService"/>.
+		/// </summary>
+		/// <param name="builderCreateFunc">A <see cref="Func{T}"/> which returns an instance of a 
+		/// <see cref="IHttpRequestBuilder"/>.</param>
 		public HttpService(Func<IHttpRequestBuilder> builderCreateFunc)
 		{
 			this.httpRequestBuilderCreator = builderCreateFunc;
 		}
 
+		/// <inheritdoc/>
 		public IHttpRequestBuilder GetHttpRequestBuilder()
 		{
 			return httpRequestBuilderCreator();
 		}
 
-		public async Task<(bool, string)> WaitForAndQueryResponseOverUri(string callbackUri, string query, CancellationToken? token = null)
+		/// <inheritdoc/>
+		public async Task<(bool, string)> WaitForAndQueryResponseOverUri(
+			string callbackUri, string query, CancellationToken? token = null)
 		{
 			var listener = new HttpListener();
 			listener.Prefixes.Add(callbackUri);
@@ -56,7 +68,9 @@ namespace CoreUtilities.Services
 			return (result != null, result ?? string.Empty);
 		}
 
-		public async Task<(HttpStatusCode, string)> SendAsyncDisposeAndGetResponse(HttpRequestMessage request, CancellationToken? token)
+		/// <inheritdoc/>
+		public async Task<(HttpStatusCode, string)> SendAsyncDisposeAndGetResponse(
+			HttpRequestMessage request, CancellationToken? token)
 		{
 			HttpResponseMessage response = null;
 			try

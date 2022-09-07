@@ -6,10 +6,19 @@ using System.IO;
 
 namespace CoreUtilities.Services
 {
+	/// <summary>
+	/// Implementation of <see cref="IRegistryService"/> for interacting with keys/values from the windows registry.
+	/// </summary>
 	public class RegistryService : IRegistryService
 	{
 		private string keyLocation;
 
+		/// <summary>
+		/// Constructor for <see cref="RegistryService"/>.
+		/// </summary>
+		/// <param name="keyDirectory">Base directory which other calls are relative to.</param>
+		/// <param name="addGuid">Flag, if <see cref="true"/>, a guid is appended to the keyDirectory, allowing
+		/// for multiple of the same application. This guid is persisted in the application base directory.</param>
 		public RegistryService(string keyDirectory, bool addGuid = false)
 		{
 			keyLocation = keyDirectory;
@@ -24,6 +33,7 @@ namespace CoreUtilities.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public void SetSetting(string setting, string value, string pathAfterKeyLocation = "")
 		{
 			// Despite name, this will open the key if it already exists
@@ -32,6 +42,7 @@ namespace CoreUtilities.Services
 			key.Close();
 		}
 
+		/// <inheritdoc/>
 		public bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = "")
 		{
 			var success = false;
@@ -59,6 +70,7 @@ namespace CoreUtilities.Services
 			return success;
 		}
 
+		/// <inheritdoc/>
 		public Dictionary<string, object> GetAllSettingsInPath(string pathAfterKeyLocation)
 		{
 			var valuesBynames = new Dictionary<string, object>();
@@ -78,6 +90,7 @@ namespace CoreUtilities.Services
 			return valuesBynames;
 		}
 
+		/// <inheritdoc/>
 		public void DeleteSetting(string setting, string pathAfterKeyLocation = "")
 		{
 			// Despite name, this will open the key if it already exists
@@ -94,6 +107,7 @@ namespace CoreUtilities.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public void DeleteSubTree(string pathAfterKeyLocation)
 		{
 			try

@@ -3,8 +3,19 @@ using System.Threading.Tasks;
 
 namespace CoreUtilities.HelperClasses
 {
+    /// <summary>
+    /// Extension methods for the <see cref="Task"/> and <see cref="Task{TResult}"/> classes.
+    /// </summary>
     public static class TaskExtensions
     {
+        /// <summary>
+        /// Converts a <see cref="Task{TResult}"/> to a cancellable task, which can be provided with a 
+        /// <see cref="CancellationToken"/> to cancel a long running async task manually.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="task">The task to run.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the task.</param>
+        /// <returns>A <see cref="Task{TResult}"/>.</returns>
         public static Task<T> AsCancellable<T>(this Task<T> task, CancellationToken token)
         {
             if (!token.CanBeCanceled)
@@ -44,6 +55,14 @@ namespace CoreUtilities.HelperClasses
             return tcs.Task;
         }
 
+        /// <summary>
+        /// Converts a <see cref="Task"/> to a cancellable task, which can be provided with a 
+        /// <see cref="CancellationToken"/> to cancel a long running async task manually.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="task">The task to run.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the task.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
         public static Task AsCancellable(this Task task, CancellationToken token)
         {
             if (!token.CanBeCanceled)
