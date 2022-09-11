@@ -30,10 +30,7 @@ namespace CoreUtilities.Services
 
 		private int rowCount;
 
-		private Func<TData, List<KeyValuePair<string, string>>> valueConverter;
-		private Func<TData, DateTime> dateGetter;
-		private Func<TData, string> primaryKeyGetter;
-		private Func<IDataRecord, TData> dbItemConverter;
+		private IDatabaseWrapperContext<TData> context;
 
 		private Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
 
@@ -56,39 +53,20 @@ namespace CoreUtilities.Services
 		/// <param name="path">The path of the database to be initialised/connected to.</param>
 		/// <param name="recreate">Whether the database should be recreated/overwritten.</param>
 		/// <param name="databaseService">The <see cref="IDatabaseService{T}"/> this wrapper, wraps.</param>
-		/// <param name="columns">An array of column names and corresponding value types to be added to the 
-		/// database.</param>
-		/// <param name="columnsToIndex">An array of column names to index.</param>
-		/// <param name="valueConverter">A <see cref="Func{T, TResult}"/> which converts the data type to be stored to
-		/// a database compatible <see cref="List{T}"/> of <see cref="KeyValuePair{TKey, TValue}"/> of 
-		/// <see cref="string"/>s which is a list of corresponding parameter names and values.</param>
-		/// <param name="dateGetter">A <see cref="Func{T, TResult}"/> which gets a <see cref="DateTime"/> value
-		/// from the <see cref="TData"/>< data type./param>
-		/// <param name="primaryKeyGetter">A <see cref="Func{T, TResult}"/> which gets a unique string from the
-		/// <see cref="TData"/> data type object.</param>
-		/// <param name="dbItemConverter">A <see cref="Func{T, TResult}"/> which converts a <see cref="IDataRecord"/>
-		/// to an object of type <see cref="TData"/></param>
+		/// <param name="context">Implementation of interface <see cref="IDatabaseWrapperContext{TData}"/> 
+		/// which provides methods to get values and convert to and from <see cref="TData"/> and 
+		/// <see cref="TTransaction"/> types.
 		public DatabaseWrapperService(
 			string path,
 			bool recreate,
 			IDatabaseService<TTransaction> databaseService,
-			KeyValuePair<string, ColumnType>[] columns,
-			string[] columnsToIndex,
-			Func<TData, List<KeyValuePair<string, string>>> valueConverter,
-			Func<TData, DateTime> dateGetter,
-			Func<TData, string> primaryKeyGetter,
-			Func<IDataRecord, TData> dbItemConverter)
+			IDatabaseWrapperContext<TData> context)
 		{
 			database = databaseService;
-
 			DatabaseName = new FileInfo(path).Name;
+			this.context = context;
 
-			this.valueConverter = valueConverter;
-			this.dateGetter = dateGetter;
-			this.primaryKeyGetter = primaryKeyGetter;
-			this.dbItemConverter = dbItemConverter;
-
-			var columnsToAdd = columns.Select(x => 
+			var columnsToAdd = context.GetColumns().Select(x => 
 					new KeyValuePair<string, string>(x.Key, x.Value.GetEnumDescription()))
 				.Union(new List<KeyValuePair<string, string>>()
 					{
@@ -97,7 +75,7 @@ namespace CoreUtilities.Services
 					})
 				.ToArray();
 
-			database.AddTableAndColumns(tableName, columnsToAdd, columnsToIndex);
+			database.AddTableAndColumns(tableName, columnsToAdd, context.GetColumnsToIndex());
 			database.SetUpUpdateCommand(
 				tableName, updateRowCommandName, columnsToAdd.Select(x => x.Key).ToList(), primaryKeyColumnName);
 			database.SetUpInsertCommand(tableName, insertRowCommandName, columnsToAdd.Select(x => x.Key).ToList());
@@ -109,7 +87,7 @@ namespace CoreUtilities.Services
 			{
 				var reader = item as IDataRecord;
 				if (reader == null) continue;
-				primaryKeyMappings[primaryKeyGetter(dbItemConverter(reader))] = 
+				primaryKeyMappings[context.GetPrimaryKey(context.GetValueFromDbType(reader))] = 
 					Convert.ToInt32(reader[primaryKeyColumnName]);
 			}
 
@@ -166,7 +144,7 @@ namespace CoreUtilities.Services
 
 				while (reader.Read())
 				{
-					if (selector(dbItemConverter(reader)))
+					if (selector(context.GetValueFromDbType(reader)))
 					{
 						count++;
 					}
@@ -184,13 +162,13 @@ namespace CoreUtilities.Services
 				if (breakOperation)
 					break;
 
-				var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
+				var itemValues = context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
 					{
-						new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).Ticks.ToString()),
+						new KeyValuePair<string, string>(dateTimeColumnName, context.GetDate(row).Ticks.ToString()),
 						new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
 					}).ToList();
 
-				primaryKeyMappings[primaryKeyGetter(row)] = rowCount;
+				primaryKeyMappings[context.GetPrimaryKey(row)] = rowCount;
 				rowCount++;
 
 				database.ExecuteInsertCommand(insertRowCommandName, itemValues,	transaction);
@@ -202,15 +180,15 @@ namespace CoreUtilities.Services
 		/// <inheritdoc/>
 		public void Add(TData row)
 		{
-			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
+			var itemValues = context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
 				{
-					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).Ticks.ToString()),
+					new KeyValuePair<string, string>(dateTimeColumnName, context.GetDate(row).Ticks.ToString()),
 					new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
 				}).ToList();
 
 			database.ExecuteInsertCommand(insertRowCommandName, itemValues, writeTransaction);
 
-			primaryKeyMappings[primaryKeyGetter(row)] = rowCount;
+			primaryKeyMappings[context.GetPrimaryKey(row)] = rowCount;
 			rowCount++;
 		}
 
@@ -231,7 +209,7 @@ namespace CoreUtilities.Services
 			int i = 0;
 			while (reader.Read())
 			{
-				var item = dbItemConverter(reader);
+				var item = context.GetValueFromDbType(reader);
 				var allowed = !doSelection || selector(item);
 
 				if (i < startIndex)
@@ -250,7 +228,7 @@ namespace CoreUtilities.Services
 
 				if (allowed)
 				{
-					list.Add(dbItemConverter(reader));
+					list.Add(context.GetValueFromDbType(reader));
 					i++;
 				}
 			}
@@ -285,7 +263,7 @@ namespace CoreUtilities.Services
 
 			while (reader.Read())
 			{
-				var item = dbItemConverter(reader);
+				var item = context.GetValueFromDbType(reader);
 				if (!doSelection || selector(item))
 				{
 					list.Add(item);
@@ -310,16 +288,16 @@ namespace CoreUtilities.Services
 			if (breakOperation)
 				return;
 
-			var itemValues = valueConverter(row).Union(new List<KeyValuePair<string, string>>()
+			var itemValues = context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
 				{
-					new KeyValuePair<string, string>(dateTimeColumnName, dateGetter(row).Ticks.ToString()),
+					new KeyValuePair<string, string>(dateTimeColumnName, context.GetDate(row).Ticks.ToString()),
 				}).ToList();
 
 			database.ExecuteUpdateCommand(
 				updateRowCommandName, 
 				itemValues,
 				new KeyValuePair<string, string>(
-					primaryKeyColumnName, primaryKeyMappings[primaryKeyGetter(row)].ToString()),
+					primaryKeyColumnName, primaryKeyMappings[context.GetPrimaryKey(row)].ToString()),
 				writeTransaction);
 		}
 

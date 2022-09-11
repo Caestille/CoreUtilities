@@ -2,25 +2,24 @@
 using CoreUtilities.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace CoreUtilities.Services
 {
 	/// <summary>
-	/// Implementation of <see cref="IDatabaseActionBuilder{TData}"/>. Class provides clean build pattern type ways of
+	/// Implementation of <see cref="IDatabaseActionHelper{TData}"/>. Class provides clean build pattern type ways of
 	/// interacting with a <see cref="IDatabaseWrapperService{TData}"/>.
 	/// </summary>
 	/// <typeparam name="TData">The data type the <see cref="IDatabaseWrapperService{TData}"/> is storing.</typeparam>
-	public class DatabaseActionBuilder<TData> : IDatabaseActionBuilder<TData>
+	public class DatabaseActionHelper<TData> : IDatabaseActionHelper<TData>
 	{
 		private IDatabaseWrapperService<TData> database;
 
 		/// <summary>
-		/// Constructor for <see cref="DatabaseActionBuilder{TData}"/>.
+		/// Constructor for <see cref="DatabaseActionHelper{TData}"/>.
 		/// </summary>
 		/// <param name="databaseWrapper">The <see cref="IDatabaseWrapperService{TData}"/> this class should use for
 		/// building commands to interact with.</param>
-		public DatabaseActionBuilder(IDatabaseWrapperService<TData> databaseWrapper)
+		public DatabaseActionHelper(IDatabaseWrapperService<TData> databaseWrapper)
 		{
 			database = databaseWrapper;
 		}

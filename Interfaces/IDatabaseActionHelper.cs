@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CoreUtilities.Interfaces
 {
-	public interface IDatabaseActionBuilder<TData>
+	public interface IDatabaseActionHelper<TData>
 	{
 		/// <summary>
 		/// A friendly way to get a write transaction, add any number of writes, and then execute it.
