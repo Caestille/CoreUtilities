@@ -1,13 +1,13 @@
-﻿using CoreUtilities.Interfaces;
+﻿using CoreUtilities.Interfaces.Database;
 
 namespace CoreUtilities.HelperClasses.Database
 {
-	/// <summary>
-	/// Wrapper class for enabling builder pattern usage of update transactions into a 
-	/// <see cref="IDatabaseWrapperService{TData}"/> instance.
-	/// </summary>
-	/// <typeparam name="T">The data type to be stored.</typeparam>
-	public class UpdateTransactionWrapper<T>
+    /// <summary>
+    /// Wrapper class for enabling builder pattern usage of update transactions into a 
+    /// <see cref="IDatabaseWrapperService{TData}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The data type to be stored.</typeparam>
+    public class UpdateTransactionWrapper<T>
 	{
 		private IDatabaseWrapperService<T> database;
 

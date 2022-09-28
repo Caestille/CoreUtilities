@@ -1,10 +1,10 @@
-﻿using CoreUtilities.Interfaces;
+﻿using CoreUtilities.Interfaces.RegistryInteraction;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CoreUtilities.Services
+namespace CoreUtilities.Services.RegistryInteraction
 {
 	/// <summary>
 	/// Implementation of <see cref="IRegistryService"/> for interacting with keys/values from the windows registry.
@@ -55,7 +55,7 @@ namespace CoreUtilities.Services
 				outOfRegistryValue = key.GetValue(setting);
 				success = outOfRegistryValue != null;
 			}
-			catch 
+			catch
 			{
 				value = defaultValue;
 				SetSetting(setting, defaultValue.ToString());

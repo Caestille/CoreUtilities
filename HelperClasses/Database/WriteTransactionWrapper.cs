@@ -1,14 +1,14 @@
-﻿using CoreUtilities.Interfaces;
+﻿using CoreUtilities.Interfaces.Database;
 using System.Collections.Generic;
 
 namespace CoreUtilities.HelperClasses.Database
 {
-	/// <summary>
-	/// Wrapper class for enabling builder pattern usage of write transactions into a 
-	/// <see cref="IDatabaseWrapperService{TData}"/> instance.
-	/// </summary>
-	/// <typeparam name="T">The data type to be stored.</typeparam>
-	public class WriteTransactionWrapper<T>
+    /// <summary>
+    /// Wrapper class for enabling builder pattern usage of write transactions into a 
+    /// <see cref="IDatabaseWrapperService{TData}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The data type to be stored.</typeparam>
+    public class WriteTransactionWrapper<T>
 	{
 		private IDatabaseWrapperService<T> database;
 

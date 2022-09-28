@@ -1,19 +1,19 @@
-﻿using CoreUtilities.Interfaces;
+﻿using CoreUtilities.Interfaces.Database;
 using System;
 using System.Collections.Generic;
 
 namespace CoreUtilities.HelperClasses.Database
 {
-	/// <summary>
-	/// Wrapper class for enabling builder pattern usage of read operations into a 
-	/// <see cref="IDatabaseWrapperService{TData}"/> instance.
-	/// This is a wrapper capable of
-	/// reading data of type <see cref="TData"/> and returning a result from the <see cref="Close"/> method of type
-	/// <see cref="TReturn"/>.
-	/// </summary>
-	/// <typeparam name="TData">The data type to be stored.</typeparam>
-	/// <typeparam name="TReturn">The data type to be returned from the read operation, if required.</typeparam>
-	public class ReaderInstanceWrapper<TData, TReturn>
+    /// <summary>
+    /// Wrapper class for enabling builder pattern usage of read operations into a 
+    /// <see cref="IDatabaseWrapperService{TData}"/> instance.
+    /// This is a wrapper capable of
+    /// reading data of type <see cref="TData"/> and returning a result from the <see cref="Close"/> method of type
+    /// <see cref="TReturn"/>.
+    /// </summary>
+    /// <typeparam name="TData">The data type to be stored.</typeparam>
+    /// <typeparam name="TReturn">The data type to be returned from the read operation, if required.</typeparam>
+    public class ReaderInstanceWrapper<TData, TReturn>
 	{
 		private IDatabaseWrapperService<TData> database;
 		private IEnumerable<object> rows;
