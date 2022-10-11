@@ -1,4 +1,5 @@
-﻿using CoreUtilities.Interfaces.HTTP;
+﻿using CoreUtilities.HelperClasses.Extensions;
+using CoreUtilities.Interfaces.HTTP;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;

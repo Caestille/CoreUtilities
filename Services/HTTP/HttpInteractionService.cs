@@ -1,4 +1,4 @@
-﻿using CoreUtilities.HelperClasses;
+﻿using CoreUtilities.HelperClasses.Extensions;
 using CoreUtilities.Interfaces.HTTP;
 using System;
 using System.Net;

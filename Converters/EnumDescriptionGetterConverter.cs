@@ -1,11 +1,11 @@
-﻿using CoreUtilities.HelperClasses;
+﻿using CoreUtilities.HelperClasses.Extensions;
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
-	public class EnumDescriptionGetterConverter : IValueConverter
+    public class EnumDescriptionGetterConverter : IValueConverter
 	{
 		Enum cachedEnum;
 

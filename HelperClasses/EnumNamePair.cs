@@ -1,9 +1,10 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CoreUtilities.HelperClasses.Extensions;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
 
 namespace CoreUtilities.HelperClasses
 {
-	public class EnumNamePair : ObservableObject
+    public class EnumNamePair : ObservableObject
 	{
 		private string name;
 		public string Name

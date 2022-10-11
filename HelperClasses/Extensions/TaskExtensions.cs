@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreUtilities.HelperClasses
+namespace CoreUtilities.HelperClasses.Extensions
 {
     /// <summary>
     /// Extension methods for the <see cref="Task"/> and <see cref="Task{TResult}"/> classes.
