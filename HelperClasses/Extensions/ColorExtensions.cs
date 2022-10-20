@@ -1,4 +1,5 @@
 ﻿using SkiaSharp;
+using System;
 using System.Windows.Media;
 
 namespace CoreUtilities.HelperClasses.Extensions
@@ -23,6 +24,12 @@ namespace CoreUtilities.HelperClasses.Extensions
 			byte g = (byte)(((double)colour.G * colour1Weighting + (double)colour2.G * colour2Weighting) / (colour1Weighting + colour2Weighting));
 			byte b = (byte)(((double)colour.B * colour1Weighting + (double)colour2.B * colour2Weighting) / (colour1Weighting + colour2Weighting));
 			return Color.FromArgb(a, r, g, b);
+		}
+
+		public static Color RandomColour()
+		{
+			var random = new Random();
+			return Color.FromArgb(255, (byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
 		}
 	}
 }
