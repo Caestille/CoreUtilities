@@ -5,7 +5,7 @@
 
 	<!--#region Converters-->
 
-	<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+	<converters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
 	<converters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
 	<converters:MultiBoolAndConverter x:Key="MultiBoolAndConverter" />
 	<converters:MultiBoolOrConverter x:Key="MultiBoolOrConverter" />
