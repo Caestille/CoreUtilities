@@ -26,10 +26,13 @@ namespace CoreUtilities.HelperClasses.Extensions
 			return Color.FromArgb(a, r, g, b);
 		}
 
-		public static Color RandomColour()
+		public static Color RandomColour(byte lowerBounds = 0)
 		{
 			var random = new Random();
-			return Color.FromArgb(255, (byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+			return Color.FromArgb(255,
+				(byte)random.Next(lowerBounds, 255),
+				(byte)random.Next(lowerBounds, 255),
+				(byte)random.Next(lowerBounds, 255));
 		}
 	}
 }
