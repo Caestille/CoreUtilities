@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace CoreUtilities.Interfaces.Database
 {
+    /// <summary>
+    /// An interface for classes wrapping databases with common interactions to inherit.
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public interface IDatabaseWrapperService<TData>
     {
         /// <summary>

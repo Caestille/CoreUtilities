@@ -1,82 +1,95 @@
-﻿using CoreUtilities.Interfaces.EvaluationRules;
+﻿using CoreUtilities.HelperClasses.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-    public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
-    {
-        public DateTimeRule(Func<TInput, DateTime> getPropertyFunc) : base(getPropertyFunc) { }
+	/// <summary>
+	/// A rule for operating on DateTime values.
+	/// </summary>
+	/// <typeparam name="TInput">The input type to be evaluated with.</typeparam>
+	public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
+	{
+		/// <summary>
+		/// Initialises a new <see cref="DateTimeRule{TInput}"/>.
+		/// </summary>
+		/// <param name="getPropertyFunc">The <see cref="Func{T, TResult}"/> used to obtain the property from the
+		/// <typeparamref name="TInput"/> to be evaluated with.</param>
+		public DateTimeRule(Func<TInput, DateTime> getPropertyFunc) : base(getPropertyFunc) { }
 
-        public override bool Evaluate(TInput input)
-        {
-            var value = GetPropertyFunc(input);
+		/// <inheritdoc />
+		public override bool Evaluate(TInput input)
+		{
+			var value = GetPropertyFunc(input);
 
-            switch (SelectedOperation)
-            {
-                case AvailableRuleOperation.EqualTo:
-                    return value == Value1;
-				case AvailableRuleOperation.NotEqualTo:
+			switch (SelectedOperation)
+			{
+				case AvailableOperation.EqualTo:
+					return value == Value1;
+				case AvailableOperation.NotEqualTo:
 					return value != Value1;
-				case AvailableRuleOperation.LessThan:
-                    return value < Value1;
-                case AvailableRuleOperation.GreaterThan:
-                    return value > Value1;
-                case AvailableRuleOperation.InBetween:
-                    return value > Value2 && value < Value1;
-                case AvailableRuleOperation.OutsideOf:
-                    return value < Value2 && value > Value1;
-                case AvailableRuleOperation.Contains:
-                    throw new NotSupportedException("Contains rule type is not supported for value type rule");
-                case AvailableRuleOperation.DoesNotContain:
-                    throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
-            }
+				case AvailableOperation.LessThan:
+					return value < Value1;
+				case AvailableOperation.GreaterThan:
+					return value > Value1;
+				case AvailableOperation.InBetween:
+					return value > Value2 && value < Value1;
+				case AvailableOperation.OutsideOf:
+					return value < Value2 && value > Value1;
+				case AvailableOperation.Contains:
+					throw new NotSupportedException("Contains rule type is not supported for value type rule");
+				case AvailableOperation.DoesNotContain:
+					throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        public override void ConfigureForSelectedOperation()
-        {
-            switch (SelectedOperation)
-            {
-                case AvailableRuleOperation.EqualTo:
-                    Value2Usable = false;
-                    break;
-				case AvailableRuleOperation.NotEqualTo:
+		/// <inheritdoc />
+		public override void ConfigureForSelectedOperation()
+		{
+			switch (SelectedOperation)
+			{
+				case AvailableOperation.EqualTo:
 					Value2Usable = false;
 					break;
-				case AvailableRuleOperation.LessThan:
-                    Value2Usable = false;
-                    break;
-                case AvailableRuleOperation.GreaterThan:
-                    Value2Usable = false;
-                    break;
-                case AvailableRuleOperation.InBetween:
-                    Value2Usable = true;
-                    break;
-                case AvailableRuleOperation.OutsideOf:
-                    Value2Usable = true;
-                    break;
-                case AvailableRuleOperation.Contains:
-                    throw new NotSupportedException("Contains rule type is not supported for value type rule");
-                case AvailableRuleOperation.DoesNotContain:
-                    throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
-            }
-            base.ConfigureForSelectedOperation();
-        }
+				case AvailableOperation.NotEqualTo:
+					Value2Usable = false;
+					break;
+				case AvailableOperation.LessThan:
+					Value2Usable = false;
+					break;
+				case AvailableOperation.GreaterThan:
+					Value2Usable = false;
+					break;
+				case AvailableOperation.InBetween:
+					Value2Usable = true;
+					break;
+				case AvailableOperation.OutsideOf:
+					Value2Usable = true;
+					break;
+				case AvailableOperation.Contains:
+					throw new NotSupportedException("Contains rule type is not supported for value type rule");
+				case AvailableOperation.DoesNotContain:
+					throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
+			}
+			base.ConfigureForSelectedOperation();
+		}
 
-        public virtual IEnumerable<string> AvailableProperties
-            => typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(DateTime)).Select(x => x.Name);
+		/// <inheritdoc />
+		public override IEnumerable<string> AvailableProperties
+			=> typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(DateTime)).Select(x => x.Name);
 
-        public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
-        {
-            AvailableRuleOperation.EqualTo,
-			AvailableRuleOperation.NotEqualTo,
-			AvailableRuleOperation.GreaterThan,
-            AvailableRuleOperation.LessThan,
-            AvailableRuleOperation.InBetween,
-            AvailableRuleOperation.OutsideOf,
-        };
-    }
+		/// <inheritdoc />
+		public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
+		{
+			AvailableOperation.EqualTo,
+			AvailableOperation.NotEqualTo,
+			AvailableOperation.GreaterThan,
+			AvailableOperation.LessThan,
+			AvailableOperation.InBetween,
+			AvailableOperation.OutsideOf,
+		};
+	}
 }

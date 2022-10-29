@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 namespace CoreUtilities.Interfaces.Database
 {
-    public interface IDatabaseActionHelper<TData>
+    /// <summary>
+    /// An interface for a high level wrapper providing friendly builder pattern type database interactions.
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    public interface IDatabaseInteractionBuilder<TData>
     {
         /// <summary>
         /// A friendly way to get a write transaction, add any number of writes, and then execute it.

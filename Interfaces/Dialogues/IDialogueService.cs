@@ -4,6 +4,9 @@ using System.Windows;
 
 namespace CoreUtilities.Interfaces.Dialogues
 {
+    /// <summary>
+    /// Interface for classes managing dialogues to inherit.
+    /// </summary>
     public interface IDialogueService
     {
         /// <summary>

@@ -6,20 +6,20 @@ using System.Collections.Generic;
 namespace CoreUtilities.Services.Database
 {
     /// <summary>
-    /// Implementation of <see cref="IDatabaseActionHelper{TData}"/>. Class provides clean build pattern type ways of
+    /// Implementation of <see cref="IDatabaseInteractionBuilder{TData}"/>. Class provides clean build pattern type ways of
     /// interacting with a <see cref="IDatabaseWrapperService{TData}"/>.
     /// </summary>
     /// <typeparam name="TData">The data type the <see cref="IDatabaseWrapperService{TData}"/> is storing.</typeparam>
-    public class DatabaseActionHelper<TData> : IDatabaseActionHelper<TData>
+    public class DatabaseInteractionBuilder<TData> : IDatabaseInteractionBuilder<TData>
     {
         private IDatabaseWrapperService<TData> database;
 
         /// <summary>
-        /// Constructor for <see cref="DatabaseActionHelper{TData}"/>.
+        /// Constructor for <see cref="DatabaseInteractionBuilder{TData}"/>.
         /// </summary>
         /// <param name="databaseWrapper">The <see cref="IDatabaseWrapperService{TData}"/> this class should use for
         /// building commands to interact with.</param>
-        public DatabaseActionHelper(IDatabaseWrapperService<TData> databaseWrapper)
+        public DatabaseInteractionBuilder(IDatabaseWrapperService<TData> databaseWrapper)
         {
             database = databaseWrapper;
         }
@@ -51,9 +51,11 @@ namespace CoreUtilities.Services.Database
         }
 
         /// <inheritdoc/>
-        public IEnumerable<TData> GetConvertedInstancesBetweenIndices(int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selectionCriteria = null)
+        public IEnumerable<TData> GetConvertedInstancesBetweenIndices(
+            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selectionCriteria = null)
         {
-            var result = database.GetConvertedRowsBetweenIndices(startIndex, endIndex, defaultCreator, selectionCriteria);
+            var result = database.GetConvertedRowsBetweenIndices(
+                startIndex, endIndex, defaultCreator, selectionCriteria);
             return result;
         }
 

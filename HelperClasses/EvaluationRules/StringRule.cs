@@ -1,47 +1,60 @@
-﻿using CoreUtilities.Interfaces.EvaluationRules;
+﻿using CoreUtilities.HelperClasses.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-    public class StringRule<TInput> : BaseRule<TInput, string>
-    {
-        public StringRule(Func<TInput, string> getPropertyFunc) : base(getPropertyFunc) { }
-        public override bool Evaluate(TInput input)
-        {
-            var value = GetPropertyFunc(input);
+	/// <summary>
+	/// A rule operating on string values.
+	/// </summary>
+	/// <typeparam name="TInput">The input type to be evaluated.</typeparam>
+	public class StringRule<TInput> : BaseRule<TInput, string>
+	{
+		/// <summary>
+		/// Initialises a new <see cref="StringRule{TInput}"/>.
+		/// </summary>
+		/// <param name="getPropertyFunc">A <see cref="Func{T, TResult}"/> used to obtain the <see cref="string"/>
+		/// value to be evaluated with from the <typeparamref name="TInput"/>.</param>
+		public StringRule(Func<TInput, string> getPropertyFunc) : base(getPropertyFunc) { }
 
-            switch (SelectedOperation)
-            {
-                case AvailableRuleOperation.EqualTo:
-                    throw new NotSupportedException("EqualTo rule type is not supported for value type rule");
-				case AvailableRuleOperation.NotEqualTo:
+		/// <inheritdoc />
+		public override bool Evaluate(TInput input)
+		{
+			var value = GetPropertyFunc(input);
+
+			switch (SelectedOperation)
+			{
+				case AvailableOperation.EqualTo:
+					throw new NotSupportedException("EqualTo rule type is not supported for value type rule");
+				case AvailableOperation.NotEqualTo:
 					throw new NotSupportedException("NotEqualTo rule type is not supported for value type rule");
-				case AvailableRuleOperation.LessThan:
-                    throw new NotSupportedException("LessThan rule type is not supported for value type rule");
-                case AvailableRuleOperation.GreaterThan:
-                    throw new NotSupportedException("GreaterThan rule type is not supported for value type rule");
-                case AvailableRuleOperation.InBetween:
-                    throw new NotSupportedException("InBetween rule type is not supported for value type rule");
-                case AvailableRuleOperation.OutsideOf:
-                    throw new NotSupportedException("OutsideOf rule type is not supported for value type rule");
-                case AvailableRuleOperation.Contains:
-                    return value.IndexOf(Value1, StringComparison.OrdinalIgnoreCase) >= 0;
-                case AvailableRuleOperation.DoesNotContain:
-                    return !(value.IndexOf(Value1, StringComparison.OrdinalIgnoreCase) >= 0);
-            }
+				case AvailableOperation.LessThan:
+					throw new NotSupportedException("LessThan rule type is not supported for value type rule");
+				case AvailableOperation.GreaterThan:
+					throw new NotSupportedException("GreaterThan rule type is not supported for value type rule");
+				case AvailableOperation.InBetween:
+					throw new NotSupportedException("InBetween rule type is not supported for value type rule");
+				case AvailableOperation.OutsideOf:
+					throw new NotSupportedException("OutsideOf rule type is not supported for value type rule");
+				case AvailableOperation.Contains:
+					return value.IndexOf(Value1, StringComparison.OrdinalIgnoreCase) >= 0;
+				case AvailableOperation.DoesNotContain:
+					return !(value.IndexOf(Value1, StringComparison.OrdinalIgnoreCase) >= 0);
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        public virtual IEnumerable<string> AvailableProperties
-            => typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(string)).Select(x => x.Name);
+		/// <inheritdoc />
+		public override IEnumerable<string> AvailableProperties
+			=> typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(string)).Select(x => x.Name);
 
-        public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
-        {
-            AvailableRuleOperation.Contains,
-            AvailableRuleOperation.DoesNotContain,
-        };
-    }
+		/// <inheritdoc />
+		public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
+		{
+			AvailableOperation.Contains,
+			AvailableOperation.DoesNotContain,
+		};
+	}
 }

@@ -5,6 +5,10 @@ using System.Data;
 
 namespace CoreUtilities.Interfaces.Database
 {
+    /// <summary>
+    /// An interface for a class defining abstracted methods and properties for database interaction.
+    /// </summary>
+    /// <typeparam name="TData">The data type to be stored.</typeparam>
     public interface IDatabaseWrapperContext<TData>
     {
         /// <summary>
