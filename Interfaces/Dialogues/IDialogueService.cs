@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace CoreUtilities.Interfaces.Dialogues
 {
@@ -24,20 +25,26 @@ namespace CoreUtilities.Interfaces.Dialogues
         /// <param name="dialogueSize">An overriding dialogue size if required, otherwise it is automatic (which
         /// can have undesired results).</param>
         /// <returns>An (awaitable) <see cref="Task"/>.</returns>
-        Task OpenCustomDialogue(object? dataContext = null, Size? dialogueSize = null);
+        Task ShowCustomDialogue(object? dataContext = null, Size? dialogueSize = null);
 
         /// <summary>
         /// Opens an open file dialogue.
         /// </summary>
         /// <returns>The path to open.</returns>
-        string OpenFileDialogue();
+        string ShowOpenFileDialogue();
 
-        /// <summary>
-        /// Shows a message box to display to the user.
-        /// </summary>
-        /// <param name="title">The message box title.</param>
-        /// <param name="message">The message in the message box.</param>
-        /// <param name="button">The type of confirmation button(s) the message box should display.</param>
-        void ShowMessageBox(string title, string message, MessageBoxButton button);
+		/// <summary>
+		/// Opens a colour picker dialogue.
+		/// </summary>
+		/// <returns>The picked <see cref="Color"/>.</returns>
+		Color ShowColourPickerDialogue();
+
+		/// <summary>
+		/// Shows a message box to display to the user.
+		/// </summary>
+		/// <param name="title">The message box title.</param>
+		/// <param name="message">The message in the message box.</param>
+		/// <param name="button">The type of confirmation button(s) the message box should display.</param>
+		void ShowMessageBox(string title, string message, MessageBoxButton button);
     }
 }

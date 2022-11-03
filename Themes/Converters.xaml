@@ -34,6 +34,7 @@
 	<converters:StringIsValueConverter x:Key="StringIsValueConverter" />
 	<converters:StringIsNotValueConverter x:Key="StringIsNotValueConverter" />
 	<converters:IsIntegerConverter x:Key="IsIntegerConverter" />
+	<converters:ColourToBrushConverter x:Key="ColourToBrushConverter" />
 
 	<!--#endregion End Converters-->
 </ResourceDictionary>
