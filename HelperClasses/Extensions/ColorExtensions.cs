@@ -21,6 +21,16 @@ namespace CoreUtilities.HelperClasses.Extensions
 			return new SKColor(colour.R, colour.G, colour.B, alpha ?? colour.A);
 		}
 
+		public static string GetHexString(this Color colour)
+		{
+			return colour.ToString();
+		}
+
+		public static Color FromHexString(string hex)
+		{
+			return (Color)ColorConverter.ConvertFromString(hex);
+		}
+
 		/// <summary>
 		/// Returns the same <see cref="Color"/> with the given alpha value.
 		/// </summary>
