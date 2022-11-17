@@ -88,6 +88,11 @@ namespace CoreUtilities.HelperClasses.Extensions
 			return Math.Sqrt(rFactor + gFactor + bFactor) / 255d;
 		}
 
+		public static double Brightness(this Color colour)
+		{
+			return System.Drawing.Color.FromArgb(colour.A, colour.R, colour.G, colour.B).GetBrightness();
+		}
+
 		/// <summary>
 		/// Indicates if two colours RGB components are similar to each other by a given theshold.
 		/// </summary>
