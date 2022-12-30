@@ -10,16 +10,29 @@ namespace CoreUtilities.Converters
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			string text = (string)values[0];
-			double fontSize = (double)values[1];
-			FontFamily fontFamily = (FontFamily)values[2];
-			FontStyle fontStyle = (FontStyle)values[3];
-			FontWeight fontWeight = (FontWeight)values[4];
-			FontStretch fontStretch = (FontStretch)values[5];
+			if (values[0] is string text
+				&& values[1] is double fontSize
+				&& values[2] is FontFamily fontFamily
+				&& values[3] is FontStyle fontStyle
+				&& values[4] is FontWeight fontWeight
+				&& values[5] is FontStretch fontStretch)
+			{
+				var overrideText = string.Empty;
+				var padding = 0d;
+				if (parameter is string param)
+				{
+					var array = param.Split('|');
+					overrideText = array[0];
+					if (array.Length > 1 && double.TryParse(array[1], out double value))
+					{
+						padding = value;
+					}
+				}
+				double width = MeasureString(!string.IsNullOrEmpty(overrideText) ? overrideText : text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch);
+				return width + padding;
+			}
 
-			double width = MeasureString(text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch);
-
-			return width;
+			return 0;
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
