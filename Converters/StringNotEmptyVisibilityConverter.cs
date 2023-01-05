@@ -12,7 +12,13 @@ namespace CoreUtilities.Converters
 			if (value is not string)
 				return Visibility.Visible;
 
-			return string.IsNullOrEmpty((string)value) ? Visibility.Collapsed : Visibility.Visible;
+			var invert = false;
+			if (parameter is string boolString && bool.TryParse(boolString, out var doInvert)) invert = doInvert;
+
+			var empty = string.IsNullOrEmpty((string)value);
+			if (invert) empty = !empty;
+
+			return empty ? Visibility.Collapsed : Visibility.Visible;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
