@@ -7,6 +7,11 @@ using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
+	/// <summary>
+	/// An <see cref="IValueConverter"/> which given an <see cref="IEnumerable{T}"/>, returns
+	/// <see cref="Visibility.Visible"/> if the <see cref="IEnumerable{T}"/> has any elements, else
+	/// <see cref="Visibility.Collapsed"/>.
+	/// </summary>
 	public class SequenceHasElementsVisibilityConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -5,6 +5,10 @@ using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
+	/// <summary>
+	/// Given a set of <see cref="bool"/> bindings, if an OR operation on all <see cref="bool"/>s evaluates to
+	/// <see cref="true"/>, returns <see cref="Visibility.Visible"/>, else <see cref="Visibility.Collapsed"/>.
+	/// </summary>
 	public class MultiBoolOrToVisibilityConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

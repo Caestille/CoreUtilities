@@ -5,6 +5,11 @@ using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
+	/// <summary>
+	/// An <see cref="IValueConverter"/> which when given a <see cref="string"/>, if not empty, returns
+	/// <see cref="Visibility.Visible"/>, else <see cref="Visibility.Collapsed"/>. A converter parameter can be
+	/// optionally specified as <see cref="true"/> or <see cref="false"/> to invert the result.
+	/// </summary>
 	public class StringNotEmptyVisibilityConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

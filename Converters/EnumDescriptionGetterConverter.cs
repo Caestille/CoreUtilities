@@ -5,7 +5,11 @@ using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
-    public class EnumDescriptionGetterConverter : IValueConverter
+	/// <summary>
+	/// An <see cref="IValueConverter"/> that given an <see cref="Enum"/>, if it has a description attribute, returns
+	/// that, otherwise the <see cref="Enum"/> itself converted to a string.
+	/// </summary>
+	public class EnumDescriptionGetterConverter : IValueConverter
 	{
 		Enum cachedEnum;
 

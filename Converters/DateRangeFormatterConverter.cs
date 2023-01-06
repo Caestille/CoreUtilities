@@ -4,6 +4,10 @@ using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
+	/// <summary>
+	/// An <see cref="IMultiValueConverter"/> which when given two <see cref="DateTime"/> values, formats them as
+	/// 'Date1 - Date2'.
+	/// </summary>
 	public class DateRangeFormatterConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

@@ -5,6 +5,10 @@ using System.Windows.Data;
 
 namespace CoreUtilities.Converters
 {
+	/// <summary>
+	/// An <see cref="IValueConverter"/> which when given a <see cref="bool"/>, returns a <see cref="DataGridLength"/>
+	/// value which will wrap the rows if <see cref="true"/> and set the row width to automatic if <see cref="false"/>.
+	/// </summary>
 	public class DataGridWrapRowsBoolConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -6,6 +6,13 @@ using System.Windows.Media;
 
 namespace CoreUtilities.Converters
 {
+	/// <summary>
+	/// An <see cref="IMultiValueConverter"/> which given a string in item 1, font size, family, style, weight and
+	/// stretch in items 2, 3, 4, 5 and 6 respectively, returns the calculated width of the given string, useful for UI
+	/// which need to scale to a string but can't do so automatically. A converter parameter can be provided to
+	/// optionally override the given string with a fixed value instead of a binding, as well as add a padding around
+	/// the width, of format overrideString|padding
+	/// </summary>
 	public class StringWidthGetterConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -28,7 +35,10 @@ namespace CoreUtilities.Converters
 						padding = value;
 					}
 				}
-				double width = MeasureString(!string.IsNullOrEmpty(overrideText) ? overrideText : text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch);
+				double width = MeasureString(
+					!string.IsNullOrEmpty(overrideText) 
+					? overrideText
+					: text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch);
 				return width + padding;
 			}
 
