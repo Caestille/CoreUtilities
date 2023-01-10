@@ -14,8 +14,35 @@ namespace CoreUtilities.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			IEnumerable<object> list = (IEnumerable<object>)value;
-			return list.Any();
+			switch (value)
+			{
+				case IEnumerable<object> objectList:
+					return objectList.Any();
+				case IEnumerable<int> intList:
+					return intList.Any();
+				case IEnumerable<float> floatList:
+					return floatList.Any();
+				case IEnumerable<double> doubleList:
+					return doubleList.Any();
+				case IEnumerable<bool> boolList:
+					return boolList.Any();
+				case IEnumerable<long> longList:
+					return longList.Any();
+				case IEnumerable<ulong> ulongList:
+					return ulongList.Any();
+				case IEnumerable<short> shortList:
+					return shortList.Any();
+				case IEnumerable<ushort> ushortList:
+					return ushortList.Any();
+				case IEnumerable<byte> byteList:
+					return byteList.Any();
+				case IEnumerable<sbyte> sbyteList:
+					return sbyteList.Any();
+				case IEnumerable<char> charList:
+					return charList.Any();
+			}
+
+			return false;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
