@@ -57,5 +57,11 @@ namespace CoreUtilities.Interfaces.Dialogues
 		/// <param name="message">The message in the message box.</param>
 		/// <param name="button">The type of confirmation button(s) the message box should display.</param>
 		void ShowMessageBox(string title, string message, MessageBoxButton button);
+
+		/// <summary>
+		/// Gives the service the main <see cref="Window"/> to set as parents of child windows.
+		/// </summary>
+		/// <param name="window">The <see cref="Window"/></param>
+		void GiveMainWindow(Window window);
 	}
 }
