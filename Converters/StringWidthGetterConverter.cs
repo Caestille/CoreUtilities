@@ -48,7 +48,7 @@ namespace CoreUtilities.Converters
 				return width + padding;
 			}
 
-			return 0;
+			return 0d;
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
