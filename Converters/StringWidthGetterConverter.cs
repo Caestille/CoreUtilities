@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -17,12 +18,13 @@ namespace CoreUtilities.Converters
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (values[0] is string text
-				&& values[1] is double fontSize
-				&& values[2] is FontFamily fontFamily
-				&& values[3] is FontStyle fontStyle
-				&& values[4] is FontWeight fontWeight
-				&& values[5] is FontStretch fontStretch)
+			if (values[0] is string format
+				&& values[1] is string text
+				&& values[2] is double fontSize
+				&& values[3] is FontFamily fontFamily
+				&& values[4] is FontStyle fontStyle
+				&& values[5] is FontWeight fontWeight
+				&& values[6] is FontStretch fontStretch)
 			{
 				var overrideText = string.Empty;
 				var padding = 0d;
@@ -34,6 +36,10 @@ namespace CoreUtilities.Converters
 					{
 						padding = value;
 					}
+				}
+				if (!string.IsNullOrEmpty(format))
+				{
+					overrideText = Regex.Replace(format, "[A-z]", "0");
 				}
 				double width = MeasureString(
 					!string.IsNullOrEmpty(overrideText) 
