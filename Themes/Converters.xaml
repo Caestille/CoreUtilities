@@ -26,6 +26,7 @@
 	<converters:DoubleInverterConverter x:Key="DoubleInverterConverter" />
 	<converters:ValueIfTrueValueIfFalseConverter x:Key="ValueIfTrueValueIfFalseConverter" />
 	<converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
+	<converters:VisibleIfNullConverter x:Key="VisibleIfNullConverter" />
 	<converters:MultiBoolAndToVisibilityConverter x:Key="MultiBoolAndToVisibilityConverter" />
 	<converters:MultiBoolOrToVisibilityConverter x:Key="MultiBoolOrToVisibilityConverter" />
 	<converters:VisibilityInverterConverter x:Key="VisibilityInverterConverter" />
