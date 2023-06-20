@@ -44,7 +44,7 @@ namespace CoreUtilities.Converters
 				double width = MeasureString(
 					!string.IsNullOrEmpty(overrideText) 
 					? overrideText
-					: text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch);
+					: text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch).Width;
 				return width + padding;
 			}
 
@@ -56,7 +56,7 @@ namespace CoreUtilities.Converters
 			return new[] { Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing };
 		}
 
-		public static double MeasureString(string? text, double fontSize, FontFamily fontFamily, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch)
+		public static Size MeasureString(string? text, double fontSize, FontFamily fontFamily, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch)
 		{
 			if (text != null)
 			{
@@ -70,10 +70,10 @@ namespace CoreUtilities.Converters
 					fontSize,
 					Brushes.Black);
 
-				return formattedText.Width;
+				return new Size(formattedText.Width, formattedText.Height);
 			}
 
-			return 0;
+			return new Size(0, 0);
 		}
 	}
 }
