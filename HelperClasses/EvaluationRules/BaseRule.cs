@@ -1,5 +1,6 @@
 ﻿using CoreUtilities.HelperClasses.Enums;
 using CoreUtilities.Interfaces.EvaluationRules;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 
