@@ -47,7 +47,7 @@ namespace CoreUtilities.Interfaces.Dialogues
 		/// Opens a colour picker dialogue.
 		/// </summary>
 		/// <param name="inputColour">The starting colour of the dialogue.</param>
-		/// <param name="colourChangedCallback">Called when the colour changes in the dialog.</param>
+		/// <param name="colourChangedCallback">Called when the colour selected in the dialogue changes.</param>
 		/// <returns>The picked <see cref="Color"/>.</returns>
 		Color ShowColourPickerDialogue(Color inputColour, Action<Color>? colourChangedCallback = null);
 
