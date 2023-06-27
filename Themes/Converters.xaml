@@ -1,10 +1,9 @@
 <ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:CoreUtilities.Converters">
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:converters="clr-namespace:CoreUtilities.Converters">
 
-    <!--#region Converters-->
+	<!--#region Converters-->
 
 	<converters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
 	<converters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
@@ -39,5 +38,5 @@
 	<converters:IsIntegerConverter x:Key="IsIntegerConverter" />
 	<converters:ColourToBrushConverter x:Key="ColourToBrushConverter" />
 
-    <!--#endregion End Converters-->
+	<!--#endregion End Converters-->
 </ResourceDictionary>
