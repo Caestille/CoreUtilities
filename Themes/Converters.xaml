@@ -20,6 +20,7 @@
 	<converters:DataGridWrapRowsBoolConverter x:Key="DataGridWrapRowsBoolConverter" />
 	<converters:PercentFormatterConverter x:Key="PercentFormatterConverter" />
 	<converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+	<converters:IsNullConverter x:Key="IsNullConverter" />
 	<converters:SequenceHasElementsVisibilityConverter x:Key="SequenceHasElementsVisibilityConverter" />
 	<converters:SequenceHasElementsBooleanConverter x:Key="SequenceHasElementsBooleanConverter" />
 	<converters:SequenceEmptyBooleanConverter x:Key="SequenceEmptyBooleanConverter" />

@@ -46,9 +46,10 @@ namespace CoreUtilities.Interfaces.Dialogues
 		/// <summary>
 		/// Opens a colour picker dialogue.
 		/// </summary>
-		/// <param name="inputColour">The startying colour of the dialogue.</param>
+		/// <param name="inputColour">The starting colour of the dialogue.</param>
+		/// <param name="colourChangedCallback">Called when the colour changes in the dialog.</param>
 		/// <returns>The picked <see cref="Color"/>.</returns>
-		Color ShowColourPickerDialogue(Color inputColour);
+		Color ShowColourPickerDialogue(Color inputColour, Action<Color>? colourChangedCallback = null);
 
 		/// <summary>
 		/// Shows a message box to display to the user.
@@ -57,11 +58,5 @@ namespace CoreUtilities.Interfaces.Dialogues
 		/// <param name="message">The message in the message box.</param>
 		/// <param name="button">The type of confirmation button(s) the message box should display.</param>
 		void ShowMessageBox(string title, string message, MessageBoxButton button);
-
-		/// <summary>
-		/// Gives the service the main <see cref="Window"/> to set as parents of child windows.
-		/// </summary>
-		/// <param name="window">The <see cref="Window"/></param>
-		void GiveMainWindow(Window window);
 	}
 }
