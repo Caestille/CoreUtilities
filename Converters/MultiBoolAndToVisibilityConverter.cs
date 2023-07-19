@@ -13,6 +13,9 @@ namespace CoreUtilities.Converters
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
+			var type = Visibility.Collapsed;
+			if (parameter != null && parameter is string visType && (visType == "hidden" || visType == "Hidden")) type = Visibility.Hidden;
+
 			bool allow = true;
 			foreach (object value in values)
 			{
@@ -21,7 +24,7 @@ namespace CoreUtilities.Converters
 					allow &= castValue;
 				}
 			}
-			return allow ? Visibility.Visible : Visibility.Collapsed;
+			return allow ? Visibility.Visible : type;
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
