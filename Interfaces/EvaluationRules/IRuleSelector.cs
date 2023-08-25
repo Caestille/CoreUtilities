@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CoreUtilities.Interfaces.EvaluationRules
 {
     /// <summary>
-    /// An interface for classes configureing rules to inherit. The base 
+    /// An interface for classes configuring rules to inherit. The base 
     /// <see cref="AndRule{TInput, TEvaluate}"/> and <see cref="OrRule{TInput, TEvaluate}"/>s expect a class inheriting
     /// this as their <see cref="TEvaluate"/>.
     /// </summary>

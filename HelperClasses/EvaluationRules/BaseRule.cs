@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-    /// <summary>
-    /// The base rule for specific value rule types to inherit. Defines some standard behaviour and properties.
-    /// </summary>
-    /// <typeparam name="TInput">The input type for the rule to expect.</typeparam>
-    /// <typeparam name="TEvaluate">The value type the rule will evaluate with.</typeparam>
-    public class BaseRule<TInput, TEvaluate> : ObservableObject, IEvaluationRule<TInput, TEvaluate>
+	/// <summary>
+	/// The base rule for specific value rule types to inherit. Defines some standard behaviour and properties.
+	/// </summary>
+	/// <typeparam name="TInput">The input type for the rule to expect.</typeparam>
+	/// <typeparam name="TEvaluate">The value type the rule will evaluate with.</typeparam>
+	public class BaseRule<TInput, TEvaluate> : ObservableObject, IEvaluationRule<TInput, TEvaluate>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="BaseRule{TInput, TEvaluate}"/>.
