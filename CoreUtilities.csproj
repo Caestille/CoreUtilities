@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
       <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
