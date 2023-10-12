@@ -40,7 +40,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// </summary>
 		/// <param name="entries">The list of entries to add.</param>
 		/// <returns></returns>
-		public WriteTransactionWrapper<T> WithEntryRange(IEnumerable<T> entries)
+		public WriteTransactionWrapper<T> WithEntrys(IEnumerable<T> entries)
 		{
 			database.AddRange(entries);
 			return this;
@@ -48,7 +48,7 @@ namespace CoreUtilities.HelperClasses.Database
 
 		/// <summary>
 		/// Executes all pending writes and closes the transaction. Should be performed after 
-		/// <see cref="WithEntryRange(IEnumerable{T})"/> or <see cref="WithEntry(T)"/> calls.
+		/// <see cref="WithEntrys(IEnumerable{T})"/> or <see cref="WithEntry(T)"/> calls.
 		/// </summary>
 		public void ExecuteWrite()
 		{
