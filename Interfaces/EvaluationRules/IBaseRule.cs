@@ -9,7 +9,7 @@ namespace CoreUtilities.Interfaces.EvaluationRules
 	/// </summary>
 	/// <typeparam name="TInput">The input type to be evaluated.</typeparam>
 	/// <typeparam name="TEvaluate">The property type of the input to be evaluated.</typeparam>
-	public interface IEvaluationRule<TInput, TEvaluate>
+	public interface IBaseRule<TInput, TEvaluate>
 	{
 		/// <summary>
 		/// Given a <typeparamref name="TInput"/>, returns whether the object matches the set rule.

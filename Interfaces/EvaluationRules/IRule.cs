@@ -1,4 +1,5 @@
-﻿using CoreUtilities.HelperClasses.EvaluationRules;
+﻿using CoreUtilities.HelperClasses.Enums;
+using CoreUtilities.HelperClasses.EvaluationRules;
 
 namespace CoreUtilities.Interfaces.EvaluationRules
 {
@@ -8,7 +9,7 @@ namespace CoreUtilities.Interfaces.EvaluationRules
 	/// <see cref="AndRule{TInput, TEvaluate}"/>.
 	/// </summary>
 	/// <typeparam name="TInput">The input type to be evaluated</typeparam>
-	public interface IRuleImplementation<TInput>
+	public interface IRule<TInput>
 	{
 		/// <summary>
 		/// Executes the rule on a given input, and returns a <see cref="bool"/> indicating whether the value matched
@@ -21,16 +22,30 @@ namespace CoreUtilities.Interfaces.EvaluationRules
 		/// <summary>
 		/// Gets the potential first value of the rule. Depending on the inheritor, this may not be set
 		/// </summary>
-		string Value1 { get; set; }
+		object Value1 { get; set; }
 
 		/// <summary>
 		/// Gets the potential second value of the rule. Depending on the inheritor, this may not be set
 		/// </summary>
-		string Value2 { get; set; }
+		object Value2 { get; set; }
 
 		/// <summary>
 		/// The rule operation/comparison to be executed (e.g.: Less than, more than etc).
 		/// </summary>
-		string SelectedOperation { get; set; }
+		AvailableOperation? SelectedOperation { get; set; }
+
+		/// <summary>
+		/// Serialises the given value to a string for storage.
+		/// </summary>
+		/// <param name="value">The value to serialise.</param>
+		/// <returns>The serialised value.</returns>
+		string SerialiseValue(object value);
+
+		/// <summary>
+		/// Deserialises a value back to a representative object.
+		/// </summary>
+		/// <param name="value">The value to deserialise.</param>
+		/// <returns>The deserialised value.</returns>
+		object DeserialiseValue(string value);
 	}
 }

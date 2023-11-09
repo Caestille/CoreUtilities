@@ -11,7 +11,7 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 	/// </summary>
 	/// <typeparam name="TInput">The input type for the rule to expect.</typeparam>
 	/// <typeparam name="TEvaluate">The value type the rule will evaluate with.</typeparam>
-	public class BaseRule<TInput, TEvaluate> : ObservableObject, IEvaluationRule<TInput, TEvaluate>
+	public abstract class BaseRule<TInput, TEvaluate> : ObservableObject, IRule<TInput>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="BaseRule{TInput, TEvaluate}"/>.
@@ -32,17 +32,21 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// <inheritdoc />
 		public virtual void ConfigureForSelectedOperation() { }
 
-		private TEvaluate? value1;
+		public abstract string SerialiseValue(object value);
+
+		public abstract object DeserialiseValue(string value);
+
+		private object? value1;
 		/// <inheritdoc />
-		public TEvaluate? Value1
+		public object? Value1
 		{
 			get => value1;
 			set => SetProperty(ref value1, value);
 		}
 
-		private TEvaluate? value2;
+		private object? value2;
 		/// <inheritdoc />
-		public TEvaluate? Value2
+		public object? Value2
 		{
 			get => value2;
 			set => SetProperty(ref value2, value);

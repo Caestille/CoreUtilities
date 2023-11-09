@@ -1,4 +1,5 @@
 ﻿using CoreUtilities.HelperClasses.Enums;
+using CoreUtilities.Interfaces.EvaluationRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,17 +27,17 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 			switch (SelectedOperation)
 			{
 				case AvailableOperation.EqualTo:
-					return value == Value1;
+					return value == (DateTime)Value1;
 				case AvailableOperation.NotEqualTo:
-					return value != Value1;
+					return value != (DateTime)Value1;
 				case AvailableOperation.LessThan:
-					return value < Value1;
+					return value < (DateTime)Value1;
 				case AvailableOperation.GreaterThan:
-					return value > Value1;
+					return value > (DateTime)Value1;
 				case AvailableOperation.InBetween:
-					return value > Value2 && value < Value1;
+					return value > (DateTime)Value2 && value < (DateTime)Value1;
 				case AvailableOperation.OutsideOf:
-					return value < Value2 && value > Value1;
+					return value < (DateTime)Value2 && value > (DateTime)Value1;
 				case AvailableOperation.Contains:
 					throw new NotSupportedException("Contains rule type is not supported for value type rule");
 				case AvailableOperation.DoesNotContain:
@@ -75,6 +76,16 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 					throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
 			}
 			base.ConfigureForSelectedOperation();
+		}
+
+		public override string SerialiseValue(object value)
+		{
+			return ((DateTime)value).ToString();
+		}
+
+		public override object DeserialiseValue(string value)
+		{
+			return DateTime.Parse(value);
 		}
 
 		/// <inheritdoc />

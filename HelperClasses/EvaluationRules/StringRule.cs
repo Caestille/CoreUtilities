@@ -38,12 +38,22 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 				case AvailableOperation.OutsideOf:
 					throw new NotSupportedException("OutsideOf rule type is not supported for value type rule");
 				case AvailableOperation.Contains:
-					return value.IndexOf(Value1, StringComparison.OrdinalIgnoreCase) >= 0;
+					return value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0;
 				case AvailableOperation.DoesNotContain:
-					return !(value.IndexOf(Value1, StringComparison.OrdinalIgnoreCase) >= 0);
+					return !(value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0);
 			}
 
 			return false;
+		}
+
+		public override string SerialiseValue(object value)
+		{
+			return (string)value;
+		}
+
+		public override object DeserialiseValue(string value)
+		{
+			return value;
 		}
 
 		/// <inheritdoc />

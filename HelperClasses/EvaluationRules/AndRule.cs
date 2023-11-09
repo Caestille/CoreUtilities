@@ -26,7 +26,17 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// <inheritdoc />
 		public override bool Evaluate(TInput input)
 		{
-			return Value1.Evaluate(input) && Value2.Evaluate(input);
+			return ((TEvaluate)Value1).Evaluate(input) && ((TEvaluate)Value2).Evaluate(input);
+		}
+
+		public override string SerialiseValue(object value)
+		{
+			return ((TEvaluate)value).Serialise();
+		}
+
+		public override object DeserialiseValue(string value)
+		{
+			return ((TEvaluate)Activator.CreateInstance(typeof(TEvaluate))).Deserialise(value);
 		}
 
 		/// <inheritdoc />
