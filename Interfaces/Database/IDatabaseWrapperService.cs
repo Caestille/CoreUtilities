@@ -100,5 +100,10 @@ namespace CoreUtilities.Interfaces.Database
         /// database, disposing related resources.
         /// </summary>
         void Disconnect();
-    }
+
+		/// <summary>
+		/// Deletes the database file on disk
+		/// </summary>
+		void Delete();
+	}
 }

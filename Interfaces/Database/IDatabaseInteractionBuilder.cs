@@ -71,8 +71,13 @@ namespace CoreUtilities.Interfaces.Database
         void ClearDatabase();
 
         /// <summary>
-        /// Disconntects from the database. Any pending transactions are rolled back automatically.
+        /// Disconnects from the database. Any pending transactions are rolled back automatically.
         /// </summary>
         void Disconnect();
+
+        /// <summary>
+        /// Deletes the database file on disk
+        /// </summary>
+        void Delete();
     }
 }

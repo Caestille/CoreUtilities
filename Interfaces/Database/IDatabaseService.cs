@@ -120,5 +120,10 @@ namespace CoreUtilities.Interfaces.Database
 		/// Disconnects from the database. Anything pending will be rolled back.
 		/// </summary>
 		void Disconnect();
+
+		/// <summary>
+		/// Deletes the database file on disk
+		/// </summary>
+		void Delete();
 	}
 }

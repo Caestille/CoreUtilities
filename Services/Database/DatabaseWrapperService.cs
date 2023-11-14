@@ -325,9 +325,15 @@ namespace CoreUtilities.Services.Database
             }
             // Closing connections with transactions open should simply roll them back
             database.Disconnect();
-        }
+		}
 
-        private string GenerateOrderingString(string columnName, Ordering order)
+		/// <inheritdoc/>
+		public void Delete()
+		{
+			database.Delete();
+		}
+
+		private string GenerateOrderingString(string columnName, Ordering order)
         {
             string orderingString = order == Ordering.Ascending ? "ASC" : "DESC";
             return $"ORDER BY {columnName} {orderingString}";
