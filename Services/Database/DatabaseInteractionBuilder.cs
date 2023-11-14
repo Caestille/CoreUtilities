@@ -86,6 +86,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public void Delete()
         {
+            Disconnect();
             database.Delete();
         }
     }
