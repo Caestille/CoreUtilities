@@ -2,17 +2,16 @@
 using CoreUtilities.Interfaces.EvaluationRules;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-	/// <summary>
-	/// A rule for operating on two <see cref="BaseRule{TInput, TEvaluate}"/> derivatives and indicating whether one or
-	/// both match their set conditions.
-	/// </summary>
-	/// <typeparam name="TInput">The type to be given.</typeparam>
-	/// <typeparam name="TEvaluate">The property type to evaluate.</typeparam>
-	public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEvaluate : IRuleConfigurer<TInput>
+    /// <summary>
+    /// A rule for operating on two <see cref="BaseRule{TInput, TEvaluate}"/> derivatives and indicating whether one or
+    /// both match their set conditions.
+    /// </summary>
+    /// <typeparam name="TInput">The type to be given.</typeparam>
+    /// <typeparam name="TEvaluate">The property type to evaluate.</typeparam>
+    public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEvaluate : IRuleConfigurer<TInput>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="OrRule{TInput, TEvaluate}"/>.

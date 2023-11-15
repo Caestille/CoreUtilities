@@ -1,16 +1,15 @@
 ﻿using CoreUtilities.HelperClasses.Enums;
-using CoreUtilities.Interfaces.EvaluationRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-	/// <summary>
-	/// A rule for operating on DateTime values.
-	/// </summary>
-	/// <typeparam name="TInput">The input type to be evaluated with.</typeparam>
-	public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
+    /// <summary>
+    /// A rule for operating on DateTime values.
+    /// </summary>
+    /// <typeparam name="TInput">The input type to be evaluated with.</typeparam>
+    public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="DateTimeRule{TInput}"/>.

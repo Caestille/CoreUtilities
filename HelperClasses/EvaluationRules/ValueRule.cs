@@ -1,16 +1,15 @@
 ﻿using CoreUtilities.HelperClasses.Enums;
-using CoreUtilities.Interfaces.EvaluationRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-	/// <summary>
-	/// A rule operating on numerical values.
-	/// </summary>
-	/// <typeparam name="TInput">The input type to be evaluated.</typeparam>
-	public class ValueRule<TInput> : BaseRule<TInput, double?>
+    /// <summary>
+    /// A rule operating on numerical values.
+    /// </summary>
+    /// <typeparam name="TInput">The input type to be evaluated.</typeparam>
+    public class ValueRule<TInput> : BaseRule<TInput, double?>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="ValueRule{TInput}"/>, accepts a <see cref="Func{T, TResult}"/> which given a

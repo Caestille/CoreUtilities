@@ -2,16 +2,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.SQLite;
 using System.IO;
 
 namespace CoreUtilities.Services.Database
 {
-	/// <summary>
-	/// Implementation of <see cref="IDatabaseService{T}"/> using SQlite.
-	/// </summary>
-	public class SqLiteDatabaseService : IDatabaseService<SQLiteTransaction>
+    /// <summary>
+    /// Implementation of <see cref="IDatabaseService{T}"/> using SQlite.
+    /// </summary>
+    public class SqLiteDatabaseService : IDatabaseService<SQLiteTransaction>
 	{
 		private string connectionString;
 
