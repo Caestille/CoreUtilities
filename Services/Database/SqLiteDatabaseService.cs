@@ -143,7 +143,7 @@ namespace CoreUtilities.Services.Database
 			string commandName,
 			List<KeyValuePair<string, string>> paramsToUpdate,
 			KeyValuePair<string, string> conditionalParamToUpdate,
-			SQLiteTransaction transaction = null)
+			SQLiteTransaction? transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToUpdate)
 				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
@@ -159,7 +159,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public void ExecuteInsertCommand(string commandName,
 			List<KeyValuePair<string, string>> paramsToInsert,
-			SQLiteTransaction transaction = null)
+			SQLiteTransaction? transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToInsert)
 				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;

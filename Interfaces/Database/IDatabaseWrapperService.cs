@@ -69,7 +69,7 @@ namespace CoreUtilities.Interfaces.Database
         /// to the output.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing results converted to the output type.</returns>
         IEnumerable<TData> GetConvertedRowsBetweenIndices(
-            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selector = null);
+            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool>? selector = null);
 
         /// <summary>
         /// Gets all rows matching an optional selection criteria.

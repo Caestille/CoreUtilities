@@ -205,13 +205,12 @@ namespace CoreUtilities.Services.Database
                 as SQLiteDataReader)!;
 
             List<TData> list = new List<TData>();
-            var doSelection = selector != null;
 
             int i = 0;
             while (reader.Read())
             {
                 var item = context.GetValueFromDbType(reader);
-                var allowed = !doSelection || selector(item);
+                var allowed = selector != null ? selector(item) : true;
 
                 if (i < startIndex)
                 {
@@ -305,6 +304,8 @@ namespace CoreUtilities.Services.Database
         /// <inheritdoc/>
         public void CloseWriteTransaction()
         {
+            if (writeTransaction == null) return;
+
             database.CommitAndCloseTransaction(writeTransaction);
             writeTransaction.Dispose();
             writeTransaction = null;

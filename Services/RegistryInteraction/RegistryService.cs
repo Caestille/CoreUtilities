@@ -50,15 +50,20 @@ namespace CoreUtilities.Services.RegistryInteraction
 			// Despite name, this will open the key if it already exists
 			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
 
+			T? castValue = default;
 			try
 			{
 				outOfRegistryValue = key.GetValue(setting);
-				success = outOfRegistryValue != null;
+				if (outOfRegistryValue != null && Convert.ChangeType(outOfRegistryValue, typeof(T)) is T val)
+				{
+					castValue = val;
+					success = true;
+				}
 			}
 			catch
 			{
 				value = defaultValue;
-				SetSetting(setting, defaultValue.ToString());
+				SetSetting(setting, defaultValue?.ToString() ?? "");
 				return false;
 			}
 			finally
@@ -66,7 +71,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 				key.Close();
 			}
 
-			value = success ? (T)Convert.ChangeType(outOfRegistryValue, typeof(T)) : defaultValue;
+			value = success ? castValue! : defaultValue;
 			return success;
 		}
 
@@ -74,15 +79,18 @@ namespace CoreUtilities.Services.RegistryInteraction
 		public Dictionary<string, object> GetAllSettingsInPath(string pathAfterKeyLocation)
 		{
 			var valuesBynames = new Dictionary<string, object>();
-			using (RegistryKey rootKey = Registry.CurrentUser.OpenSubKey(keyLocation + pathAfterKeyLocation))
+			using (var rootKey = Registry.CurrentUser.OpenSubKey(keyLocation + pathAfterKeyLocation))
 			{
 				if (rootKey != null)
 				{
 					string[] valueNames = rootKey.GetValueNames();
 					foreach (string currSubKey in valueNames)
 					{
-						object value = rootKey.GetValue(currSubKey);
-						valuesBynames.Add(currSubKey, value);
+						var value = rootKey.GetValue(currSubKey);
+						if (value != null)
+						{
+							valuesBynames.Add(currSubKey, value);
+						}
 					}
 					rootKey.Close();
 				}

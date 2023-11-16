@@ -38,9 +38,9 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 				case AvailableOperation.OutsideOf:
 					throw new NotSupportedException("OutsideOf rule type is not supported for value type rule");
 				case AvailableOperation.Contains:
-					return value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0;
+					return (Value1 is string) ? value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0 : false;
 				case AvailableOperation.DoesNotContain:
-					return !(value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0);
+					return (Value1 is string) ? !(value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0) : false;
 			}
 
 			return false;

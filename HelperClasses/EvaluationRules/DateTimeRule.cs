@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-    /// <summary>
-    /// A rule for operating on DateTime values.
-    /// </summary>
-    /// <typeparam name="TInput">The input type to be evaluated with.</typeparam>
-    public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
+	/// <summary>
+	/// A rule for operating on DateTime values.
+	/// </summary>
+	/// <typeparam name="TInput">The input type to be evaluated with.</typeparam>
+	public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="DateTimeRule{TInput}"/>.
@@ -26,17 +26,17 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 			switch (SelectedOperation)
 			{
 				case AvailableOperation.EqualTo:
-					return value == (DateTime)Value1;
+					return (Value1 is DateTime) ? value == (DateTime)Value1 : false;
 				case AvailableOperation.NotEqualTo:
-					return value != (DateTime)Value1;
+					return (Value1 is DateTime) ? value != (DateTime)Value1 : false;
 				case AvailableOperation.LessThan:
-					return value < (DateTime)Value1;
+					return (Value1 is DateTime) ? value < (DateTime)Value1 : false;
 				case AvailableOperation.GreaterThan:
-					return value > (DateTime)Value1;
+					return (Value1 is DateTime) ? value > (DateTime)Value1 : false;
 				case AvailableOperation.InBetween:
-					return value > (DateTime)Value2 && value < (DateTime)Value1;
+					return (Value1 is DateTime && Value2 is DateTime) ? value > (DateTime)Value2 && value < (DateTime)Value1 : false;
 				case AvailableOperation.OutsideOf:
-					return value < (DateTime)Value2 && value > (DateTime)Value1;
+					return (Value1 is DateTime && Value2 is DateTime) ? value < (DateTime)Value2 && value > (DateTime)Value1 : false;
 				case AvailableOperation.Contains:
 					throw new NotSupportedException("Contains rule type is not supported for value type rule");
 				case AvailableOperation.DoesNotContain:

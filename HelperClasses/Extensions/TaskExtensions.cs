@@ -41,7 +41,7 @@ namespace CoreUtilities.HelperClasses.Extensions
                     }
                     else if (task.IsFaulted)
                     {
-                        tcs.TrySetException(t.Exception);
+                        tcs.TrySetException(t.Exception!);
                     }
                     else
                     {
@@ -88,7 +88,7 @@ namespace CoreUtilities.HelperClasses.Extensions
                     }
                     else if (task.IsFaulted)
                     {
-                        tcs.TrySetException(t.Exception);
+                        tcs.TrySetException(t.Exception!);
                     }
                 },
                 CancellationToken.None,

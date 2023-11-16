@@ -11,7 +11,7 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 	/// </summary>
 	/// <typeparam name="TInput">The type to be given.</typeparam>
 	/// <typeparam name="TEvaluate">The property type to evaluate.</typeparam>
-	public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEvaluate : IRuleConfigurer<TInput>
+	public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEvaluate : notnull, IRuleConfigurer<TInput>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="AndRule{TInput, TEvaluate}"/>

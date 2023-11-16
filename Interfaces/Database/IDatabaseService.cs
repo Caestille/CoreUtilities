@@ -72,7 +72,7 @@ namespace CoreUtilities.Interfaces.Database
 			string commandName,
 			List<KeyValuePair<string, string>> paramsToUpdate,
 			KeyValuePair<string, string> conditionalParamToUpdate,
-			T transaction = null);
+			T? transaction = null);
 
 		/// <summary>
 		/// Executes a previously set up insert command of a given name with the given parameters. 
@@ -85,7 +85,7 @@ namespace CoreUtilities.Interfaces.Database
 		/// <param name="transaction">The transaction this command belongs to, if any. If null, it will be
 		/// executed immediately.</param>
 		void ExecuteInsertCommand(
-			string commandName, List<KeyValuePair<string, string>> paramsToInsert, T transaction = null);
+			string commandName, List<KeyValuePair<string, string>> paramsToInsert, T? transaction = null);
 
 		/// <summary>
 		/// Clears all rows from a given table.

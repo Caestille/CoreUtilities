@@ -22,12 +22,12 @@ namespace CoreUtilities.Interfaces.EvaluationRules
 		/// <summary>
 		/// Gets the potential first value of the rule. Depending on the inheritor, this may not be set
 		/// </summary>
-		object Value1 { get; set; }
+		object? Value1 { get; set; }
 
 		/// <summary>
 		/// Gets the potential second value of the rule. Depending on the inheritor, this may not be set
 		/// </summary>
-		object Value2 { get; set; }
+		object? Value2 { get; set; }
 
 		/// <summary>
 		/// The rule operation/comparison to be executed (e.g.: Less than, more than etc).

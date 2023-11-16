@@ -13,7 +13,7 @@ namespace CoreUtilities.Interfaces.EvaluationRules
 		/// <summary>
 		/// The selected rule to evaluate with.
 		/// </summary>
-		IRule<TInput> SelectedRule { get; }
+		IRule<TInput>? SelectedRule { get; }
 
 		/// <summary>
 		/// The evaluation method.

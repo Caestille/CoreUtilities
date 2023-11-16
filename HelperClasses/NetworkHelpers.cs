@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Net.NetworkInformation;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CoreUtilities.HelperClasses
 {
@@ -8,33 +10,24 @@ namespace CoreUtilities.HelperClasses
 	{
 		private static string cachedPublicIp;
 
-		public static string PublicIP
-		{
-			get
-			{
-				if (!string.IsNullOrEmpty(cachedPublicIp))
-				{
-					return cachedPublicIp;
-				}
+		private static HttpClient httpClient = new HttpClient();
 
-				try
-				{
-					string url = "http://checkip.dyndns.org";
-					WebRequest req = WebRequest.Create(url);
-					WebResponse resp = req.GetResponse();
-					StreamReader sr = new StreamReader(resp.GetResponseStream());
-					string response = sr.ReadToEnd().Trim();
-					string[] a = response.Split(':');
-					string a2 = a[1].Substring(1);
-					string[] a3 = a2.Split('<');
-					string a4 = a3[0];
-					cachedPublicIp = a4;
-					return a4;
-				}
-				catch
-				{
-					return "";
-				}
+		public static async Task<string> GetPublicIpAsync()
+		{
+			if (!string.IsNullOrEmpty(cachedPublicIp))
+			{
+				return cachedPublicIp;
+			}
+
+			try
+			{
+				var response = await (await httpClient.GetAsync("http://checkip.dyndns.org")).Content.ReadAsStringAsync();
+				cachedPublicIp = response.Split(':')[1].Substring(1).Split('<')[0];
+				return cachedPublicIp;
+			}
+			catch
+			{
+				return "";
 			}
 		}
 

@@ -52,7 +52,7 @@ namespace CoreUtilities.Services.Database
 
         /// <inheritdoc/>
         public IEnumerable<TData> GetConvertedInstancesBetweenIndices(
-            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selectionCriteria = null)
+            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool>? selectionCriteria = null)
         {
             var result = database.GetConvertedRowsBetweenIndices(
                 startIndex, endIndex, defaultCreator, selectionCriteria);
