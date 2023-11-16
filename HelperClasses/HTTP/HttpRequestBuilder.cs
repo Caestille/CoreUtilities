@@ -18,8 +18,8 @@ namespace CoreUtilities.HelperClasses.HTTP
 
         private string requestType;
         private string requestTo;
-        private Dictionary<string, string> unvalidatedHeaders = new Dictionary<string, string>();
-        private Dictionary<string, string> content = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> unvalidatedHeaders = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> content = new Dictionary<string, string>();
         private string headerContentType;
 
         /// <inheritdoc/>

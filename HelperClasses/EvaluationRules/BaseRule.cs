@@ -36,17 +36,17 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 
 		public abstract object DeserialiseValue(string value);
 
-		private object? value1;
+		private object value1;
 		/// <inheritdoc />
-		public object? Value1
+		public object Value1
 		{
 			get => value1;
 			set => SetProperty(ref value1, value);
 		}
 
-		private object? value2;
+		private object value2;
 		/// <inheritdoc />
-		public object? Value2
+		public object Value2
 		{
 			get => value2;
 			set => SetProperty(ref value2, value);

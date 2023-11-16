@@ -9,7 +9,7 @@ namespace CoreUtilities.HelperClasses.Database
 	/// <typeparam name="T">The data type to be stored.</typeparam>
 	public class UpdateTransactionWrapper<T>
 	{
-		private IDatabaseWrapperService<T> database;
+		private readonly IDatabaseWrapperService<T> database;
 
 		/// <summary>
 		/// Constructor for the <see cref="UpdateTransactionWrapper{T}"/>.

@@ -15,9 +15,9 @@ namespace CoreUtilities.HelperClasses.Database
 	/// <typeparam name="TReturn">The data type to be returned from the read operation, if required.</typeparam>
 	public class ReaderInstanceWrapper<TData, TReturn>
 	{
-		private IDatabaseWrapperService<TData> database;
-		private IEnumerable<object> rows;
-		private int reference;
+		private readonly IDatabaseWrapperService<TData> database;
+		private readonly IEnumerable<object> rows;
+		private readonly int reference;
 
 		private TReturn result;
 
@@ -69,9 +69,9 @@ namespace CoreUtilities.HelperClasses.Database
 	/// <typeparam name="TData">The data type to be stored.</typeparam>
 	public class ReaderInstanceWrapper<TData>
 	{
-		private IDatabaseWrapperService<TData> database;
-		private IEnumerable<object> rows;
-		private int reference;
+		private readonly IDatabaseWrapperService<TData> database;
+		private readonly IEnumerable<object> rows;
+		private readonly int reference;
 
 		/// <summary>
 		/// Constructor for the <see cref="ReaderInstanceWrapper{TData}"/>.

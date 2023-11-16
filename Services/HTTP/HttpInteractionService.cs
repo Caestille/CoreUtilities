@@ -15,8 +15,8 @@ namespace CoreUtilities.Services.HTTP
     /// </summary>
     public class HttpInteractionService : IHttpService
     {
-        private HttpClient httpClient = new HttpClient();
-        private Func<IHttpRequestBuilder> httpRequestBuilderCreator;
+        private readonly HttpClient httpClient = new HttpClient();
+        private readonly Func<IHttpRequestBuilder> httpRequestBuilderCreator;
 
         /// <summary>
         /// Constructor for the <see cref="HttpInteractionService"/>.
@@ -77,7 +77,7 @@ namespace CoreUtilities.Services.HTTP
             {
                 response = await httpClient.SendAsync(request).AsCancellable(token ?? CancellationToken.None);
             }
-            catch (TaskCanceledException e)
+            catch (TaskCanceledException)
             {
                 // Task was cancelled
                 // TODO: Logging

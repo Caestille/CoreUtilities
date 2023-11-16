@@ -12,18 +12,18 @@ namespace CoreUtilities.Services.Database
     /// </summary>
     public class SqLiteDatabaseService : IDatabaseService<SQLiteTransaction>
 	{
-		private string connectionString;
+		private readonly string connectionString;
 
-		private SQLiteConnection readConnection;
-		private SQLiteConnection writeConnection;
+		private readonly SQLiteConnection readConnection;
+		private readonly SQLiteConnection writeConnection;
 
-		private Dictionary<string, List<string>> currentTablesAndColumns = new();
+		private readonly Dictionary<string, List<string>> currentTablesAndColumns = new();
 
-		private Dictionary<string, SQLiteCommand> commands = new();
-		private Dictionary<string, List<SQLiteParameter>> commandParameters = new();
-		private Dictionary<string, SQLiteParameter> commandCondtionalParameters = new();
+		private readonly Dictionary<string, SQLiteCommand> commands = new();
+		private readonly Dictionary<string, List<SQLiteParameter>> commandParameters = new();
+		private readonly Dictionary<string, SQLiteParameter> commandCondtionalParameters = new();
 
-		private string dbPath;
+		private readonly string dbPath;
 
 		/// <summary>
 		/// Constructor for the <see cref="SqLiteDatabaseService"/>. Creates the database if needed and opens read and
@@ -257,8 +257,8 @@ namespace CoreUtilities.Services.Database
 					cmd.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {dataType};";
 					cmd.ExecuteNonQuery();
 				}
-				catch (SQLiteException e)
-				{
+				catch (SQLiteException)
+                {
 					// column already existed in table. Do nothing
 				}
 			}

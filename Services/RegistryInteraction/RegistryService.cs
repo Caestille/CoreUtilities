@@ -11,7 +11,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 	/// </summary>
 	public class RegistryService : IRegistryService
 	{
-		private string keyLocation;
+		private readonly string keyLocation;
 
 		/// <summary>
 		/// Constructor for <see cref="RegistryService"/>.

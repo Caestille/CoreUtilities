@@ -31,12 +31,12 @@ namespace CoreUtilities.Services.Database
 
         private int rowCount;
 
-        private IDatabaseWrapperContext<TData> context;
+        private readonly IDatabaseWrapperContext<TData> context;
 
-        private Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> primaryKeyMappings = new Dictionary<string, int>();
 
         private int count = 0;
-        private ConcurrentDictionary<int, SQLiteDataReader> rowReaders = new();
+        private readonly ConcurrentDictionary<int, SQLiteDataReader> rowReaders = new();
 
         private const string updateRowCommandName = "updateRow";
         private const string insertRowCommandName = "insertRow";

@@ -12,7 +12,7 @@ namespace CoreUtilities.Services.Database
     /// <typeparam name="TData">The data type the <see cref="IDatabaseWrapperService{TData}"/> is storing.</typeparam>
     public class DatabaseInteractionBuilder<TData> : IDatabaseInteractionBuilder<TData>
     {
-        private IDatabaseWrapperService<TData> database;
+        private readonly IDatabaseWrapperService<TData> database;
 
         /// <summary>
         /// Constructor for <see cref="DatabaseInteractionBuilder{TData}"/>.
