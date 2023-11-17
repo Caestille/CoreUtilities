@@ -41,7 +41,7 @@ namespace CoreUtilities.Interfaces.Database
         /// If not the row count is not incremented for that row.</param>
         /// <returns>An <see cref="int"/> which is the row count of all rows matching the selector (if set), or
         /// all rows if now.</returns>
-        int RowCount(Func<TData, bool> selector = null);
+        int RowCount(Func<TData, bool>? selector = null);
 
         /// <summary>
         /// Adds a <see cref="IEnumerable{T}"/> of values to the database.
@@ -77,7 +77,7 @@ namespace CoreUtilities.Interfaces.Database
         /// <param name="selector">A <see cref="Func{T, TResult}"/> which each row is evaluated against to add
         /// to the output.</param>
         /// <returns></returns>
-        IEnumerable<TData> GetConvertedRows(Func<TData, bool> selector = null);
+        IEnumerable<TData> GetConvertedRows(Func<TData, bool>? selector = null);
 
         /// <summary>
         /// Begins a write transaction in the database, which can have insertions added to and then committed/closed.

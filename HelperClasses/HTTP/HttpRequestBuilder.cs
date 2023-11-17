@@ -1,5 +1,6 @@
 ﻿using CoreUtilities.HelperClasses.Extensions;
 using CoreUtilities.Interfaces.HTTP;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -14,13 +15,13 @@ namespace CoreUtilities.HelperClasses.HTTP
     /// </summary>
     public class HttpRequestBuilder : IHttpRequestBuilder
     {
-        private HttpRequestMessage currentRequest;
+        private HttpRequestMessage? currentRequest;
 
-        private string requestType;
-        private string requestTo;
+        private string? requestType;
+        private string? requestTo;
         private readonly Dictionary<string, string> unvalidatedHeaders = new Dictionary<string, string>();
         private readonly Dictionary<string, string> content = new Dictionary<string, string>();
-        private string headerContentType;
+        private string? headerContentType;
 
         /// <inheritdoc/>
         public IHttpRequestBuilder CreateRequest(IHttpRequestBuilder.HttpCommandType commandType, string requestTo)
@@ -58,7 +59,7 @@ namespace CoreUtilities.HelperClasses.HTTP
         /// <inheritdoc/>
         public HttpRequestMessage Build()
         {
-            currentRequest = new HttpRequestMessage(new HttpMethod(requestType), requestTo);
+            currentRequest = new HttpRequestMessage(new HttpMethod(requestType!), requestTo);
 
             if (unvalidatedHeaders.Any())
             {
@@ -82,9 +83,13 @@ namespace CoreUtilities.HelperClasses.HTTP
                 currentRequest.Content = new StringContent(contentSb.ToString());
             }
 
-            if (!string.IsNullOrEmpty(headerContentType))
+            if (!string.IsNullOrEmpty(headerContentType) && currentRequest.Content != null)
             {
                 currentRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(headerContentType);
+            }
+            else
+            {
+                throw new InvalidOperationException("Missing content or header content type");
             }
 
             return currentRequest;

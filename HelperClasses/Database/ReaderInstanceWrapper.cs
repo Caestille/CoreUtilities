@@ -19,7 +19,7 @@ namespace CoreUtilities.HelperClasses.Database
 		private readonly IEnumerable<object> rows;
 		private readonly int reference;
 
-		private TReturn result;
+		private TReturn? result;
 
 		/// <summary>
 		/// Constructor for the <see cref="ReaderInstanceWrapper{TData, TReturn}"/>. 
@@ -53,7 +53,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <see cref="WithAction(Func{IEnumerable{object}, TReturn})"/>. 
 		/// </summary>
 		/// <returns>A value of type <see cref="TReturn"/>.</returns>
-		public TReturn Close()
+		public TReturn? Close()
 		{
 			database.CloseRowReader(reference);
 			return result;

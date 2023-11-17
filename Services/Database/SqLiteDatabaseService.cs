@@ -36,7 +36,7 @@ namespace CoreUtilities.Services.Database
 		{
 			connectionString = $"Data Source={path};Version=3;";
 			var dir = Path.GetDirectoryName(path);
-			if (!Directory.Exists(dir)) 
+			if (dir!= null && !Directory.Exists(dir)) 
 			{
 				Directory.CreateDirectory(dir);
 			}
