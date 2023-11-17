@@ -72,7 +72,7 @@ namespace CoreUtilities.Services.HTTP
         public async Task<(HttpStatusCode, string)> SendAsyncDisposeAndGetResponse(
             HttpRequestMessage request, CancellationToken? token)
         {
-            HttpResponseMessage response = null;
+            HttpResponseMessage? response = null;
             try
             {
                 response = await httpClient.SendAsync(request).AsCancellable(token ?? CancellationToken.None);

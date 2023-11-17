@@ -20,8 +20,13 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 
 		/// <inheritdoc />
 		public override bool Evaluate(TInput input)
-		{
-			var value = GetPropertyFunc(input);
+        {
+            if (GetPropertyFunc == null)
+            {
+                throw new NullReferenceException("GetPropertyFunc is null");
+            }
+
+            var value = GetPropertyFunc(input);
 
 			switch (SelectedOperation)
 			{

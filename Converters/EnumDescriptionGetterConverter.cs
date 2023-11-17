@@ -11,7 +11,7 @@ namespace CoreUtilities.Converters
 	/// </summary>
 	public class EnumDescriptionGetterConverter : IValueConverter
 	{
-		Enum cachedEnum;
+		private Enum? cachedEnum;
 
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
@@ -28,7 +28,7 @@ namespace CoreUtilities.Converters
 		{
 			if (value is string description)
 			{
-				if (description == cachedEnum.GetEnumDescription())
+				if (description == cachedEnum?.GetEnumDescription())
 				{
 					return cachedEnum;
 				}

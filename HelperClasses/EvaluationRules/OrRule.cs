@@ -18,25 +18,35 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// </summary>
 		public OrRule() : base(null)
 		{
-			Value1 = (TEvaluate)Activator.CreateInstance(typeof(TEvaluate));
-			Value2 = (TEvaluate)Activator.CreateInstance(typeof(TEvaluate));
+			Value1 = Activator.CreateInstance(typeof(TEvaluate));
+			Value2 = Activator.CreateInstance(typeof(TEvaluate));
 			SelectedOperation = AvailableOperation.EqualTo;
 		}
 
 		/// <inheritdoc />
 		public override bool Evaluate(TInput input)
 		{
-			return ((TEvaluate)Value1).Evaluate(input) || ((TEvaluate)Value1).Evaluate(input);
+			if (Value1 is TEvaluate val1 && Value2 is TEvaluate val2)
+			{
+				return val1.Evaluate(input) || val2.Evaluate(input);
+			}
+
+			return false;
 		}
 
 		public override string SerialiseValue(object value)
 		{
-			return ((TEvaluate)value).Serialise();
+			if (value is TEvaluate val)
+			{
+				return val.Serialise();
+			}
+
+			return string.Empty;
 		}
 
 		public override object DeserialiseValue(string value)
 		{
-			return ((TEvaluate)Activator.CreateInstance(typeof(TEvaluate))).Deserialise(value);
+			return ((TEvaluate)Activator.CreateInstance(typeof(TEvaluate))!).Deserialise(value);
 		}
 
 		/// <inheritdoc />

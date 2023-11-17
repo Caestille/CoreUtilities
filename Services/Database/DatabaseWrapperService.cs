@@ -259,12 +259,11 @@ namespace CoreUtilities.Services.Database
                 as SQLiteDataReader)!;
 
             List<TData> list = new List<TData>();
-            var doSelection = selector != null;
 
             while (reader.Read())
             {
                 var item = context.GetValueFromDbType(reader);
-                if (!doSelection || selector(item))
+                if (selector == null || selector(item))
                 {
                     list.Add(item);
                 }

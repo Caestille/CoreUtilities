@@ -44,7 +44,7 @@ namespace CoreUtilities.Interfaces.Database
         /// <param name="selector"></param>
         /// <returns></returns>
         IEnumerable<TData> GetConvertedInstancesBetweenIndices(
-            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool> selector = null);
+            int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool>? selector = null);
 
         /// <summary>
         /// Gets all rows which (optionally) match a <see cref="Func{T, TResult}"/> selection criteria.
@@ -53,7 +53,7 @@ namespace CoreUtilities.Interfaces.Database
         /// of whether the row passes the selection criteria.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> which is all rows matching the selection criteria (or all
         /// if null), converted using the database conversion func.</returns>
-        IEnumerable<TData> GetConvertedInstances(Func<TData, bool> selector = null);
+        IEnumerable<TData> GetConvertedInstances(Func<TData, bool>? selector = null);
 
         /// <summary>
         /// Gets the row count of all rows which (optionally) match a <see cref="Func{T, TResult}"/> selection 
@@ -63,7 +63,7 @@ namespace CoreUtilities.Interfaces.Database
         /// of whether the row passes the selection criteria.</param>
         /// <returns>A <see cref="int"/> which is the count of all rows matching the selection criteria (or all
         /// if null).</returns>
-        int RowCount(Func<TData, bool> selector = null);
+        int RowCount(Func<TData, bool>? selector = null);
 
         /// <summary>
         /// Removes all rows from the database.

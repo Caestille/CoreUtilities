@@ -8,7 +8,7 @@ namespace CoreUtilities.HelperClasses
 {
 	public static class NetworkHelpers
 	{
-		private static string cachedPublicIp;
+		private static string? cachedPublicIp;
 
 		private static HttpClient httpClient = new HttpClient();
 

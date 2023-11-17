@@ -18,7 +18,7 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// </summary>
 		/// <param name="getPropertyFunc">The <see cref="Func{T, TResult}"/> used the obtain the 
 		/// <typeparamref name="TEvaluate"/> to evaluate with from the given <typeparamref name="TInput"/>.</param>
-		public BaseRule(Func<TInput, TEvaluate> getPropertyFunc)
+		public BaseRule(Func<TInput, TEvaluate>? getPropertyFunc)
 		{
 			this.getPropertyFunc = getPropertyFunc;
 		}
@@ -60,9 +60,9 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 			set => SetProperty(ref value2Usable, value);
 		}
 
-		private Func<TInput, TEvaluate> getPropertyFunc;
+		private Func<TInput, TEvaluate>? getPropertyFunc;
 		/// <inheritdoc />
-		public Func<TInput, TEvaluate> GetPropertyFunc
+		public Func<TInput, TEvaluate>? GetPropertyFunc
 		{
 			get => getPropertyFunc;
 			set => SetProperty(ref getPropertyFunc, value);
