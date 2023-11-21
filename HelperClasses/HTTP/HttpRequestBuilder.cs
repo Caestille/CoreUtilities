@@ -87,10 +87,6 @@ namespace CoreUtilities.HelperClasses.HTTP
             {
                 currentRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(headerContentType);
             }
-            else
-            {
-                throw new InvalidOperationException("Missing content or header content type");
-            }
 
             return currentRequest;
         }
