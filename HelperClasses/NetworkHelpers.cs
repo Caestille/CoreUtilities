@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Net.NetworkInformation;
-using System.Net;
+﻿using System.Net.NetworkInformation;
 using System.Net.Http;
 using System.Threading.Tasks;
 

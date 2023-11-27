@@ -1,6 +1,5 @@
 ﻿using CoreUtilities.HelperClasses.Extensions;
 using CoreUtilities.Interfaces.HTTP;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,11 +8,11 @@ using System.Text;
 
 namespace CoreUtilities.HelperClasses.HTTP
 {
-    /// <summary>
-    /// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a 
-    /// <see cref="HttpRequestMessage"/>.
-    /// </summary>
-    public class HttpRequestBuilder : IHttpRequestBuilder
+	/// <summary>
+	/// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a 
+	/// <see cref="HttpRequestMessage"/>.
+	/// </summary>
+	public class HttpRequestBuilder : IHttpRequestBuilder
     {
         private HttpRequestMessage? currentRequest;
 
