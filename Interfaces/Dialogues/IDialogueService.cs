@@ -25,7 +25,7 @@ namespace CoreUtilities.Interfaces.Dialogues
 		/// <param name="dialogueSize">An overriding dialogue size if required, otherwise it is automatic (which
 		/// can have undesired results).</param>
 		/// <returns>An (awaitable) <see cref="Task"/>.</returns>
-		void ShowCustomDialogue(object? dataContext = null, Size? dialogueSize = null);
+		void ShowCustomDialogue(object dataContext, Size? dialogueSize = null);
 
         /// <summary>
         /// Given a datacontext (viewmodel), opens a registered dialogue (if it exists) in a borderless window.
@@ -35,7 +35,7 @@ namespace CoreUtilities.Interfaces.Dialogues
         /// <param name="dialogueSize">An overriding dialogue size if required, otherwise it is automatic (which
         /// can have undesired results).</param>
         /// <returns>An (awaitable) <see cref="Task"/>.</returns>
-        void ShowBorderlessCustomDialogue(object? dataContext = null, Size? dialogueSize = null);
+        void ShowBorderlessCustomDialogue(object dataContext, Size? dialogueSize = null);
 
 		/// <summary>
 		/// Opens an open file dialogue.
