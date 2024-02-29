@@ -222,7 +222,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public void Delete()
 		{
-			File.Delete(this.dbPath);
+			File.Delete(dbPath);
 		}
 
 		/// <summary>
