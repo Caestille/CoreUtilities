@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace CoreUtilities.Services
@@ -11,6 +12,7 @@ namespace CoreUtilities.Services
 		private bool hasKeepAliveBeenRefreshed;
 		private bool block;
 		bool run = true;
+		string creator;
 
 		/// <summary>
 		/// Constructor for <see cref="KeepAliveTriggerService"/>. Sets the action to invoke and the refresh time.
@@ -18,7 +20,7 @@ namespace CoreUtilities.Services
 		/// <param name="callback">The <see cref="Action"/> to invoke.</param>
 		/// <param name="refreshTimeMs">The refresh time after which the action is invoked if not kept alive (in ms).
 		/// </param>
-		public KeepAliveTriggerService(Action callback, int refreshTimeMs)
+		public KeepAliveTriggerService(Action callback, int refreshTimeMs, [CallerFilePath]string creator = "")
 		{
 			Thread thread = new Thread(new ThreadStart(() =>
 			{
@@ -40,6 +42,7 @@ namespace CoreUtilities.Services
 				}
 			}));
 			thread.Start();
+			this.creator = creator;
 		}
 
 		/// <summary>
