@@ -6,21 +6,21 @@ namespace CoreUtilities.Services
 	/// <summary>
 	/// Service which invokes an <see cref="Action"/> once after a refresh time if not kept alive.
 	/// </summary>
-	public class KeepAliveTriggerService
+	public class RefreshTrigger
 	{
-		private bool hasKeepAliveBeenRefreshed;
+		private bool refreshed;
 		private bool block;
 		private bool run = true;
 		private Action refreshAction;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="KeepAliveTriggerService"/> class.
+		/// Initializes a new instance of the <see cref="RefreshTrigger"/> class.
 		/// Sets the action to invoke and the refresh time.
 		/// </summary>
 		/// <param name="callback">The <see cref="Action"/> to invoke.</param>
 		/// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.
 		/// </param>
-		public KeepAliveTriggerService(Action callback, int refreshTimeMs)
+		public RefreshTrigger(Action callback, int refreshTimeMs)
 		{
 			if (refreshTimeMs <= 0)
 			{
@@ -28,21 +28,21 @@ namespace CoreUtilities.Services
 				return;
 			}
 
-			refreshAction = () => hasKeepAliveBeenRefreshed = true;
+			refreshAction = () => refreshed = true;
 
 			Thread thread = new Thread(new ThreadStart(() =>
 			{
 				while (run)
 				{
-					if (!hasKeepAliveBeenRefreshed && !block)
+					if (!refreshed && !block)
 					{
 						callback();
 						block = true;
 					}
 
-					if (hasKeepAliveBeenRefreshed)
+					if (refreshed)
 					{
-						hasKeepAliveBeenRefreshed = false;
+						refreshed = false;
 						block = false;
 					}
 
