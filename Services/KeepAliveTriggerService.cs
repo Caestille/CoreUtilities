@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace CoreUtilities.Services
@@ -11,17 +10,26 @@ namespace CoreUtilities.Services
 	{
 		private bool hasKeepAliveBeenRefreshed;
 		private bool block;
-		bool run = true;
-		string creator;
+		private bool run = true;
+		private Action refreshAction;
 
 		/// <summary>
-		/// Constructor for <see cref="KeepAliveTriggerService"/>. Sets the action to invoke and the refresh time.
+		/// Initializes a new instance of the <see cref="KeepAliveTriggerService"/> class.
+		/// Sets the action to invoke and the refresh time.
 		/// </summary>
 		/// <param name="callback">The <see cref="Action"/> to invoke.</param>
-		/// <param name="refreshTimeMs">The refresh time after which the action is invoked if not kept alive (in ms).
+		/// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.
 		/// </param>
-		public KeepAliveTriggerService(Action callback, int refreshTimeMs, [CallerFilePath]string creator = "")
+		public KeepAliveTriggerService(Action callback, int refreshTimeMs)
 		{
+			if (refreshTimeMs <= 0)
+			{
+				refreshAction = callback;
+				return;
+			}
+
+			refreshAction = () => hasKeepAliveBeenRefreshed = true;
+
 			Thread thread = new Thread(new ThreadStart(() =>
 			{
 				while (run)
@@ -42,20 +50,18 @@ namespace CoreUtilities.Services
 				}
 			}));
 			thread.Start();
-			this.creator = creator;
 		}
 
 		/// <summary>
-		/// Refreshes the service keepAlive, preventing the action from being invoked for the refresh time period once
-		/// more.
+		/// Refreshes the trigger, preventing the action from being invoked for the refresh time period once more.
 		/// </summary>
 		public void Refresh()
 		{
-			hasKeepAliveBeenRefreshed = true;
+			refreshAction();
 		}
 
 		/// <summary>
-		/// Stops the service, killing the thread checking for the keep alive.
+		/// Stops the service, killing the thread checking for the refresh.
 		/// </summary>
 		public void Stop()
 		{
