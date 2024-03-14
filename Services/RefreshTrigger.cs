@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace CoreUtilities.Services
@@ -12,6 +13,7 @@ namespace CoreUtilities.Services
 		private bool block;
 		private bool run = true;
 		private Action refreshAction;
+		private string name;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RefreshTrigger"/> class.
@@ -20,7 +22,7 @@ namespace CoreUtilities.Services
 		/// <param name="callback">The <see cref="Action"/> to invoke.</param>
 		/// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.
 		/// </param>
-		public RefreshTrigger(Action callback, int refreshTimeMs)
+		public RefreshTrigger(Action callback, int refreshTimeMs, [CallerFilePath] string name = "")
 		{
 			if (refreshTimeMs <= 0)
 			{
@@ -50,6 +52,8 @@ namespace CoreUtilities.Services
 				}
 			}));
 			thread.Start();
+
+			this.name = name;
 		}
 
 		/// <summary>
