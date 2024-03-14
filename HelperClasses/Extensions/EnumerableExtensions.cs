@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace CoreUtilities.HelperClasses.Extensions
 {
@@ -16,6 +17,11 @@ namespace CoreUtilities.HelperClasses.Extensions
         public static IEnumerable<T> Clone<T>(this IEnumerable<T> toCopy)
         {
             return new List<T>(toCopy);
+        }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
+        {
+            return new ObservableCollection<T>(enumerable);
         }
     }
 }
