@@ -23,5 +23,10 @@ namespace CoreUtilities.HelperClasses.Extensions
         {
             return new ObservableCollection<T>(enumerable);
         }
+
+        public static RangeObservableCollection<T> ToRangeObservableCollection<T>(this IEnumerable<T> enumerable)
+        {
+            return new RangeObservableCollection<T>(enumerable);
+        }
     }
 }
