@@ -1,6 +1,7 @@
 ﻿using CoreUtilities.HelperClasses.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace CoreUtilities.HelperClasses.EvaluationRules
@@ -89,7 +90,8 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 
 		public override object DeserialiseValue(string value)
 		{
-			return DateTime.Parse(value);
+			var sucess = DateTime.TryParse(value, CultureInfo.InvariantCulture, out var result);
+            return sucess ? result : null;
 		}
 
 		/// <inheritdoc />
