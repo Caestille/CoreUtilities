@@ -6,7 +6,7 @@ namespace CoreUtilities.HelperClasses
 {
 	public static class NetworkHelpers
 	{
-		private static string? cachedPublicIp;
+        private static string? cachedPublicIp;
 
 		private static HttpClient httpClient = new HttpClient();
 
@@ -20,8 +20,13 @@ namespace CoreUtilities.HelperClasses
 			try
 			{
 				var response = await (await httpClient.GetAsync("http://checkip.dyndns.org")).Content.ReadAsStringAsync();
-				cachedPublicIp = response.Split(':')[1].Substring(1).Split('<')[0];
-				return cachedPublicIp;
+                if (response.Contains("Current IP Address"))
+                {
+                    cachedPublicIp = response.Split(':')[1].Substring(1).Split('<')[0];
+                    return cachedPublicIp;
+                }
+
+                return "";
 			}
 			catch
 			{
