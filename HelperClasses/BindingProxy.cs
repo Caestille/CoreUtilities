@@ -7,7 +7,14 @@ namespace CoreUtilities.HelperClasses
 	/// </summary>
 	public class BindingProxy : Freezable
 	{
-		protected override Freezable CreateInstanceCore()
+        public BindingProxy() { }
+
+        public BindingProxy(object data)
+        {
+            Data = data;
+        }
+
+        protected override Freezable CreateInstanceCore()
 		{
 			return new BindingProxy();
 		}
@@ -22,7 +29,7 @@ namespace CoreUtilities.HelperClasses
 		}
 
 		public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
-			"Data",
+			nameof(Data),
 			typeof(object),
 			typeof(BindingProxy),
 			new UIPropertyMetadata(null));
