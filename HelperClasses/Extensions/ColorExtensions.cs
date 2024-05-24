@@ -53,10 +53,10 @@ namespace CoreUtilities.HelperClasses.Extensions
 		public static Color Combine(this Color colour, Color colour2, double colour2Weighting)
 		{
 			double colour1Weighting = 1 - colour2Weighting;
-			byte a = (byte)(((double)colour.A * colour1Weighting + (double)colour2.A * colour2Weighting) / (colour1Weighting + colour2Weighting));
-			byte r = (byte)(((double)colour.R * colour1Weighting + (double)colour2.R * colour2Weighting) / (colour1Weighting + colour2Weighting));
-			byte g = (byte)(((double)colour.G * colour1Weighting + (double)colour2.G * colour2Weighting) / (colour1Weighting + colour2Weighting));
-			byte b = (byte)(((double)colour.B * colour1Weighting + (double)colour2.B * colour2Weighting) / (colour1Weighting + colour2Weighting));
+			byte a = (byte)((colour.A * colour1Weighting + colour2.A * colour2Weighting) / (colour1Weighting + colour2Weighting));
+			byte r = (byte)((colour.R * colour1Weighting + colour2.R * colour2Weighting) / (colour1Weighting + colour2Weighting));
+			byte g = (byte)((colour.G * colour1Weighting + colour2.G * colour2Weighting) / (colour1Weighting + colour2Weighting));
+			byte b = (byte)((colour.B * colour1Weighting + colour2.B * colour2Weighting) / (colour1Weighting + colour2Weighting));
 			return Color.FromArgb(a, r, g, b);
 		}
 
@@ -147,9 +147,9 @@ namespace CoreUtilities.HelperClasses.Extensions
 		/// <returns>A <see cref="Color"/> with brightness modified by the scaling factor.</returns>
 		public static void ChangeThisColourBrightness(this ref Color colour, float factor)
 		{
-			float red = (float)colour.R;
-			float green = (float)colour.G;
-			float blue = (float)colour.B;
+			float red = colour.R;
+			float green = colour.G;
+			float blue = colour.B;
 
 			if (factor < 0)
 			{
@@ -176,9 +176,9 @@ namespace CoreUtilities.HelperClasses.Extensions
 		/// <returns>A <see cref="Color"/> with brightness modified by the scaling factor.</returns>
 		public static Color ChangeColourBrightness(this Color colour, float factor)
 		{
-			float red = (float)colour.R;
-			float green = (float)colour.G;
-			float blue = (float)colour.B;
+			float red = colour.R;
+			float green = colour.G;
+			float blue = colour.B;
 
 			if (factor < 0)
 			{
