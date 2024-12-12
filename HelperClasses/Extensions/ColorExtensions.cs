@@ -168,6 +168,11 @@ namespace CoreUtilities.HelperClasses.Extensions
 			colour = Color.FromArgb(colour.A, (byte)red, (byte)green, (byte)blue);
 		}
 
+        public static Color Invert(this Color colour)
+        {
+            return Color.FromArgb(colour.A, (byte)(255 - colour.R), (byte)(255 - colour.G), (byte)(255 - colour.B));
+        }
+
 		/// <summary>
 		/// Changes the brightness of a <see cref="Color"/> by a scaling factor.
 		/// </summary>
