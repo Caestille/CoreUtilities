@@ -1,5 +1,4 @@
-﻿using SkiaSharp;
-using System;
+﻿using System;
 using System.Windows.Media;
 
 namespace CoreUtilities.HelperClasses.Extensions
@@ -9,18 +8,6 @@ namespace CoreUtilities.HelperClasses.Extensions
 	/// </summary>
 	public static class ColorExtensions
 	{
-		/// <summary>
-		/// Converts a <see cref="Color"/> to a <see cref="SKColor"/>.
-		/// </summary>
-		/// <param name="colour">The colour to be converted</param>
-		/// <param name="alpha">An overriding alpha value if the <see cref="Color"/>s alpha property is not
-		/// desirable.</param>
-		/// <returns>A <see cref="SKColor"/> matching the given <see cref="Color"/>.</returns>
-		public static SKColor ToSkColor(this Color colour, byte? alpha = null)
-		{
-			return new SKColor(colour.R, colour.G, colour.B, alpha ?? colour.A);
-		}
-
 		public static string GetHexString(this Color colour)
 		{
 			return colour.ToString();
