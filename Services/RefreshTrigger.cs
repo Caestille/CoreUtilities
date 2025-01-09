@@ -23,8 +23,10 @@
 		/// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.
 		/// </param>
 		public RefreshTrigger(Action callback, int refreshTimeMs, [CallerFilePath] string name = "")
-		{
-			if (refreshTimeMs <= 0)
+        {
+            this.name = name;
+
+            if (refreshTimeMs <= 0)
 			{
                 this.refreshAction = callback;
 				return;
@@ -53,7 +55,6 @@
 			}));
 			thread.Start();
 
-			this.name = name;
 		}
 
 		/// <summary>

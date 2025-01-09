@@ -9,22 +9,22 @@
         public delegate object ConvertDelegate(object[] values, Type targetType, object parameter, CultureInfo culture);
         public delegate object[] ConvertBackDelegate(object value, Type[] targetTypes, object parameter, CultureInfo culture);
 
-        public InlineMultiConverter(ConvertDelegate convert, ConvertBackDelegate convertBack = null)
+        public InlineMultiConverter(ConvertDelegate convert, ConvertBackDelegate? convertBack = null)
         {
-            this._convert = convert ?? throw new ArgumentNullException(nameof(convert));
-            this._convertBack = convertBack;
+            this.convert = convert ?? throw new ArgumentNullException(nameof(convert));
+            this.convertBack = convertBack;
         }
 
-        private ConvertDelegate _convert { get; }
+        private ConvertDelegate convert { get; }
 
-        private ConvertBackDelegate _convertBack { get; }
+        private ConvertBackDelegate? convertBack { get; }
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-            => this._convert(values, targetType, parameter, culture);
+            => this.convert(values, targetType, parameter, culture);
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-            => (this._convertBack != null)
-                ? this._convertBack(value, targetTypes, parameter, culture)
+            => (this.convertBack != null)
+                ? this.convertBack(value, targetTypes, parameter, culture)
                 : throw new NotImplementedException();
     }
 }

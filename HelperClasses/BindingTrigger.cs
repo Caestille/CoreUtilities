@@ -13,13 +13,13 @@
                 Path = new PropertyPath(nameof(this.Value))
             };
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public Binding Binding { get; }
 
         public void Refresh()
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Value)));
 
-        public object Value { get; }
+        public object? Value { get; }
     }
 }
