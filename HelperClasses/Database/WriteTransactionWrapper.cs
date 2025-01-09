@@ -1,14 +1,14 @@
-﻿using CoreUtilities.Interfaces.Database;
-using System.Collections.Generic;
-
-namespace CoreUtilities.HelperClasses.Database
+﻿namespace CoreUtilities.HelperClasses.Database
 {
-	/// <summary>
-	/// Wrapper class for enabling builder pattern usage of write transactions into a 
-	/// <see cref="IDatabaseWrapperService{TData}"/> instance.
-	/// </summary>
-	/// <typeparam name="T">The data type to be stored.</typeparam>
-	public class WriteTransactionWrapper<T>
+    using CoreUtilities.Interfaces.Database;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Wrapper class for enabling builder pattern usage of write transactions into a 
+    /// <see cref="IDatabaseWrapperService{TData}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The data type to be stored.</typeparam>
+    public class WriteTransactionWrapper<T>
 	{
 		private readonly IDatabaseWrapperService<T> database;
 
@@ -30,7 +30,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <returns>This <see cref="WriteTransactionWrapper{T}"/> class, enabling the builder pattern to continue.</returns>
 		public WriteTransactionWrapper<T> WithEntry(T entry)
 		{
-			database.Add(entry);
+            this.database.Add(entry);
 			return this;
 		}
 
@@ -42,7 +42,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <returns></returns>
 		public WriteTransactionWrapper<T> WithEntrys(IEnumerable<T> entries)
 		{
-			database.AddRange(entries);
+            this.database.AddRange(entries);
 			return this;
 		}
 
@@ -52,7 +52,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// </summary>
 		public void ExecuteWrite()
 		{
-			database.CloseWriteTransaction();
+            this.database.CloseWriteTransaction();
 		}
 	}
 }

@@ -1,16 +1,16 @@
-﻿using System.Windows.Data;
-using System.Windows;
-using System.ComponentModel;
-
-namespace CoreUtilities.HelperClasses
+﻿namespace CoreUtilities.HelperClasses
 {
+    using System.Windows.Data;
+    using System.Windows;
+    using System.ComponentModel;
+
     public class BindingTrigger : INotifyPropertyChanged
     {
         public BindingTrigger()
-            => Binding = new Binding()
+            => this.Binding = new Binding()
             {
                 Source = this,
-                Path = new PropertyPath(nameof(Value))
+                Path = new PropertyPath(nameof(this.Value))
             };
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -18,7 +18,7 @@ namespace CoreUtilities.HelperClasses
         public Binding Binding { get; }
 
         public void Refresh()
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Value)));
 
         public object Value { get; }
     }

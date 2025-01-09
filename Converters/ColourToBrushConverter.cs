@@ -1,16 +1,16 @@
-﻿using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Media;
-
-namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters
 {
-	/// <summary>
-	/// A <see cref="IValueConverter"/> which returns a <see cref="SolidColorBrush"/> whos colour is the colour set in
-	/// the binding.
-	/// </summary>
-	public class ColourToBrushConverter : IValueConverter
+    using System;
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Data;
+    using System.Windows.Media;
+
+    /// <summary>
+    /// A <see cref="IValueConverter"/> which returns a <see cref="SolidColorBrush"/> whos colour is the colour set in
+    /// the binding.
+    /// </summary>
+    public class ColourToBrushConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{

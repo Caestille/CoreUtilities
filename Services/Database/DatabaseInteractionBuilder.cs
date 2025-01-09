@@ -1,10 +1,10 @@
-﻿using CoreUtilities.HelperClasses.Database;
-using CoreUtilities.Interfaces.Database;
-using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.Services.Database
+﻿namespace CoreUtilities.Services.Database
 {
+    using CoreUtilities.HelperClasses.Database;
+    using CoreUtilities.Interfaces.Database;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Implementation of <see cref="IDatabaseInteractionBuilder{TData}"/>. Class provides clean build pattern type ways of
     /// interacting with a <see cref="IDatabaseWrapperService{TData}"/>.
@@ -21,40 +21,40 @@ namespace CoreUtilities.Services.Database
         /// building commands to interact with.</param>
         public DatabaseInteractionBuilder(IDatabaseWrapperService<TData> databaseWrapper)
         {
-            database = databaseWrapper;
+            this.database = databaseWrapper;
         }
 
         /// <inheritdoc/>
         public WriteTransactionWrapper<TData> GetWriteTransaction()
         {
-            database.OpenWriteTransaction();
-            return new WriteTransactionWrapper<TData>(database);
+            this.database.OpenWriteTransaction();
+            return new WriteTransactionWrapper<TData>(this.database);
         }
 
         /// <inheritdoc/>
         public UpdateTransactionWrapper<TData> GetUpdateTransaction()
         {
-            database.OpenWriteTransaction();
-            return new UpdateTransactionWrapper<TData>(database);
+            this.database.OpenWriteTransaction();
+            return new UpdateTransactionWrapper<TData>(this.database);
         }
 
         /// <inheritdoc/>
         public ReaderInstanceWrapper<TData> GetReader()
         {
-            return new ReaderInstanceWrapper<TData>(database);
+            return new ReaderInstanceWrapper<TData>(this.database);
         }
 
         /// <inheritdoc/>
         public ReaderInstanceWrapper<TData, TReturn> GetReader<TReturn>()
         {
-            return new ReaderInstanceWrapper<TData, TReturn>(database);
+            return new ReaderInstanceWrapper<TData, TReturn>(this.database);
         }
 
         /// <inheritdoc/>
         public IEnumerable<TData> GetConvertedInstancesBetweenIndices(
             int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool>? selectionCriteria = null)
         {
-            var result = database.GetConvertedRowsBetweenIndices(
+            var result = this.database.GetConvertedRowsBetweenIndices(
                 startIndex, endIndex, defaultCreator, selectionCriteria);
             return result;
         }
@@ -62,32 +62,32 @@ namespace CoreUtilities.Services.Database
         /// <inheritdoc/>
         public IEnumerable<TData> GetConvertedInstances(Func<TData, bool>? selectionCriteria = null)
         {
-            return database.GetConvertedRows(selectionCriteria);
+            return this.database.GetConvertedRows(selectionCriteria);
         }
 
         /// <inheritdoc/>
         public int RowCount(Func<TData, bool>? selector = null)
         {
-            return database.RowCount(selector);
+            return this.database.RowCount(selector);
         }
 
         /// <inheritdoc/>
         public void ClearDatabase()
         {
-            database.ClearAllRows();
+            this.database.ClearAllRows();
         }
 
         /// <inheritdoc/>
         public void Disconnect()
         {
-            database.Disconnect();
+            this.database.Disconnect();
         }
 
 		/// <inheritdoc/>
 		public void Delete()
         {
-            Disconnect();
-            database.Delete();
+            this.Disconnect();
+            this.database.Delete();
         }
     }
 }

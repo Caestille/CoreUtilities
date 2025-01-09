@@ -1,18 +1,18 @@
-﻿using CoreUtilities.HelperClasses;
-using CoreUtilities.HelperClasses.Extensions;
-using CoreUtilities.Interfaces.Database;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SQLite;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-
-namespace CoreUtilities.Services.Database
+﻿namespace CoreUtilities.Services.Database
 {
+    using CoreUtilities.HelperClasses;
+    using CoreUtilities.HelperClasses.Extensions;
+    using CoreUtilities.Interfaces.Database;
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Common;
+    using System.Data.SQLite;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+
     /// <summary>
     /// Implementation of <see cref="IDatabaseWrapperService{TData}"/>. Wrapper service which wraps raw usage of a 
     /// database implementation, more convenient. Requires that the data type have some sort of datetime representation
@@ -63,8 +63,8 @@ namespace CoreUtilities.Services.Database
             IDatabaseService<TTransaction> databaseService,
             IDatabaseWrapperContext<TData> context)
         {
-            database = databaseService;
-            DatabaseName = new FileInfo(path).Name;
+            this.database = databaseService;
+            this.DatabaseName = new FileInfo(path).Name;
             this.context = context;
 
             var columnsToAdd = context.GetColumns().Select(x =>
@@ -76,53 +76,53 @@ namespace CoreUtilities.Services.Database
                     })
                 .ToArray();
 
-            database.AddTableAndColumns(tableName, columnsToAdd, context.GetColumnsToIndex());
-            database.SetUpUpdateCommand(
+            this.database.AddTableAndColumns(tableName, columnsToAdd, context.GetColumnsToIndex());
+            this.database.SetUpUpdateCommand(
                 tableName, updateRowCommandName, columnsToAdd.Select(x => x.Key).ToList(), primaryKeyColumnName);
-            database.SetUpInsertCommand(tableName, insertRowCommandName, columnsToAdd.Select(x => x.Key).ToList());
+            this.database.SetUpInsertCommand(tableName, insertRowCommandName, columnsToAdd.Select(x => x.Key).ToList());
 
             if (recreate)
                 return;
 
-            foreach (object item in AllRows().rows)
+            foreach (object item in this.AllRows().rows)
             {
                 var reader = item as IDataRecord;
                 if (reader == null) continue;
-                primaryKeyMappings[context.GetPrimaryKey(context.GetValueFromDbType(reader))] =
+                this.primaryKeyMappings[context.GetPrimaryKey(context.GetValueFromDbType(reader))] =
                     Convert.ToInt32(reader[primaryKeyColumnName]);
             }
 
-            rowCount = primaryKeyMappings.Count;
+            this.rowCount = this.primaryKeyMappings.Count;
         }
 
         /// <inheritdoc/>
         public (int reference, IEnumerable<object> rows) AllRows()
         {
-            SQLiteDataReader reader = (database.GetRows(tableName, "",
-                GenerateOrderingString(dateTimeColumnName, Ordering.Descending)) as SQLiteDataReader)!;
-            var success = rowReaders.TryAdd(count, reader);
+            SQLiteDataReader reader = (this.database.GetRows(tableName, "",
+                this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending)) as SQLiteDataReader)!;
+            var success = this.rowReaders.TryAdd(this.count, reader);
             if (!success)
             {
                 Debug.WriteLine("Failed to add row reader");
             }
-            var result = (count, reader.Cast<object>());
-            count++;
+            var result = (this.count, reader.Cast<object>());
+            this.count++;
             return result;
         }
 
         /// <inheritdoc/>
         public void CloseRowReader(int reference)
         {
-            var reader = rowReaders[reference];
+            var reader = this.rowReaders[reference];
             reader.Close();
             reader.Dispose();
-            rowReaders.Remove(reference, out _);
+            this.rowReaders.Remove(reference, out _);
         }
 
         /// <inheritdoc/>
         public void ClearAllRows()
         {
-            database.Clear(tableName);
+            this.database.Clear(tableName);
         }
 
         /// <inheritdoc/>
@@ -130,22 +130,22 @@ namespace CoreUtilities.Services.Database
         {
             if (selector == null)
             {
-                return (int)database.RowCount(tableName, "");
+                return (int)this.database.RowCount(tableName, "");
             }
             else
             {
                 int count = 0;
 
                 SQLiteDataReader reader =
-                (database.GetRows(
+                (this.database.GetRows(
                     tableName,
                     "",
-                    GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
+                    this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
                 as SQLiteDataReader)!;
 
                 while (reader.Read())
                 {
-                    if (selector(context.GetValueFromDbType(reader)))
+                    if (selector(this.context.GetValueFromDbType(reader)))
                     {
                         count++;
                     }
@@ -157,40 +157,40 @@ namespace CoreUtilities.Services.Database
         /// <inheritdoc/>
         public void AddRange(IEnumerable<TData> list)
         {
-            TTransaction transaction = database.GetAndOpenWriteTransaction();
+            TTransaction transaction = this.database.GetAndOpenWriteTransaction();
             foreach (TData row in list)
             {
-                if (breakOperation)
+                if (this.breakOperation)
                     break;
 
-                var itemValues = context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
+                var itemValues = this.context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
                     {
-                        new KeyValuePair<string, string>(dateTimeColumnName, context.GetDate(row).Ticks.ToString()),
-                        new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
+                        new KeyValuePair<string, string>(dateTimeColumnName, this.context.GetDate(row).Ticks.ToString()),
+                        new KeyValuePair<string, string>(primaryKeyColumnName, this.rowCount.ToString()),
                     }).ToList();
 
-                primaryKeyMappings[context.GetPrimaryKey(row)] = rowCount;
-                rowCount++;
+                this.primaryKeyMappings[this.context.GetPrimaryKey(row)] = this.rowCount;
+                this.rowCount++;
 
-                database.ExecuteInsertCommand(insertRowCommandName, itemValues, transaction);
+                this.database.ExecuteInsertCommand(insertRowCommandName, itemValues, transaction);
             }
-            database.CommitAndCloseTransaction(transaction);
+            this.database.CommitAndCloseTransaction(transaction);
             transaction.Dispose();
         }
 
         /// <inheritdoc/>
         public void Add(TData row)
         {
-            var itemValues = context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
+            var itemValues = this.context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>(dateTimeColumnName, context.GetDate(row).Ticks.ToString()),
-                    new KeyValuePair<string, string>(primaryKeyColumnName, rowCount.ToString()),
+                    new KeyValuePair<string, string>(dateTimeColumnName, this.context.GetDate(row).Ticks.ToString()),
+                    new KeyValuePair<string, string>(primaryKeyColumnName, this.rowCount.ToString()),
                 }).ToList();
 
-            database.ExecuteInsertCommand(insertRowCommandName, itemValues, writeTransaction);
+            this.database.ExecuteInsertCommand(insertRowCommandName, itemValues, this.writeTransaction);
 
-            primaryKeyMappings[context.GetPrimaryKey(row)] = rowCount;
-            rowCount++;
+            this.primaryKeyMappings[this.context.GetPrimaryKey(row)] = this.rowCount;
+            this.rowCount++;
         }
 
         /// <inheritdoc/>
@@ -198,10 +198,10 @@ namespace CoreUtilities.Services.Database
             int startIndex, int endIndex, Func<TData> defaultCreator, Func<TData, bool>? selector = null)
         {
             SQLiteDataReader reader =
-                (database.GetRows(
+                (this.database.GetRows(
                     tableName,
                     "",
-                    GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
+                    this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
                 as SQLiteDataReader)!;
 
             List<TData> list = new List<TData>();
@@ -209,7 +209,7 @@ namespace CoreUtilities.Services.Database
             int i = 0;
             while (reader.Read())
             {
-                var item = context.GetValueFromDbType(reader);
+                var item = this.context.GetValueFromDbType(reader);
                 var allowed = selector != null ? selector(item) : true;
 
                 if (i < startIndex)
@@ -228,7 +228,7 @@ namespace CoreUtilities.Services.Database
 
                 if (allowed)
                 {
-                    list.Add(context.GetValueFromDbType(reader));
+                    list.Add(this.context.GetValueFromDbType(reader));
                     i++;
                 }
             }
@@ -252,17 +252,17 @@ namespace CoreUtilities.Services.Database
         public IEnumerable<TData> GetConvertedRows(Func<TData, bool>? selector = null)
         {
             SQLiteDataReader reader =
-                (database.GetRows(
+                (this.database.GetRows(
                     tableName,
                     "",
-                    GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
+                    this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
                 as SQLiteDataReader)!;
 
             List<TData> list = new List<TData>();
 
             while (reader.Read())
             {
-                var item = context.GetValueFromDbType(reader);
+                var item = this.context.GetValueFromDbType(reader);
                 if (selector == null || selector(item))
                 {
                     list.Add(item);
@@ -278,59 +278,59 @@ namespace CoreUtilities.Services.Database
         /// <inheritdoc/>
         public void OpenWriteTransaction()
         {
-            writeTransaction = database.GetAndOpenWriteTransaction();
+            this.writeTransaction = this.database.GetAndOpenWriteTransaction();
         }
 
         /// <inheritdoc/>
         public void UpdateRow(TData row)
         {
-            if (breakOperation)
+            if (this.breakOperation)
                 return;
 
-            var itemValues = context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
+            var itemValues = this.context.GetDbCompatibleItem(row).Union(new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>(dateTimeColumnName, context.GetDate(row).Ticks.ToString()),
+                    new KeyValuePair<string, string>(dateTimeColumnName, this.context.GetDate(row).Ticks.ToString()),
                 }).ToList();
 
-            database.ExecuteUpdateCommand(
+            this.database.ExecuteUpdateCommand(
                 updateRowCommandName,
                 itemValues,
                 new KeyValuePair<string, string>(
-                    primaryKeyColumnName, primaryKeyMappings[context.GetPrimaryKey(row)].ToString()),
-                writeTransaction);
+                    primaryKeyColumnName, this.primaryKeyMappings[this.context.GetPrimaryKey(row)].ToString()),
+                this.writeTransaction);
         }
 
         /// <inheritdoc/>
         public void CloseWriteTransaction()
         {
-            if (writeTransaction == null) return;
+            if (this.writeTransaction == null) return;
 
-            database.CommitAndCloseTransaction(writeTransaction);
-            writeTransaction.Dispose();
-            writeTransaction = null;
+            this.database.CommitAndCloseTransaction(this.writeTransaction);
+            this.writeTransaction.Dispose();
+            this.writeTransaction = null;
         }
 
         /// <inheritdoc/>
         public void Disconnect()
         {
-            breakOperation = true;
-            if (rowReaders.Any())
+            this.breakOperation = true;
+            if (this.rowReaders.Any())
             {
-                foreach (var reader in rowReaders.Values)
+                foreach (var reader in this.rowReaders.Values)
                 {
                     reader.Close();
                     reader.Dispose();
                 }
-                rowReaders.Clear();
+                this.rowReaders.Clear();
             }
             // Closing connections with transactions open should simply roll them back
-            database.Disconnect();
+            this.database.Disconnect();
 		}
 
 		/// <inheritdoc/>
 		public void Delete()
 		{
-			database.Delete();
+            this.database.Delete();
 		}
 
 		private string GenerateOrderingString(string columnName, Ordering order)

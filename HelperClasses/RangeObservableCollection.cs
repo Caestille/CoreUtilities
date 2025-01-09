@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-
-namespace CoreUtilities.HelperClasses
+﻿namespace CoreUtilities.HelperClasses
 {
-	/// <summary>
-	/// Extenesion of <see cref="ObservableCollection{T}"/>. Raises <see cref="INotifyCollectionChanged"/> when the
-	/// collection is modified, as well as allowing addition of multiple objects.
-	/// </summary>
-	/// <typeparam name="T">The data type to be stored.</typeparam>
-	public class RangeObservableCollection<T> : ObservableCollection<T>
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+
+    /// <summary>
+    /// Extenesion of <see cref="ObservableCollection{T}"/>. Raises <see cref="INotifyCollectionChanged"/> when the
+    /// collection is modified, as well as allowing addition of multiple objects.
+    /// </summary>
+    /// <typeparam name="T">The data type to be stored.</typeparam>
+    public class RangeObservableCollection<T> : ObservableCollection<T>
 	{
 		private bool suppressNotification;
 
@@ -25,12 +25,12 @@ namespace CoreUtilities.HelperClasses
 		/// <param name="list">The list to initialise with.</param>
 		public RangeObservableCollection(IEnumerable<T> list)
 		{
-			AddRange(list);
+            this.AddRange(list);
 		}
 
 		protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
 		{
-			if (!suppressNotification)
+			if (!this.suppressNotification)
 				base.OnCollectionChanged(e);
 		}
 
@@ -44,13 +44,13 @@ namespace CoreUtilities.HelperClasses
 			if (list == null)
 				throw new ArgumentNullException(nameof(list));
 
-			suppressNotification = true;
+            this.suppressNotification = true;
 
 			foreach (T item in list)
-				Add(item);
+                this.Add(item);
 
-			suppressNotification = false;
-			OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            this.suppressNotification = false;
+            this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 
 		/// <summary>
@@ -63,13 +63,13 @@ namespace CoreUtilities.HelperClasses
 			if (list == null)
 				throw new ArgumentNullException(nameof(list));
 
-			suppressNotification = true;
+            this.suppressNotification = true;
 
 			foreach (T item in list)
-				Remove(item);
+                this.Remove(item);
 
-			suppressNotification = false;
-			OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            this.suppressNotification = false;
+            this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace CoreUtilities.HelperClasses
 		/// </summary>
 		public void ForceRaiseCollectionChanged()
 		{
-			OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 	}
 }

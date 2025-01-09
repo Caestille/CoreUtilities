@@ -1,15 +1,15 @@
-﻿using CoreUtilities.HelperClasses.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CoreUtilities.HelperClasses.EvaluationRules
+﻿namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-	/// <summary>
-	/// A rule operating on numerical values.
-	/// </summary>
-	/// <typeparam name="TInput">The input type to be evaluated.</typeparam>
-	public class ValueRule<TInput> : BaseRule<TInput, double?>
+    using CoreUtilities.HelperClasses.Enums;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// A rule operating on numerical values.
+    /// </summary>
+    /// <typeparam name="TInput">The input type to be evaluated.</typeparam>
+    public class ValueRule<TInput> : BaseRule<TInput, double?>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="ValueRule{TInput}"/>, accepts a <see cref="Func{T, TResult}"/> which given a
@@ -21,29 +21,29 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// <inheritdoc />
 		public override bool Evaluate(TInput input)
         {
-            if (GetPropertyFunc == null)
+            if (this.GetPropertyFunc == null)
             {
                 throw new NullReferenceException("GetPropertyFunc is null");
             }
 
-            var value = GetPropertyFunc(input);
+            var value = this.GetPropertyFunc(input);
 
 			if (value == null) return false;
 
-			switch (SelectedOperation)
+			switch (this.SelectedOperation)
 			{
 				case AvailableOperation.EqualTo:
-					return (Value1 is double) ? value == (double)Value1 : false;
+					return (this.Value1 is double) ? value == (double)this.Value1 : false;
 				case AvailableOperation.NotEqualTo:
-					return (Value1 is double) ? value != (double)Value1 : false;
+					return (this.Value1 is double) ? value != (double)this.Value1 : false;
 				case AvailableOperation.LessThan:
-					return (Value1 is double) ? value < (double)Value1 : false;
+					return (this.Value1 is double) ? value < (double)this.Value1 : false;
 				case AvailableOperation.GreaterThan:
-					return (Value1 is double) ? value > (double)Value1 : false;
+					return (this.Value1 is double) ? value > (double)this.Value1 : false;
 				case AvailableOperation.InBetween:
-					return (Value1 is double && Value2 is double) ? value > (double)Value2 && value < (double)Value1 : false;
+					return (this.Value1 is double && this.Value2 is double) ? value > (double)this.Value2 && value < (double)this.Value1 : false;
 				case AvailableOperation.OutsideOf:
-					return (Value1 is double && Value2 is double) ? value < (double)Value2 && value > (double)Value1 : false;
+					return (this.Value1 is double && this.Value2 is double) ? value < (double)this.Value2 && value > (double)this.Value1 : false;
 				case AvailableOperation.Contains:
 					throw new NotSupportedException("Contains rule type is not supported for value type rule");
 				case AvailableOperation.DoesNotContain:
@@ -56,25 +56,25 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// <inheritdoc />
 		public override void ConfigureForSelectedOperation()
 		{
-			switch (SelectedOperation)
+			switch (this.SelectedOperation)
 			{
 				case AvailableOperation.EqualTo:
-					Value2Usable = false;
+                    this.Value2Usable = false;
 					break;
 				case AvailableOperation.NotEqualTo:
-					Value2Usable = false;
+                    this.Value2Usable = false;
 					break;
 				case AvailableOperation.LessThan:
-					Value2Usable = false;
+                    this.Value2Usable = false;
 					break;
 				case AvailableOperation.GreaterThan:
-					Value2Usable = false;
+                    this.Value2Usable = false;
 					break;
 				case AvailableOperation.InBetween:
-					Value2Usable = true;
+                    this.Value2Usable = true;
 					break;
 				case AvailableOperation.OutsideOf:
-					Value2Usable = true;
+                    this.Value2Usable = true;
 					break;
 				case AvailableOperation.Contains:
 					throw new NotSupportedException("Contains rule type is not supported for value type rule");

@@ -1,15 +1,15 @@
-﻿using CoreUtilities.Interfaces.RegistryInteraction;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace CoreUtilities.Services.RegistryInteraction
+﻿namespace CoreUtilities.Services.RegistryInteraction
 {
-	/// <summary>
-	/// Implementation of <see cref="IRegistryService"/> for interacting with keys/values from the windows registry.
-	/// </summary>
-	public class RegistryService : IRegistryService
+    using CoreUtilities.Interfaces.RegistryInteraction;
+    using Microsoft.Win32;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
+    /// <summary>
+    /// Implementation of <see cref="IRegistryService"/> for interacting with keys/values from the windows registry.
+    /// </summary>
+    public class RegistryService : IRegistryService
 	{
 		private readonly string keyLocation;
 
@@ -21,7 +21,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 		/// for multiple of the same application. This guid is persisted in the application base directory.</param>
 		public RegistryService(string keyDirectory, bool addGuid = false)
 		{
-			keyLocation = keyDirectory;
+            this.keyLocation = keyDirectory;
 			if (addGuid)
 			{
 				if (!File.Exists("AppGuid.txt"))
@@ -29,7 +29,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 					File.WriteAllText("AppGuid.txt", Guid.NewGuid().ToString());
 				}
 				string appGuid = File.ReadAllText("AppGuid.txt");
-				keyLocation = $@"{keyDirectory}\{appGuid}";
+                this.keyLocation = $@"{keyDirectory}\{appGuid}";
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 		public void SetSetting(string setting, string value, string pathAfterKeyLocation = "")
 		{
 			// Despite name, this will open the key if it already exists
-			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
+			RegistryKey key = Registry.CurrentUser.CreateSubKey(this.keyLocation + pathAfterKeyLocation);
 			key.SetValue(setting, value);
 			key.Close();
 		}
@@ -48,7 +48,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 			var success = false;
 			object? outOfRegistryValue = null;
 			// Despite name, this will open the key if it already exists
-			RegistryKey key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
+			RegistryKey key = Registry.CurrentUser.CreateSubKey(this.keyLocation + pathAfterKeyLocation);
 
 			T? castValue = default;
 			try
@@ -63,7 +63,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 			catch
 			{
 				value = defaultValue;
-				SetSetting(setting, defaultValue?.ToString() ?? "");
+                this.SetSetting(setting, defaultValue?.ToString() ?? "");
 				return false;
 			}
 			finally
@@ -79,7 +79,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 		public Dictionary<string, object> GetAllSettingsInPath(string pathAfterKeyLocation)
 		{
 			var valuesBynames = new Dictionary<string, object>();
-			using (var rootKey = Registry.CurrentUser.OpenSubKey(keyLocation + pathAfterKeyLocation))
+			using (var rootKey = Registry.CurrentUser.OpenSubKey(this.keyLocation + pathAfterKeyLocation))
 			{
 				if (rootKey != null)
 				{
@@ -102,7 +102,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 		public void DeleteSetting(string setting, string pathAfterKeyLocation = "")
 		{
 			// Despite name, this will open the key if it already exists
-			var key = Registry.CurrentUser.CreateSubKey(keyLocation + pathAfterKeyLocation);
+			var key = Registry.CurrentUser.CreateSubKey(this.keyLocation + pathAfterKeyLocation);
 
 			try
 			{
@@ -120,7 +120,7 @@ namespace CoreUtilities.Services.RegistryInteraction
 		{
 			try
 			{
-				Registry.CurrentUser.DeleteSubKeyTree(keyLocation + pathAfterKeyLocation);
+				Registry.CurrentUser.DeleteSubKeyTree(this.keyLocation + pathAfterKeyLocation);
 			}
 			catch { }
 		}

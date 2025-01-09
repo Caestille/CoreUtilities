@@ -1,15 +1,15 @@
-﻿using CoreUtilities.HelperClasses.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CoreUtilities.HelperClasses.EvaluationRules
+﻿namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-	/// <summary>
-	/// A rule operating on string values.
-	/// </summary>
-	/// <typeparam name="TInput">The input type to be evaluated.</typeparam>
-	public class StringRule<TInput> : BaseRule<TInput, string>
+    using CoreUtilities.HelperClasses.Enums;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// A rule operating on string values.
+    /// </summary>
+    /// <typeparam name="TInput">The input type to be evaluated.</typeparam>
+    public class StringRule<TInput> : BaseRule<TInput, string>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="StringRule{TInput}"/>.
@@ -21,14 +21,14 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// <inheritdoc />
 		public override bool Evaluate(TInput input)
         {
-            if (GetPropertyFunc == null)
+            if (this.GetPropertyFunc == null)
             {
                 throw new NullReferenceException("GetPropertyFunc is null");
             }
 
-            var value = GetPropertyFunc(input);
+            var value = this.GetPropertyFunc(input);
 
-			switch (SelectedOperation)
+			switch (this.SelectedOperation)
 			{
 				case AvailableOperation.EqualTo:
 					throw new NotSupportedException("EqualTo rule type is not supported for value type rule");
@@ -43,9 +43,9 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 				case AvailableOperation.OutsideOf:
 					throw new NotSupportedException("OutsideOf rule type is not supported for value type rule");
 				case AvailableOperation.Contains:
-					return (Value1 is string) ? value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0 : false;
+					return (this.Value1 is string) ? value.IndexOf((string)this.Value1, StringComparison.OrdinalIgnoreCase) >= 0 : false;
 				case AvailableOperation.DoesNotContain:
-					return (Value1 is string) ? !(value.IndexOf((string)Value1, StringComparison.OrdinalIgnoreCase) >= 0) : false;
+					return (this.Value1 is string) ? !(value.IndexOf((string)this.Value1, StringComparison.OrdinalIgnoreCase) >= 0) : false;
 			}
 
 			return false;

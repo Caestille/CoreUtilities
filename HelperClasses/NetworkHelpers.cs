@@ -1,10 +1,10 @@
-﻿using System.Net.NetworkInformation;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace CoreUtilities.HelperClasses
+﻿namespace CoreUtilities.HelperClasses
 {
-	public static class NetworkHelpers
+    using System.Net.NetworkInformation;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
+    public static class NetworkHelpers
 	{
         private static string? cachedPublicIp;
 

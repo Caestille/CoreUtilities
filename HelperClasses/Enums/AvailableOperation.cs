@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
-
-namespace CoreUtilities.HelperClasses.Enums
+﻿namespace CoreUtilities.HelperClasses.Enums
 {
-	public enum AvailableOperation
+    using System.ComponentModel;
+
+    public enum AvailableOperation
 	{
 		[Description("=")]
 		EqualTo,

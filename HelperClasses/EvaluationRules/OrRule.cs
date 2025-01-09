@@ -1,10 +1,10 @@
-﻿using CoreUtilities.HelperClasses.Enums;
-using CoreUtilities.Interfaces.EvaluationRules;
-using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.HelperClasses.EvaluationRules
+﻿namespace CoreUtilities.HelperClasses.EvaluationRules
 {
+    using CoreUtilities.HelperClasses.Enums;
+    using CoreUtilities.Interfaces.EvaluationRules;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A rule for operating on two <see cref="BaseRule{TInput, TEvaluate}"/> derivatives and indicating whether one or
     /// both match their set conditions.
@@ -18,15 +18,15 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// </summary>
 		public OrRule() : base(null)
 		{
-			Value1 = Activator.CreateInstance(typeof(TEvaluate));
-			Value2 = Activator.CreateInstance(typeof(TEvaluate));
-			SelectedOperation = AvailableOperation.EqualTo;
+            this.Value1 = Activator.CreateInstance(typeof(TEvaluate));
+            this.Value2 = Activator.CreateInstance(typeof(TEvaluate));
+            this.SelectedOperation = AvailableOperation.EqualTo;
 		}
 
 		/// <inheritdoc />
 		public override bool Evaluate(TInput input)
 		{
-			if (Value1 is TEvaluate val1 && Value2 is TEvaluate val2)
+			if (this.Value1 is TEvaluate val1 && this.Value2 is TEvaluate val2)
 			{
 				return val1.Evaluate(input) || val2.Evaluate(input);
 			}

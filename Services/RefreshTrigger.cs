@@ -1,13 +1,13 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
-
-namespace CoreUtilities.Services
+﻿namespace CoreUtilities.Services
 {
-	/// <summary>
-	/// Service which invokes an <see cref="Action"/> once after a refresh time if not kept alive.
-	/// </summary>
-	public class RefreshTrigger
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+
+    /// <summary>
+    /// Service which invokes an <see cref="Action"/> once after a refresh time if not kept alive.
+    /// </summary>
+    public class RefreshTrigger
 	{
 		private bool refreshed;
 		private bool block;
@@ -26,26 +26,26 @@ namespace CoreUtilities.Services
 		{
 			if (refreshTimeMs <= 0)
 			{
-				refreshAction = callback;
+                this.refreshAction = callback;
 				return;
 			}
 
-			refreshAction = () => refreshed = true;
+            this.refreshAction = () => this.refreshed = true;
 
 			Thread thread = new Thread(new ThreadStart(() =>
 			{
-				while (run)
+				while (this.run)
 				{
-					if (!refreshed && !block)
+					if (!this.refreshed && !this.block)
 					{
 						callback();
-						block = true;
+                        this.block = true;
 					}
 
-					if (refreshed)
+					if (this.refreshed)
 					{
-						refreshed = false;
-						block = false;
+                        this.refreshed = false;
+                        this.block = false;
 					}
 
 					Thread.Sleep(refreshTimeMs);
@@ -61,7 +61,7 @@ namespace CoreUtilities.Services
 		/// </summary>
 		public void Refresh()
 		{
-			refreshAction();
+            this.refreshAction();
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace CoreUtilities.Services
 		/// </summary>
 		public void Stop()
 		{
-			run = false;
+            this.run = false;
 		}
 	}
 }

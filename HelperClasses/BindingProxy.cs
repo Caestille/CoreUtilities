@@ -1,17 +1,17 @@
-﻿using System.Windows;
-
-namespace CoreUtilities.HelperClasses
+﻿namespace CoreUtilities.HelperClasses
 {
-	/// <summary>
-	/// Proxy for a binding, allowing nested data contexts to access a parent binding.
-	/// </summary>
-	public class BindingProxy : Freezable
+    using System.Windows;
+
+    /// <summary>
+    /// Proxy for a binding, allowing nested data contexts to access a parent binding.
+    /// </summary>
+    public class BindingProxy : Freezable
 	{
         public BindingProxy() { }
 
         public BindingProxy(object data)
         {
-            Data = data;
+            this.Data = data;
         }
 
         protected override Freezable CreateInstanceCore()
@@ -24,8 +24,8 @@ namespace CoreUtilities.HelperClasses
 		/// </summary>
 		public object Data
 		{
-			get => GetValue(DataProperty);
-			set => SetValue(DataProperty, value);
+			get => this.GetValue(DataProperty);
+			set => this.SetValue(DataProperty, value);
 		}
 
 		public static readonly DependencyProperty DataProperty = DependencyProperty.Register(

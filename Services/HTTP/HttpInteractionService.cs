@@ -1,14 +1,14 @@
-﻿using CoreUtilities.HelperClasses.Extensions;
-using CoreUtilities.Interfaces.HTTP;
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CoreUtilities.Services.HTTP
+﻿namespace CoreUtilities.Services.HTTP
 {
+    using CoreUtilities.HelperClasses.Extensions;
+    using CoreUtilities.Interfaces.HTTP;
+    using System;
+    using System.Net;
+    using System.Net.Http;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Implementation of <see cref="IHttpService"/>. Implements handy ways to create and send 
     /// <see cref="HttpRequestMessage"/>s.
@@ -25,13 +25,13 @@ namespace CoreUtilities.Services.HTTP
         /// <see cref="IHttpRequestBuilder"/>.</param>
         public HttpInteractionService(Func<IHttpRequestBuilder> builderCreateFunc)
         {
-            httpRequestBuilderCreator = builderCreateFunc;
+            this.httpRequestBuilderCreator = builderCreateFunc;
         }
 
         /// <inheritdoc/>
         public IHttpRequestBuilder GetHttpRequestBuilder()
         {
-            return httpRequestBuilderCreator();
+            return this.httpRequestBuilderCreator();
         }
 
         /// <inheritdoc/>
@@ -75,7 +75,7 @@ namespace CoreUtilities.Services.HTTP
             HttpResponseMessage? response = null;
             try
             {
-                response = await httpClient.SendAsync(request).AsCancellable(token ?? CancellationToken.None);
+                response = await this.httpClient.SendAsync(request).AsCancellable(token ?? CancellationToken.None);
             }
             catch (TaskCanceledException)
             {

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters
 {
-	/// <summary>
-	/// An <see cref="IValueConverter"/> which multiples a given <see cref="double"/> by the given converter parameter
-	/// </summary>
-	public class ValueMultiplierConverter : IValueConverter
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
+    /// <summary>
+    /// An <see cref="IValueConverter"/> which multiples a given <see cref="double"/> by the given converter parameter
+    /// </summary>
+    public class ValueMultiplierConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{

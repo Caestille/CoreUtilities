@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-
-namespace CoreUtilities.HelperClasses.Extensions
+﻿namespace CoreUtilities.HelperClasses.Extensions
 {
+    using System.Collections.Generic;
+    using System.Windows;
+
     /// <summary>
     /// Extension methods for <see cref="FrameworkElement"/>s.
     /// </summary>

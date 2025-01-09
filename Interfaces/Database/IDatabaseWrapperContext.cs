@@ -1,10 +1,10 @@
-﻿using CoreUtilities.HelperClasses;
-using System;
-using System.Collections.Generic;
-using System.Data;
-
-namespace CoreUtilities.Interfaces.Database
+﻿namespace CoreUtilities.Interfaces.Database
 {
+    using CoreUtilities.HelperClasses;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+
     /// <summary>
     /// An interface for a class defining abstracted methods and properties for database interaction.
     /// </summary>

@@ -1,10 +1,10 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CoreUtilities.Interfaces.HTTP
+﻿namespace CoreUtilities.Interfaces.HTTP
 {
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Interface for service implementing useful HTTP interactions in an easy to use manner.
     /// </summary>

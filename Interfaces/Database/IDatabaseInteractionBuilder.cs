@@ -1,9 +1,9 @@
-﻿using CoreUtilities.HelperClasses.Database;
-using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.Interfaces.Database
+﻿namespace CoreUtilities.Interfaces.Database
 {
+    using CoreUtilities.HelperClasses.Database;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// An interface for a high level wrapper providing friendly builder pattern type database interactions.
     /// </summary>

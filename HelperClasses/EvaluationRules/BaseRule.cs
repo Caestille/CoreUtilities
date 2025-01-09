@@ -1,17 +1,17 @@
-﻿using CoreUtilities.HelperClasses.Enums;
-using CoreUtilities.Interfaces.EvaluationRules;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.HelperClasses.EvaluationRules
+﻿namespace CoreUtilities.HelperClasses.EvaluationRules
 {
-	/// <summary>
-	/// The base rule for specific value rule types to inherit. Defines some standard behaviour and properties.
-	/// </summary>
-	/// <typeparam name="TInput">The input type for the rule to expect.</typeparam>
-	/// <typeparam name="TEvaluate">The value type the rule will evaluate with.</typeparam>
-	public abstract class BaseRule<TInput, TEvaluate> : ObservableObject, IRule<TInput>
+    using CoreUtilities.HelperClasses.Enums;
+    using CoreUtilities.Interfaces.EvaluationRules;
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// The base rule for specific value rule types to inherit. Defines some standard behaviour and properties.
+    /// </summary>
+    /// <typeparam name="TInput">The input type for the rule to expect.</typeparam>
+    /// <typeparam name="TEvaluate">The value type the rule will evaluate with.</typeparam>
+    public abstract class BaseRule<TInput, TEvaluate> : ObservableObject, IRule<TInput>
 	{
 		/// <summary>
 		/// Initialises a new <see cref="BaseRule{TInput, TEvaluate}"/>.
@@ -34,38 +34,38 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 
 		public abstract string SerialiseValue(object value);
 
-		public abstract object DeserialiseValue(string value);
+		public abstract object? DeserialiseValue(string value);
 
 		private object? value1;
 		/// <inheritdoc />
 		public object? Value1
 		{
-			get => value1;
-			set => SetProperty(ref value1, value);
+			get => this.value1;
+			set => this.SetProperty(ref this.value1, value);
 		}
 
 		private object? value2;
 		/// <inheritdoc />
 		public object? Value2
 		{
-			get => value2;
-			set => SetProperty(ref value2, value);
+			get => this.value2;
+			set => this.SetProperty(ref this.value2, value);
 		}
 
 		private bool value2Usable;
 		/// <inheritdoc />
 		public bool Value2Usable
 		{
-			get => value2Usable;
-			set => SetProperty(ref value2Usable, value);
+			get => this.value2Usable;
+			set => this.SetProperty(ref this.value2Usable, value);
 		}
 
 		private Func<TInput, TEvaluate>? getPropertyFunc;
 		/// <inheritdoc />
 		public Func<TInput, TEvaluate>? GetPropertyFunc
 		{
-			get => getPropertyFunc;
-			set => SetProperty(ref getPropertyFunc, value);
+			get => this.getPropertyFunc;
+			set => this.SetProperty(ref this.getPropertyFunc, value);
 		}
 
 		/// <inheritdoc />
@@ -75,11 +75,11 @@ namespace CoreUtilities.HelperClasses.EvaluationRules
 		/// <inheritdoc />
 		public AvailableOperation? SelectedOperation
 		{
-			get => selectedOperation;
+			get => this.selectedOperation;
 			set
 			{
-				SetProperty(ref selectedOperation, value);
-				ConfigureForSelectedOperation();
+                this.SetProperty(ref this.selectedOperation, value);
+                this.ConfigureForSelectedOperation();
 			}
 		}
 

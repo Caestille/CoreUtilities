@@ -1,15 +1,15 @@
-﻿using CoreUtilities.HelperClasses.Enums;
-using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.Interfaces.EvaluationRules
+﻿namespace CoreUtilities.Interfaces.EvaluationRules
 {
-	/// <summary>
-	/// An interface for classes designed to implement an evaluation step to implement.
-	/// </summary>
-	/// <typeparam name="TInput">The input type to be evaluated.</typeparam>
-	/// <typeparam name="TEvaluate">The property type of the input to be evaluated.</typeparam>
-	public interface IBaseRule<TInput, TEvaluate>
+    using CoreUtilities.HelperClasses.Enums;
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// An interface for classes designed to implement an evaluation step to implement.
+    /// </summary>
+    /// <typeparam name="TInput">The input type to be evaluated.</typeparam>
+    /// <typeparam name="TEvaluate">The property type of the input to be evaluated.</typeparam>
+    public interface IBaseRule<TInput, TEvaluate>
 	{
 		/// <summary>
 		/// Given a <typeparamref name="TInput"/>, returns whether the object matches the set rule.

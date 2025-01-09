@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
-using System.Net.Http;
-
-namespace CoreUtilities.Interfaces.HTTP
+﻿namespace CoreUtilities.Interfaces.HTTP
 {
+    using System.ComponentModel;
+    using System.Net.Http;
+
     /// <summary>
     /// Interface for a class creating an http request builder. Allows for easy creation and execution of http 
     /// requests.

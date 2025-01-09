@@ -1,14 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Data.Common;
-
-namespace CoreUtilities.Interfaces.Database
+﻿namespace CoreUtilities.Interfaces.Database
 {
-	/// <summary>
-	/// An interface for a low level database service.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public interface IDatabaseService<T> where T : DbTransaction
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Common;
+
+    /// <summary>
+    /// An interface for a low level database service.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IDatabaseService<T> where T : DbTransaction
 	{
 		/// <summary>
 		/// Adds a table with the given column name of given data types to a database, as well as sets which columns to

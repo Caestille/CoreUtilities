@@ -1,18 +1,18 @@
-﻿using CoreUtilities.HelperClasses.Extensions;
-using CoreUtilities.Interfaces.HTTP;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-
-namespace CoreUtilities.HelperClasses.HTTP
+﻿namespace CoreUtilities.HelperClasses.HTTP
 {
-	/// <summary>
-	/// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a 
-	/// <see cref="HttpRequestMessage"/>.
-	/// </summary>
-	public class HttpRequestBuilder : IHttpRequestBuilder
+    using CoreUtilities.HelperClasses.Extensions;
+    using CoreUtilities.Interfaces.HTTP;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
+
+    /// <summary>
+    /// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a 
+    /// <see cref="HttpRequestMessage"/>.
+    /// </summary>
+    public class HttpRequestBuilder : IHttpRequestBuilder
     {
         private HttpRequestMessage? currentRequest;
 
@@ -25,69 +25,69 @@ namespace CoreUtilities.HelperClasses.HTTP
         /// <inheritdoc/>
         public IHttpRequestBuilder CreateRequest(IHttpRequestBuilder.HttpCommandType commandType, string requestTo)
         {
-            try { currentRequest?.Dispose(); } catch { /* Already disposed */ }
-            unvalidatedHeaders.Clear();
-            content.Clear();
+            try { this.currentRequest?.Dispose(); } catch { /* Already disposed */ }
+            this.unvalidatedHeaders.Clear();
+            this.content.Clear();
             this.requestTo = requestTo;
-            requestType = commandType.GetEnumDescription();
-            headerContentType = string.Empty;
+            this.requestType = commandType.GetEnumDescription();
+            this.headerContentType = string.Empty;
             return this;
         }
 
         /// <inheritdoc/>
         public IHttpRequestBuilder WithContent(string name, string value)
         {
-            content[name] = value;
+            this.content[name] = value;
             return this;
         }
 
         /// <inheritdoc/>
         public IHttpRequestBuilder WithHeaderContentType(string type)
         {
-            headerContentType = type;
+            this.headerContentType = type;
             return this;
         }
 
         /// <inheritdoc/>
         public IHttpRequestBuilder WithUnvalidatedHeader(string header, string value)
         {
-            unvalidatedHeaders[header] = value;
+            this.unvalidatedHeaders[header] = value;
             return this;
         }
 
         /// <inheritdoc/>
         public HttpRequestMessage Build()
         {
-            currentRequest = new HttpRequestMessage(new HttpMethod(requestType!), requestTo);
+            this.currentRequest = new HttpRequestMessage(new HttpMethod(this.requestType!), this.requestTo);
 
-            if (unvalidatedHeaders.Any())
+            if (this.unvalidatedHeaders.Count != 0)
             {
-                foreach (var kvp in unvalidatedHeaders)
+                foreach (var kvp in this.unvalidatedHeaders)
                 {
-                    currentRequest.Headers.TryAddWithoutValidation(kvp.Key, kvp.Value);
+                    this.currentRequest.Headers.TryAddWithoutValidation(kvp.Key, kvp.Value);
                 }
             }
 
-            if (content.Any())
+            if (this.content.Count != 0)
             {
                 StringBuilder contentSb = new StringBuilder().Append("{ ");
                 int i = 0;
-                foreach (var kvp in content)
+                foreach (var kvp in this.content)
                 {
                     i++;
-                    var comma = i == content.Count ? " " : ", ";
+                    var comma = i == this.content.Count ? " " : ", ";
                     contentSb.Append($"\"{kvp.Key}\": \"{kvp.Value}\"{comma}");
                 }
                 contentSb.Append(" }");
-                currentRequest.Content = new StringContent(contentSb.ToString());
+                this.currentRequest.Content = new StringContent(contentSb.ToString());
             }
 
-            if (!string.IsNullOrEmpty(headerContentType) && currentRequest.Content != null)
+            if (!string.IsNullOrEmpty(this.headerContentType) && this.currentRequest.Content != null)
             {
-                currentRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(headerContentType);
+                this.currentRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(this.headerContentType);
             }
 
-            return currentRequest;
+            return this.currentRequest;
         }
     }
 }

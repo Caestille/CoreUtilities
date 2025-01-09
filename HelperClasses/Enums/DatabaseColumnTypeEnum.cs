@@ -1,11 +1,11 @@
-﻿using System.ComponentModel;
-
-namespace CoreUtilities.HelperClasses
+﻿namespace CoreUtilities.HelperClasses
 {
-	/// <summary>
-	/// Database storage column types which can be stored.
-	/// </summary>
-	public enum ColumnType
+    using System.ComponentModel;
+
+    /// <summary>
+    /// Database storage column types which can be stored.
+    /// </summary>
+    public enum ColumnType
 	{
 		/// <summary>
 		/// Text column.

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.Interfaces.Database
+﻿namespace CoreUtilities.Interfaces.Database
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// An interface for classes wrapping databases with common interactions to inherit.
     /// </summary>

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace CoreUtilities.Interfaces.RegistryInteraction
+﻿namespace CoreUtilities.Interfaces.RegistryInteraction
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Service for interacting with keys and values in a registry.
     /// </summary>

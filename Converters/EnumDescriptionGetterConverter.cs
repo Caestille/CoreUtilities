@@ -1,15 +1,15 @@
-﻿using CoreUtilities.HelperClasses.Extensions;
-using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters
 {
-	/// <summary>
-	/// An <see cref="IValueConverter"/> that given an <see cref="Enum"/>, if it has a description attribute, returns
-	/// that, otherwise the <see cref="Enum"/> itself converted to a string.
-	/// </summary>
-	public class EnumDescriptionGetterConverter : IValueConverter
+    using CoreUtilities.HelperClasses.Extensions;
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
+    /// <summary>
+    /// An <see cref="IValueConverter"/> that given an <see cref="Enum"/>, if it has a description attribute, returns
+    /// that, otherwise the <see cref="Enum"/> itself converted to a string.
+    /// </summary>
+    public class EnumDescriptionGetterConverter : IValueConverter
 	{
 		private Enum? cachedEnum;
 
@@ -17,7 +17,7 @@ namespace CoreUtilities.Converters
 		{
 			if (value is Enum enumObject)
 			{
-				cachedEnum = enumObject;
+                this.cachedEnum = enumObject;
 				return enumObject.GetEnumDescription();
 			}
 
@@ -28,9 +28,9 @@ namespace CoreUtilities.Converters
 		{
 			if (value is string description)
 			{
-				if (description == cachedEnum?.GetEnumDescription())
+				if (description == this.cachedEnum?.GetEnumDescription())
 				{
-					return cachedEnum;
+					return this.cachedEnum;
 				}
 				else
 				{

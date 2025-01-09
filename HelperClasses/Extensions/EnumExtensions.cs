@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-
-namespace CoreUtilities.HelperClasses.Extensions
+﻿namespace CoreUtilities.HelperClasses.Extensions
 {
+    using System;
+    using System.ComponentModel;
+    using System.Reflection;
+
     /// <summary>
     /// Extensions for a <see cref="Enum"/>.
     /// </summary>

@@ -1,19 +1,19 @@
-﻿using CoreUtilities.Interfaces.Database;
-using System;
-using System.Collections.Generic;
-
-namespace CoreUtilities.HelperClasses.Database
+﻿namespace CoreUtilities.HelperClasses.Database
 {
-	/// <summary>
-	/// Wrapper class for enabling builder pattern usage of read operations into a 
-	/// <see cref="IDatabaseWrapperService{TData}"/> instance.
-	/// This is a wrapper capable of
-	/// reading data of type <see cref="TData"/> and returning a result from the <see cref="Close"/> method of type
-	/// <see cref="TReturn"/>.
-	/// </summary>
-	/// <typeparam name="TData">The data type to be stored.</typeparam>
-	/// <typeparam name="TReturn">The data type to be returned from the read operation, if required.</typeparam>
-	public class ReaderInstanceWrapper<TData, TReturn>
+    using CoreUtilities.Interfaces.Database;
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Wrapper class for enabling builder pattern usage of read operations into a 
+    /// <see cref="IDatabaseWrapperService{TData}"/> instance.
+    /// This is a wrapper capable of
+    /// reading data of type <see cref="TData"/> and returning a result from the <see cref="Close"/> method of type
+    /// <see cref="TReturn"/>.
+    /// </summary>
+    /// <typeparam name="TData">The data type to be stored.</typeparam>
+    /// <typeparam name="TReturn">The data type to be returned from the read operation, if required.</typeparam>
+    public class ReaderInstanceWrapper<TData, TReturn>
 	{
 		private readonly IDatabaseWrapperService<TData> database;
 		private readonly IEnumerable<object> rows;
@@ -29,7 +29,7 @@ namespace CoreUtilities.HelperClasses.Database
 		public ReaderInstanceWrapper(IDatabaseWrapperService<TData> database)
 		{
 			this.database = database;
-			(reference, rows) = database.AllRows();
+			(this.reference, this.rows) = database.AllRows();
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <returns>This instance of the class, allowing the builder pattern to continue.</returns>
 		public ReaderInstanceWrapper<TData, TReturn> WithAction(Func<IEnumerable<object>, TReturn> execute)
 		{
-			result = execute(rows);
+            this.result = execute(this.rows);
 			return this;
 		}
 
@@ -55,8 +55,8 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <returns>A value of type <see cref="TReturn"/>.</returns>
 		public TReturn? Close()
 		{
-			database.CloseRowReader(reference);
-			return result;
+            this.database.CloseRowReader(this.reference);
+			return this.result;
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace CoreUtilities.HelperClasses.Database
 		public ReaderInstanceWrapper(IDatabaseWrapperService<TData> database)
 		{
 			this.database = database;
-			(reference, rows) = database.AllRows();
+			(this.reference, this.rows) = database.AllRows();
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <returns>This instance of the class, allowing the builder pattern to continue.</returns>
 		public ReaderInstanceWrapper<TData> WithAction(Action<IEnumerable<object>> execute)
 		{
-			execute(rows);
+			execute(this.rows);
 			return this;
 		}
 
@@ -103,7 +103,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// </summary>
 		public void Close()
 		{
-			database.CloseRowReader(reference);
+            this.database.CloseRowReader(this.reference);
 		}
 	}
 }

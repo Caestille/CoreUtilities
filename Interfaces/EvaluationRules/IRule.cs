@@ -1,15 +1,15 @@
-﻿using CoreUtilities.HelperClasses.Enums;
-using CoreUtilities.HelperClasses.EvaluationRules;
-
-namespace CoreUtilities.Interfaces.EvaluationRules
+﻿namespace CoreUtilities.Interfaces.EvaluationRules
 {
-	/// <summary>
-	/// Generic interface for classes implementing any of <see cref="DateTimeRule{TInput}"/>,
-	/// <see cref="StringRule{TInput}"/> <see cref="ValueRule{TInput}"/>, <see cref="OrRule{TInput, TEvaluate}"/> or
-	/// <see cref="AndRule{TInput, TEvaluate}"/>.
-	/// </summary>
-	/// <typeparam name="TInput">The input type to be evaluated</typeparam>
-	public interface IRule<TInput>
+    using CoreUtilities.HelperClasses.Enums;
+    using CoreUtilities.HelperClasses.EvaluationRules;
+
+    /// <summary>
+    /// Generic interface for classes implementing any of <see cref="DateTimeRule{TInput}"/>,
+    /// <see cref="StringRule{TInput}"/> <see cref="ValueRule{TInput}"/>, <see cref="OrRule{TInput, TEvaluate}"/> or
+    /// <see cref="AndRule{TInput, TEvaluate}"/>.
+    /// </summary>
+    /// <typeparam name="TInput">The input type to be evaluated</typeparam>
+    public interface IRule<TInput>
 	{
 		/// <summary>
 		/// Executes the rule on a given input, and returns a <see cref="bool"/> indicating whether the value matched
@@ -46,6 +46,6 @@ namespace CoreUtilities.Interfaces.EvaluationRules
 		/// </summary>
 		/// <param name="value">The value to deserialise.</param>
 		/// <returns>The deserialised value.</returns>
-		object DeserialiseValue(string value);
+		object? DeserialiseValue(string value);
 	}
 }

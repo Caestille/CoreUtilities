@@ -1,12 +1,12 @@
-﻿using System;
-using System.Windows.Media;
-
-namespace CoreUtilities.HelperClasses.Extensions
+﻿namespace CoreUtilities.HelperClasses.Extensions
 {
-	/// <summary>
-	/// Class of static extension methods to the <see cref="Color"/> class.
-	/// </summary>
-	public static class ColorExtensions
+    using System;
+    using System.Windows.Media;
+
+    /// <summary>
+    /// Class of static extension methods to the <see cref="Color"/> class.
+    /// </summary>
+    public static class ColorExtensions
 	{
 		public static string GetHexString(this Color colour)
 		{

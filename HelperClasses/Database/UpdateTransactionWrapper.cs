@@ -1,13 +1,13 @@
-﻿using CoreUtilities.Interfaces.Database;
-
-namespace CoreUtilities.HelperClasses.Database
+﻿namespace CoreUtilities.HelperClasses.Database
 {
-	/// <summary>
-	/// Wrapper class for enabling builder pattern usage of update transactions into a 
-	/// <see cref="IDatabaseWrapperService{TData}"/> instance.
-	/// </summary>
-	/// <typeparam name="T">The data type to be stored.</typeparam>
-	public class UpdateTransactionWrapper<T>
+    using CoreUtilities.Interfaces.Database;
+
+    /// <summary>
+    /// Wrapper class for enabling builder pattern usage of update transactions into a 
+    /// <see cref="IDatabaseWrapperService{TData}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The data type to be stored.</typeparam>
+    public class UpdateTransactionWrapper<T>
 	{
 		private readonly IDatabaseWrapperService<T> database;
 
@@ -30,7 +30,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// <returns>This <see cref="UpdateTransactionWrapper{T}"/> class, enabling the builder pattern to continue.</returns>
 		public UpdateTransactionWrapper<T> UpdateEntry(T entry)
 		{
-			database.UpdateRow(entry);
+            this.database.UpdateRow(entry);
 			return this;
 		}
 
@@ -40,7 +40,7 @@ namespace CoreUtilities.HelperClasses.Database
 		/// </summary>
 		public void ExecuteWrite()
 		{
-			database.CloseWriteTransaction();
+            this.database.CloseWriteTransaction();
 		}
 	}
 }

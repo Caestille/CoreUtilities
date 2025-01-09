@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
-namespace CoreUtilities.HelperClasses.Extensions
+﻿namespace CoreUtilities.HelperClasses.Extensions
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
     /// <summary>
     /// Extensions for <see cref="IEnumerable{T}"/> classes.
     /// </summary>

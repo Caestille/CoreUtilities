@@ -1,12 +1,14 @@
-﻿using System;
-using System.Globalization;
-using System.Threading;
-using System.Windows.Data;
-using System.Windows.Markup;
-using System.Windows;
+﻿#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 namespace CoreUtilities.HelperClasses
 {
+    using System;
+    using System.Globalization;
+    using System.Threading;
+    using System.Windows.Data;
+    using System.Windows.Markup;
+    using System.Windows;
+
     public class DynamicResourceBindingExtension : MarkupExtension
     {
         public DynamicResourceBindingExtension()
@@ -15,7 +17,7 @@ namespace CoreUtilities.HelperClasses
 
         public DynamicResourceBindingExtension(object resourceKey)
         {
-            ResourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
+            this.ResourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
         }
 
         public object ResourceKey { get; set; }
@@ -37,28 +39,28 @@ namespace CoreUtilities.HelperClasses
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            var dynamicResource = new DynamicResourceExtension(ResourceKey);
-            bindingProxy = new BindingProxy(dynamicResource.ProvideValue(null));
+            var dynamicResource = new DynamicResourceExtension(this.ResourceKey);
+            this.bindingProxy = new BindingProxy(dynamicResource.ProvideValue(null));
 
             var dynamicResourceBinding = new Binding()
             {
-                Source = bindingProxy,
+                Source = this.bindingProxy,
                 Path = new PropertyPath(BindingProxy.DataProperty),
                 Mode = BindingMode.OneWay
             };
 
-            var targetInfo = (IProvideValueTarget)serviceProvider.GetService(typeof(IProvideValueTarget));
+            var targetInfo = (IProvideValueTarget?)serviceProvider.GetService(typeof(IProvideValueTarget));
 
-            if (targetInfo.TargetObject is DependencyObject dependencyObject)
+            if (targetInfo?.TargetObject is DependencyObject dependencyObject)
             {
-                dynamicResourceBinding.Converter = Converter;
-                dynamicResourceBinding.ConverterParameter = ConverterParameter;
-                dynamicResourceBinding.ConverterCulture = ConverterCulture;
-                dynamicResourceBinding.StringFormat = StringFormat;
-                dynamicResourceBinding.TargetNullValue = TargetNullValue;
+                dynamicResourceBinding.Converter = this.Converter;
+                dynamicResourceBinding.ConverterParameter = this.ConverterParameter;
+                dynamicResourceBinding.ConverterCulture = this.ConverterCulture;
+                dynamicResourceBinding.StringFormat = this.StringFormat;
+                dynamicResourceBinding.TargetNullValue = this.TargetNullValue;
 
                 if (dependencyObject is FrameworkElement targetFrameworkElement)
-                    targetFrameworkElement.Resources[bindingProxy] = bindingProxy;
+                    targetFrameworkElement.Resources[this.bindingProxy] = this.bindingProxy;
 
                 return dynamicResourceBinding.ProvideValue(serviceProvider);
             }
@@ -68,16 +70,16 @@ namespace CoreUtilities.HelperClasses
                 RelativeSource = new RelativeSource(RelativeSourceMode.Self)
             };
 
-            bindingTrigger = new BindingTrigger();
+            this.bindingTrigger = new BindingTrigger();
 
             var wrapperBinding = new MultiBinding()
             {
                 Bindings = {
                 dynamicResourceBinding,
                 findTargetBinding,
-                bindingTrigger.Binding
+                this.bindingTrigger.Binding
             },
-                Converter = new InlineMultiConverter(WrapperConvert)
+                Converter = new InlineMultiConverter(this.WrapperConvert)
             };
 
             return wrapperBinding.ProvideValue(serviceProvider);
@@ -88,23 +90,23 @@ namespace CoreUtilities.HelperClasses
             var dynamicResourceBindingResult = values[0];
             var bindingTargetObject = values[1];
 
-            if (Converter != null)
-                dynamicResourceBindingResult = Converter.Convert(dynamicResourceBindingResult, targetType, ConverterParameter, ConverterCulture);
+            if (this.Converter != null)
+                dynamicResourceBindingResult = this.Converter.Convert(dynamicResourceBindingResult, targetType, this.ConverterParameter, this.ConverterCulture);
 
             if (dynamicResourceBindingResult == null)
-                dynamicResourceBindingResult = TargetNullValue;
+                dynamicResourceBindingResult = this.TargetNullValue;
 
-            else if (targetType == typeof(string) && StringFormat != null)
-                dynamicResourceBindingResult = String.Format(StringFormat, dynamicResourceBindingResult);
+            else if (targetType == typeof(string) && this.StringFormat != null)
+                dynamicResourceBindingResult = String.Format(this.StringFormat, dynamicResourceBindingResult);
 
             if (bindingTargetObject is FrameworkElement targetFrameworkElement
-            && !targetFrameworkElement.Resources.Contains(bindingProxy))
+            && !targetFrameworkElement.Resources.Contains(this.bindingProxy))
             {
-                targetFrameworkElement.Resources[bindingProxy] = bindingProxy;
+                targetFrameworkElement.Resources[this.bindingProxy] = this.bindingProxy;
 
-                SynchronizationContext.Current.Post((state) =>
+                SynchronizationContext.Current?.Post((state) =>
                 {
-                    bindingTrigger.Refresh();
+                    this.bindingTrigger.Refresh();
                 }, null);
             }
 

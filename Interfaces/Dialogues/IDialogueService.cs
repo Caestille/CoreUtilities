@@ -1,14 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-
-namespace CoreUtilities.Interfaces.Dialogues
+﻿namespace CoreUtilities.Interfaces.Dialogues
 {
-	/// <summary>
-	/// Interface for classes managing dialogues to inherit.
-	/// </summary>
-	public interface IDialogueService
+    using System;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Media;
+
+    /// <summary>
+    /// Interface for classes managing dialogues to inherit.
+    /// </summary>
+    public interface IDialogueService
 	{
 		/// <summary>
 		/// Registers a view type to associate with a viewmodel type.

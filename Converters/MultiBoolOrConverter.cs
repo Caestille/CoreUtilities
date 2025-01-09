@@ -1,10 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters
 {
-	public class MultiBoolOrConverter : IMultiValueConverter
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
+    public class MultiBoolOrConverter : IMultiValueConverter
 	{
 		/// <summary>
 		/// Given a set of <see cref="bool"/> bindings, returns the result of an OR operation on all <see cref="bool"/>

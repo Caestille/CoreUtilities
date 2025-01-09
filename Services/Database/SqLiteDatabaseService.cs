@@ -1,12 +1,12 @@
-﻿using CoreUtilities.Interfaces.Database;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.IO;
-
-namespace CoreUtilities.Services.Database
+﻿namespace CoreUtilities.Services.Database
 {
+    using CoreUtilities.Interfaces.Database;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.SQLite;
+    using System.IO;
+
     /// <summary>
     /// Implementation of <see cref="IDatabaseService{T}"/> using SQlite.
     /// </summary>
@@ -34,7 +34,7 @@ namespace CoreUtilities.Services.Database
 		/// and true).</param>
 		public SqLiteDatabaseService(string path, bool recreate)
 		{
-			connectionString = $"Data Source={path};Version=3;";
+            this.connectionString = $"Data Source={path};Version=3;";
 			var dir = Path.GetDirectoryName(path);
 			if (dir!= null && !Directory.Exists(dir)) 
 			{
@@ -44,27 +44,27 @@ namespace CoreUtilities.Services.Database
 			if (recreate)
 				SQLiteConnection.CreateFile(path);
 
-			dbPath = path;
+            this.dbPath = path;
 
-			readConnection = new SQLiteConnection(connectionString);
-			writeConnection = new SQLiteConnection(connectionString);
-			readConnection.Open();
-			writeConnection.Open();
+            this.readConnection = new SQLiteConnection(this.connectionString);
+            this.writeConnection = new SQLiteConnection(this.connectionString);
+            this.readConnection.Open();
+            this.writeConnection.Open();
 		}
 
 		/// <inheritdoc/>
 		public void AddTableAndColumns(string tableName, KeyValuePair<string, string>[] columnNamesAndDataTypes,
 			string[] columnsToIndex)
 		{
-			CreateTableIfNeeded(tableName);
+            this.CreateTableIfNeeded(tableName);
 			foreach (KeyValuePair<string, string> columnAndDataType in columnNamesAndDataTypes)
 			{
-				AddColumnToTableIfNeeded(tableName, columnAndDataType.Key, columnAndDataType.Value);
+                this.AddColumnToTableIfNeeded(tableName, columnAndDataType.Key, columnAndDataType.Value);
 			}
 
 			foreach (string columnToIndex in columnsToIndex)
 			{
-				IndexColumn(tableName, columnToIndex + "Index", columnToIndex);
+                this.IndexColumn(tableName, columnToIndex + "Index", columnToIndex);
 			}
 		}
 
@@ -72,36 +72,39 @@ namespace CoreUtilities.Services.Database
 		public void SetUpUpdateCommand(
 			string tableName, string commandName, List<string> parametersToAdd, string conditionalMatchParameter)
 		{
-			SQLiteCommand command = new SQLiteCommand(writeConnection);
+			SQLiteCommand command = new SQLiteCommand(this.writeConnection);
 			string updateText = "";
 			foreach (string name in parametersToAdd)
-				updateText +=
+            {
+                updateText +=
 					$"{name} = ${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
-			string conditionalText = $"{conditionalMatchParameter} = ${conditionalMatchParameter}";
+            }
+
+            string conditionalText = $"{conditionalMatchParameter} = ${conditionalMatchParameter}";
 			string commandText = $"UPDATE {tableName} SET {updateText} WHERE {conditionalText};";
 			command.CommandText = commandText;
-			if (!commandParameters.ContainsKey(commandName))
-				commandParameters[commandName] = new List<SQLiteParameter>();
+			if (!this.commandParameters.ContainsKey(commandName))
+                this.commandParameters[commandName] = new List<SQLiteParameter>();
 			foreach (string name in parametersToAdd)
 			{
 				SQLiteParameter param = command.CreateParameter();
 				param.ParameterName = name;
 				command.Parameters.Add(param);
-				commandParameters[commandName].Add(param);
+                this.commandParameters[commandName].Add(param);
 			}
 
 			SQLiteParameter conditionalParam = command.CreateParameter();
 			conditionalParam.ParameterName = conditionalMatchParameter;
 			command.Parameters.Add(conditionalParam);
-			commandCondtionalParameters[commandName] = conditionalParam;
+            this.commandCondtionalParameters[commandName] = conditionalParam;
 
-			commands[commandName] = command;
+            this.commands[commandName] = command;
 		}
 
 		/// <inheritdoc/>
 		public void SetUpInsertCommand(string tableName, string commandName, List<string> parametersToAdd)
 		{
-			SQLiteCommand command = new SQLiteCommand(writeConnection);
+			SQLiteCommand command = new SQLiteCommand(this.writeConnection);
 			string columnNames = "";
 			foreach (string name in parametersToAdd)
 				columnNames += $"{name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
@@ -110,29 +113,29 @@ namespace CoreUtilities.Services.Database
 				values += $"${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
 			string commandText = $"INSERT INTO {tableName} ({columnNames}) VALUES ({values});";
 			command.CommandText = commandText;
-			if (!commandParameters.ContainsKey(commandName))
-				commandParameters[commandName] = new List<SQLiteParameter>();
+			if (!this.commandParameters.ContainsKey(commandName))
+                this.commandParameters[commandName] = new List<SQLiteParameter>();
 			foreach (string name in parametersToAdd)
 			{
 				SQLiteParameter param = command.CreateParameter();
 				param.ParameterName = name;
 				command.Parameters.Add(param);
-				commandParameters[commandName].Add(param);
+                this.commandParameters[commandName].Add(param);
 			}
 
-			commands[commandName] = command;
+            this.commands[commandName] = command;
 		}
 
 		/// <inheritdoc/>
 		public SQLiteTransaction GetAndOpenWriteTransaction()
 		{
-			return writeConnection.BeginTransaction();
+			return this.writeConnection.BeginTransaction();
 		}
 
 		/// <inheritdoc/>
 		public long RowCount(string tableName, string condition)
 		{
-			SQLiteCommand cmd = new SQLiteCommand(readConnection);
+			SQLiteCommand cmd = new SQLiteCommand(this.readConnection);
 
 			cmd.CommandText = $"SELECT COUNT(*) FROM {tableName} {condition};";
 			return Convert.ToInt32(cmd.ExecuteScalar());
@@ -146,11 +149,11 @@ namespace CoreUtilities.Services.Database
 			SQLiteTransaction? transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToUpdate)
-				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
+                this.commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
 
-			commandCondtionalParameters[commandName].Value = conditionalParamToUpdate.Value;
+            this.commandCondtionalParameters[commandName].Value = conditionalParamToUpdate.Value;
 
-			SQLiteCommand command = commands[commandName];
+			SQLiteCommand command = this.commands[commandName];
 			if (transaction != null && command.Transaction != transaction)
 				command.Transaction = transaction;
 			command.ExecuteNonQuery();
@@ -162,9 +165,9 @@ namespace CoreUtilities.Services.Database
 			SQLiteTransaction? transaction = null)
 		{
 			foreach (KeyValuePair<string, string> param in paramsToInsert)
-				commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
+                this.commandParameters[commandName].Find(x => x.ParameterName == param.Key)!.Value = param.Value;
 
-			SQLiteCommand command = commands[commandName];
+			SQLiteCommand command = this.commands[commandName];
 			if (transaction != null && command.Transaction != transaction)
 				command.Transaction = transaction;
 			command.ExecuteNonQuery();
@@ -173,7 +176,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public void Clear(string tableName)
 		{
-			SQLiteCommand cmd = new SQLiteCommand(writeConnection);
+			SQLiteCommand cmd = new SQLiteCommand(this.writeConnection);
 
 			cmd.CommandText = $"DELETE FROM {tableName};";
 			cmd.ExecuteNonQuery();
@@ -189,7 +192,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public IEnumerable GetRows(string tableName, string rowCondition, string ordering)
 		{
-			SQLiteCommand cmd = new SQLiteCommand(readConnection);
+			SQLiteCommand cmd = new SQLiteCommand(this.readConnection);
 
 			cmd.CommandText = $"SELECT * FROM {tableName} {rowCondition} {ordering};";
 			SQLiteDataReader reader = cmd.ExecuteReader();
@@ -200,7 +203,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public void IndexColumn(string tableName, string indexName, string columnName)
 		{
-			SQLiteCommand cmd2 = new SQLiteCommand(writeConnection);
+			SQLiteCommand cmd2 = new SQLiteCommand(this.writeConnection);
 			cmd2.CommandText = $"CREATE UNIQUE INDEX IF NOT EXISTS {indexName} ON {tableName} ({columnName});";
 			cmd2.ExecuteNonQuery();
 		}
@@ -209,9 +212,9 @@ namespace CoreUtilities.Services.Database
 		public void Disconnect()
 		{
 			SQLiteConnection.ClearAllPools();
-			readConnection.Close();
-			writeConnection.Close();
-			foreach (var command in commands.Values)
+            this.readConnection.Close();
+            this.writeConnection.Close();
+			foreach (var command in this.commands.Values)
 			{
 				command.Dispose();
 			}
@@ -222,7 +225,7 @@ namespace CoreUtilities.Services.Database
 		/// <inheritdoc/>
 		public void Delete()
 		{
-			File.Delete(dbPath);
+			File.Delete(this.dbPath);
 		}
 
 		/// <summary>
@@ -231,12 +234,12 @@ namespace CoreUtilities.Services.Database
 		/// <param name="tableName">The name of the table to create.</param>
 		private void CreateTableIfNeeded(string tableName)
 		{
-			if (!currentTablesAndColumns.ContainsKey(tableName))
+			if (!this.currentTablesAndColumns.ContainsKey(tableName))
 			{
-				SQLiteCommand cmd = new SQLiteCommand(writeConnection);
+				SQLiteCommand cmd = new SQLiteCommand(this.writeConnection);
 				cmd.CommandText = $"CREATE TABLE IF NOT EXISTS {tableName} (Id INTEGER);";
 				cmd.ExecuteNonQuery();
-				currentTablesAndColumns[tableName] = new List<string>();
+                this.currentTablesAndColumns[tableName] = new List<string>();
 			}
 		}
 
@@ -248,11 +251,11 @@ namespace CoreUtilities.Services.Database
 		/// <param name="dataType">The data type of the column to be added.</param>
 		private void AddColumnToTableIfNeeded(string tableName, string columnName, string dataType)
 		{
-			if (!currentTablesAndColumns[tableName].Contains(columnName))
+			if (!this.currentTablesAndColumns[tableName].Contains(columnName))
 			{
 				try
 				{
-					SQLiteCommand cmd = new SQLiteCommand(writeConnection);
+					SQLiteCommand cmd = new SQLiteCommand(this.writeConnection);
 
 					cmd.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {dataType};";
 					cmd.ExecuteNonQuery();
@@ -263,7 +266,7 @@ namespace CoreUtilities.Services.Database
 				}
 			}
 
-			currentTablesAndColumns[tableName].Add(columnName);
+            this.currentTablesAndColumns[tableName].Add(columnName);
 		}
 	}
 }
