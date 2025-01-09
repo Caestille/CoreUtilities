@@ -98,7 +98,7 @@
         /// <inheritdoc/>
         public (int reference, IEnumerable<object> rows) AllRows()
         {
-            SQLiteDataReader reader = (this.database.GetRows(tableName, "",
+            SQLiteDataReader reader = (this.database.GetRows(tableName, string.Empty,
                 this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending)) as SQLiteDataReader)!;
             var success = this.rowReaders.TryAdd(this.count, reader);
             if (!success)
@@ -130,7 +130,7 @@
         {
             if (selector == null)
             {
-                return (int)this.database.RowCount(tableName, "");
+                return (int)this.database.RowCount(tableName, string.Empty);
             }
             else
             {
@@ -139,7 +139,7 @@
                 SQLiteDataReader reader =
                 (this.database.GetRows(
                     tableName,
-                    "",
+                    string.Empty,
                     this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
                 as SQLiteDataReader)!;
 
@@ -200,7 +200,7 @@
             SQLiteDataReader reader =
                 (this.database.GetRows(
                     tableName,
-                    "",
+                    string.Empty,
                     this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
                 as SQLiteDataReader)!;
 
@@ -254,7 +254,7 @@
             SQLiteDataReader reader =
                 (this.database.GetRows(
                     tableName,
-                    "",
+                    string.Empty,
                     this.GenerateOrderingString(dateTimeColumnName, Ordering.Descending))
                 as SQLiteDataReader)!;
 

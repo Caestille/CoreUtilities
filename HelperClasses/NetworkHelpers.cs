@@ -26,11 +26,11 @@
                     return cachedPublicIp;
                 }
 
-                return "";
+                return string.Empty;
 			}
 			catch
 			{
-				return "";
+				return string.Empty;
 			}
 		}
 

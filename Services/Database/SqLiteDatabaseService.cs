@@ -73,11 +73,11 @@
 			string tableName, string commandName, List<string> parametersToAdd, string conditionalMatchParameter)
 		{
 			SQLiteCommand command = new SQLiteCommand(this.writeConnection);
-			string updateText = "";
+			string updateText = string.Empty;
 			foreach (string name in parametersToAdd)
             {
                 updateText +=
-					$"{name} = ${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
+					$"{name} = ${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : string.Empty);
             }
 
             string conditionalText = $"{conditionalMatchParameter} = ${conditionalMatchParameter}";
@@ -105,12 +105,12 @@
 		public void SetUpInsertCommand(string tableName, string commandName, List<string> parametersToAdd)
 		{
 			SQLiteCommand command = new SQLiteCommand(this.writeConnection);
-			string columnNames = "";
+			string columnNames = string.Empty;
 			foreach (string name in parametersToAdd)
-				columnNames += $"{name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
-			string values = "";
+				columnNames += $"{name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : string.Empty);
+			string values = string.Empty;
 			foreach (string name in parametersToAdd)
-				values += $"${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : "");
+				values += $"${name}" + (parametersToAdd.IndexOf(name) != parametersToAdd.Count - 1 ? ", " : string.Empty);
 			string commandText = $"INSERT INTO {tableName} ({columnNames}) VALUES ({values});";
 			command.CommandText = commandText;
 			if (!this.commandParameters.ContainsKey(commandName))

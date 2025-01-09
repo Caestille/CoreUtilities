@@ -34,7 +34,7 @@
 		}
 
 		/// <inheritdoc/>
-		public void SetSetting(string setting, string value, string pathAfterKeyLocation = "")
+		public void SetSetting(string setting, string value, string pathAfterKeyLocation = string.Empty)
 		{
 			// Despite name, this will open the key if it already exists
 			RegistryKey key = Registry.CurrentUser.CreateSubKey(this.keyLocation + pathAfterKeyLocation);
@@ -43,7 +43,7 @@
 		}
 
 		/// <inheritdoc/>
-		public bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = "")
+		public bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = string.Empty)
 		{
 			var success = false;
 			object? outOfRegistryValue = null;
@@ -63,7 +63,7 @@
 			catch
 			{
 				value = defaultValue;
-                this.SetSetting(setting, defaultValue?.ToString() ?? "");
+                this.SetSetting(setting, defaultValue?.ToString() ?? string.Empty);
 				return false;
 			}
 			finally
@@ -99,7 +99,7 @@
 		}
 
 		/// <inheritdoc/>
-		public void DeleteSetting(string setting, string pathAfterKeyLocation = "")
+		public void DeleteSetting(string setting, string pathAfterKeyLocation = string.Empty)
 		{
 			// Despite name, this will open the key if it already exists
 			var key = Registry.CurrentUser.CreateSubKey(this.keyLocation + pathAfterKeyLocation);

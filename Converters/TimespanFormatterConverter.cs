@@ -39,7 +39,7 @@
 				}
 			}
 
-			return "";
+			return string.Empty;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
