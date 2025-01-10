@@ -22,7 +22,7 @@
 		/// <param name="callback">The <see cref="Action"/> to invoke.</param>
 		/// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.
 		/// </param>
-		public RefreshTrigger(Action callback, int refreshTimeMs, [CallerFilePath] string name = string.Empty)
+		public RefreshTrigger(Action callback, int refreshTimeMs, [CallerFilePath] string name = "")
         {
             this.name = name;
 

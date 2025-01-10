@@ -13,7 +13,7 @@
         /// <param name="setting">The setting path.</param>
         /// <param name="value">The value to set.</param>
         /// <param name="pathAfterKeyLocation">Custom path after the key location (usually for sub folders).</param>
-        void SetSetting(string setting, string value, string pathAfterKeyLocation = string.Empty);
+        void SetSetting(string setting, string value, string pathAfterKeyLocation = "");
 
         /// <summary>
         /// Trys to get a setting from a given registry path.
@@ -25,7 +25,7 @@
         /// <param name="pathAfterKeyLocation">Custom path after the key location (usually for sub folders).</param>
         /// <returns>A <see cref="bool"/> indicating whether retrieval was succesful. If false, the default value 
         /// is returned and set to the path. </returns>
-        bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = string.Empty);
+        bool TryGetSetting<T>(string setting, T defaultValue, out T value, string pathAfterKeyLocation = "");
 
         /// <summary>
         /// Gets all settings on a given registry path.
@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="setting">The path of the setting to delete.</param>
         /// <param name="pathAfterKeyLocation">Custom path after the key location (usually for sub folders).</param>
-        void DeleteSetting(string setting, string pathAfterKeyLocation = string.Empty);
+        void DeleteSetting(string setting, string pathAfterKeyLocation = "");
 
         /// <summary>
         /// Deletes an entire registry tree.
