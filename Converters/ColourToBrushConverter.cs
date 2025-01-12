@@ -1,26 +1,25 @@
-﻿namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters;
+
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
+
+/// <summary>
+/// A <see cref="IValueConverter"/> which returns a <see cref="SolidColorBrush"/> whos colour is the colour set in
+/// the binding.
+/// </summary>
+public class ColourToBrushConverter : IValueConverter
 {
-    using System;
-    using System.Globalization;
-    using System.Windows;
-    using System.Windows.Data;
-    using System.Windows.Media;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        Color colour = value is Color ? (Color)value : Colors.Black;
+        return Application.Current.Dispatcher.Invoke(() => new SolidColorBrush(colour));
+    }
 
-    /// <summary>
-    /// A <see cref="IValueConverter"/> which returns a <see cref="SolidColorBrush"/> whos colour is the colour set in
-    /// the binding.
-    /// </summary>
-    public class ColourToBrushConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			Color colour = value is Color ? (Color)value : Colors.Black;
-			return Application.Current.Dispatcher.Invoke(() => new SolidColorBrush(colour));
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			return ((SolidColorBrush)value).Color;
-		}
-	}
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return ((SolidColorBrush)value).Color;
+    }
 }

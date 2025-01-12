@@ -1,44 +1,43 @@
-﻿namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters;
+
+using CoreUtilities.Helpers.Extensions;
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+/// <summary>
+/// An <see cref="IValueConverter"/> that given an <see cref="Enum"/>, if it has a description attribute, returns
+/// that, otherwise the <see cref="Enum"/> itself converted to a string.
+/// </summary>
+public class EnumDescriptionGetterConverter : IValueConverter
 {
-    using CoreUtilities.HelperClasses.Extensions;
-    using System;
-    using System.Globalization;
-    using System.Windows.Data;
+    private Enum? cachedEnum;
 
-    /// <summary>
-    /// An <see cref="IValueConverter"/> that given an <see cref="Enum"/>, if it has a description attribute, returns
-    /// that, otherwise the <see cref="Enum"/> itself converted to a string.
-    /// </summary>
-    public class EnumDescriptionGetterConverter : IValueConverter
-	{
-		private Enum? cachedEnum;
+    object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is Enum enumObject)
+        {
+            this.cachedEnum = enumObject;
+            return enumObject.GetEnumDescription();
+        }
 
-		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (value is Enum enumObject)
-			{
-                this.cachedEnum = enumObject;
-				return enumObject.GetEnumDescription();
-			}
+        return Binding.DoNothing;
+    }
 
-			return Binding.DoNothing;
-		}
+    object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is string description)
+        {
+            if (description == this.cachedEnum?.GetEnumDescription())
+            {
+                return this.cachedEnum;
+            }
+            else
+            {
+                return Binding.DoNothing;
+            }
+        }
 
-		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (value is string description)
-			{
-				if (description == this.cachedEnum?.GetEnumDescription())
-				{
-					return this.cachedEnum;
-				}
-				else
-				{
-					return Binding.DoNothing;
-				}
-			}
-
-			return Binding.DoNothing;
-		}
-	}
+        return Binding.DoNothing;
+    }
 }

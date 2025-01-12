@@ -1,22 +1,21 @@
-﻿namespace CoreUtilities.Converters
+﻿namespace CoreUtilities.Converters;
+
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+/// <summary>
+/// An <see cref="IValueConverter"/> which inverts a given <see cref="double"/> value.
+/// </summary>
+public class DoubleInverterConverter : IValueConverter
 {
-    using System;
-    using System.Globalization;
-    using System.Windows.Data;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return (double)value * -1;
+    }
 
-    /// <summary>
-    /// An <see cref="IValueConverter"/> which inverts a given <see cref="double"/> value.
-    /// </summary>
-    public class DoubleInverterConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			return (double)value * -1;
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
-	}
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
 }
