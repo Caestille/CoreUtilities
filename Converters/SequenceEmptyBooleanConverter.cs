@@ -45,8 +45,5 @@ public class SequenceEmptyBooleanConverter : IValueConverter
         return true;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

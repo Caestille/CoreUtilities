@@ -1,8 +1,8 @@
 ﻿namespace CoreUtilities.Helpers.WPF;
 
-using System.Windows.Data;
-using System.Windows;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Data;
 
 public class BindingTrigger : INotifyPropertyChanged
 {
@@ -10,15 +10,15 @@ public class BindingTrigger : INotifyPropertyChanged
         => this.Binding = new Binding()
         {
             Source = this,
-            Path = new PropertyPath(nameof(this.Value))
+            Path = new PropertyPath(nameof(this.Value)),
         };
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public Binding Binding { get; }
 
-    public void Refresh()
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Value)));
-
     public object? Value { get; }
+
+    public void Refresh()
+        => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Value)));
 }

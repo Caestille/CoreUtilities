@@ -8,15 +8,9 @@ using System.Windows.Media;
 /// </summary>
 public static class ColorExtensions
 {
-    public static string GetHexString(this Color colour)
-    {
-        return colour.ToString();
-    }
+    public static string GetHexString(this Color colour) => colour.ToString();
 
-    public static Color FromHexString(string hex)
-    {
-        return (Color)ColorConverter.ConvertFromString(hex);
-    }
+    public static Color FromHexString(string hex) => (Color)ColorConverter.ConvertFromString(hex);
 
     /// <summary>
     /// Returns the same <see cref="Color"/> with the given alpha value.
@@ -24,13 +18,10 @@ public static class ColorExtensions
     /// <param name="colour">The <see cref="Color"/> to modify.</param>
     /// <param name="alpha">The alpha value to set.</param>
     /// <returns>A modified <see cref="Color"/>.</returns>
-    public static Color SetAlpha(this Color colour, byte alpha)
-    {
-        return Color.FromArgb(alpha, colour.R, colour.G, colour.B);
-    }
+    public static Color SetAlpha(this Color colour, byte alpha) => Color.FromArgb(alpha, colour.R, colour.G, colour.B);
 
     /// <summary>
-    /// Merges two <see cref="Color"/>s with a given weighting towards the second colour. 
+    /// Merges two <see cref="Color"/>s with a given weighting towards the second colour.
     /// </summary>
     /// <param name="colour">The first <see cref="Color"/> to sample.</param>
     /// <param name="colour2">The second <see cref="Color"/> to sample.</param>
@@ -40,10 +31,10 @@ public static class ColorExtensions
     public static Color Combine(this Color colour, Color colour2, double colour2Weighting)
     {
         var colour1Weighting = 1 - colour2Weighting;
-        var a = (byte)((colour.A * colour1Weighting + colour2.A * colour2Weighting) / (colour1Weighting + colour2Weighting));
-        var r = (byte)((colour.R * colour1Weighting + colour2.R * colour2Weighting) / (colour1Weighting + colour2Weighting));
-        var g = (byte)((colour.G * colour1Weighting + colour2.G * colour2Weighting) / (colour1Weighting + colour2Weighting));
-        var b = (byte)((colour.B * colour1Weighting + colour2.B * colour2Weighting) / (colour1Weighting + colour2Weighting));
+        var a = (byte)(((colour.A * colour1Weighting) + (colour2.A * colour2Weighting)) / (colour1Weighting + colour2Weighting));
+        var r = (byte)(((colour.R * colour1Weighting) + (colour2.R * colour2Weighting)) / (colour1Weighting + colour2Weighting));
+        var g = (byte)(((colour.G * colour1Weighting) + (colour2.G * colour2Weighting)) / (colour1Weighting + colour2Weighting));
+        var b = (byte)(((colour.B * colour1Weighting) + (colour2.B * colour2Weighting)) / (colour1Weighting + colour2Weighting));
         return Color.FromArgb(a, r, g, b);
     }
 
@@ -55,7 +46,8 @@ public static class ColorExtensions
     public static Color RandomColour(byte lowerBounds = 0)
     {
         var random = new Random();
-        return Color.FromArgb(255,
+        return Color.FromArgb(
+            255,
             (byte)random.Next(lowerBounds, 255),
             (byte)random.Next(lowerBounds, 255),
             (byte)random.Next(lowerBounds, 255));
@@ -75,10 +67,7 @@ public static class ColorExtensions
         return Math.Sqrt(rFactor + gFactor + bFactor) / 255d;
     }
 
-    public static double Brightness(this Color colour)
-    {
-        return System.Drawing.Color.FromArgb(colour.A, colour.R, colour.G, colour.B).GetBrightness();
-    }
+    public static double Brightness(this Color colour) => System.Drawing.Color.FromArgb(colour.A, colour.R, colour.G, colour.B).GetBrightness();
 
     /// <summary>
     /// Indicates if two colours RGB components are similar to each other by a given theshold.
@@ -131,7 +120,6 @@ public static class ColorExtensions
     /// </summary>
     /// <param name="colour">The <see cref="Color"/> to cahnge the brightness of.</param>
     /// <param name="factor">The factor to scale the brightnes by.</param>
-    /// <returns>A <see cref="Color"/> with brightness modified by the scaling factor.</returns>
     public static void ChangeThisColourBrightness(this ref Color colour, float factor)
     {
         float red = colour.R;
@@ -147,18 +135,15 @@ public static class ColorExtensions
         }
         else
         {
-            red = (255 - red) * factor + red;
-            green = (255 - green) * factor + green;
-            blue = (255 - blue) * factor + blue;
+            red = ((255 - red) * factor) + red;
+            green = ((255 - green) * factor) + green;
+            blue = ((255 - blue) * factor) + blue;
         }
 
         colour = Color.FromArgb(colour.A, (byte)red, (byte)green, (byte)blue);
     }
 
-    public static Color Invert(this Color colour)
-    {
-        return Color.FromArgb(colour.A, (byte)(255 - colour.R), (byte)(255 - colour.G), (byte)(255 - colour.B));
-    }
+    public static Color Invert(this Color colour) => Color.FromArgb(colour.A, (byte)(255 - colour.R), (byte)(255 - colour.G), (byte)(255 - colour.B));
 
     /// <summary>
     /// Changes the brightness of a <see cref="Color"/> by a scaling factor.
@@ -181,9 +166,9 @@ public static class ColorExtensions
         }
         else
         {
-            red = (255 - red) * factor + red;
-            green = (255 - green) * factor + green;
-            blue = (255 - blue) * factor + blue;
+            red = ((255 - red) * factor) + red;
+            green = ((255 - green) * factor) + green;
+            blue = ((255 - blue) * factor) + blue;
         }
 
         return Color.FromArgb(colour.A, (byte)red, (byte)green, (byte)blue);

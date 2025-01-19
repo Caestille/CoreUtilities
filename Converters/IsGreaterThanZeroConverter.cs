@@ -9,13 +9,7 @@ using System.Windows.Data;
 /// </summary>
 public class IsGreaterThanZeroConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return (double)value > 0;
-    }
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value > 0;
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

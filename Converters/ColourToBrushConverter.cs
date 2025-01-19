@@ -18,8 +18,5 @@ public class ColourToBrushConverter : IValueConverter
         return Application.Current.Dispatcher.Invoke(() => new SolidColorBrush(colour));
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return ((SolidColorBrush)value).Color;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => ((SolidColorBrush)value).Color;
 }

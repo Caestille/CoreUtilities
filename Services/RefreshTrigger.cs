@@ -54,22 +54,15 @@ public class RefreshTrigger
             }
         }));
         thread.Start();
-
     }
 
     /// <summary>
     /// Refreshes the trigger, preventing the action from being invoked for the refresh time period once more.
     /// </summary>
-    public void Refresh()
-    {
-        this.refreshAction();
-    }
+    public void Refresh() => this.refreshAction();
 
     /// <summary>
     /// Stops the service, killing the thread checking for the refresh.
     /// </summary>
-    public void Stop()
-    {
-        this.run = false;
-    }
+    public void Stop() => this.run = false;
 }

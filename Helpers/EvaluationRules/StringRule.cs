@@ -1,9 +1,9 @@
 ﻿namespace CoreUtilities.Helpers.EvaluationRules;
 
-using CoreUtilities.Helpers.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreUtilities.Helpers.Enums;
 
 /// <summary>
 /// A rule operating on string values.
@@ -16,7 +16,22 @@ public class StringRule<TInput> : BaseRule<TInput, string>
     /// </summary>
     /// <param name="getPropertyFunc">A <see cref="Func{T, TResult}"/> used to obtain the <see cref="string"/>
     /// value to be evaluated with from the <typeparamref name="TInput"/>.</param>
-    public StringRule(Func<TInput, string> getPropertyFunc) : base(getPropertyFunc) { }
+    public StringRule(Func<TInput, string> getPropertyFunc)
+        : base(getPropertyFunc) { }
+
+    /// <inheritdoc />
+    public override IEnumerable<string> AvailableProperties
+        => typeof(TInput)
+            .GetProperties()
+            .Where(x => x.PropertyType == typeof(string))
+            .Select(x => x.Name);
+
+    /// <inheritdoc />
+    public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
+    {
+        AvailableOperation.Contains,
+        AvailableOperation.DoesNotContain,
+    };
 
     /// <inheritdoc />
     public override bool Evaluate(TInput input)
@@ -51,24 +66,7 @@ public class StringRule<TInput> : BaseRule<TInput, string>
         return false;
     }
 
-    public override string SerialiseValue(object value)
-    {
-        return (string)value;
-    }
+    public override string SerialiseValue(object value) => (string)value;
 
-    public override object DeserialiseValue(string value)
-    {
-        return value;
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<string> AvailableProperties
-        => typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(string)).Select(x => x.Name);
-
-    /// <inheritdoc />
-    public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
-    {
-        AvailableOperation.Contains,
-        AvailableOperation.DoesNotContain,
-    };
+    public override object DeserialiseValue(string value) => value;
 }

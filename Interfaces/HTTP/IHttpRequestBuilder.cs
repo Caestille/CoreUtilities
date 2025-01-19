@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Net.Http;
 
 /// <summary>
-/// Interface for a class creating an http request builder. Allows for easy creation and execution of http 
+/// Interface for a class creating an http request builder. Allows for easy creation and execution of http
 /// requests.
 /// </summary>
 public interface IHttpRequestBuilder
@@ -19,14 +19,13 @@ public interface IHttpRequestBuilder
         [Description("GET")]
         Get,
         [Description("DELETE")]
-        Delete
+        Delete,
     }
 
     /// <summary>
     /// Creates a request which can have content/headers added to, then built.
     /// </summary>
-    /// <param name="commandType">A <see cref="HttpCommandType"/> enum indicating what type of request this 
-    /// is.</param>
+    /// <param name="commandType">A <see cref="HttpCommandType"/> enum indicating what type of request this is.</param>
     /// <param name="requestTo">The url to send the request to.</param>
     /// <returns>An instance of a <see cref="IHttpRequestBuilder"/> which can be added to or built.</returns>
     IHttpRequestBuilder CreateRequest(HttpCommandType commandType, string requestTo);
@@ -57,6 +56,6 @@ public interface IHttpRequestBuilder
     /// <summary>
     /// Build the <see cref="HttpRequestMessage"/> and returns it ready for sending.
     /// </summary>
-    /// <returns>A <see cref="HttpRequestMessage"/.></returns>.
+    /// <returns>A <see cref="HttpRequestMessage"/>.</returns>.
     HttpRequestMessage Build();
 }

@@ -42,8 +42,5 @@ public class TimespanFormatterConverter : IValueConverter
         return string.Empty;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

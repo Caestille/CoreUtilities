@@ -7,6 +7,12 @@ using System.Windows;
 /// </summary>
 public class BindingProxy : Freezable
 {
+    public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
+        nameof(Data),
+        typeof(object),
+        typeof(BindingProxy),
+        new UIPropertyMetadata(null));
+
     public BindingProxy() { }
 
     public BindingProxy(object data)
@@ -14,23 +20,11 @@ public class BindingProxy : Freezable
         this.Data = data;
     }
 
-    protected override Freezable CreateInstanceCore()
-    {
-        return new BindingProxy();
-    }
-
-    /// <summary>
-    /// The data.
-    /// </summary>
     public object Data
     {
         get => this.GetValue(DataProperty);
         set => this.SetValue(DataProperty, value);
     }
 
-    public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
-        nameof(Data),
-        typeof(object),
-        typeof(BindingProxy),
-        new UIPropertyMetadata(null));
+    protected override Freezable CreateInstanceCore() => new BindingProxy();
 }

@@ -10,13 +10,7 @@ using System.Windows.Data;
 /// </summary>
 public class StringNotEmptyConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return !string.IsNullOrEmpty((string)value);
-    }
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !string.IsNullOrEmpty((string)value);
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

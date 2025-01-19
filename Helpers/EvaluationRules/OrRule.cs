@@ -1,9 +1,9 @@
 ﻿namespace CoreUtilities.Helpers.EvaluationRules;
 
-using CoreUtilities.Helpers.Enums;
-using CoreUtilities.Interfaces.EvaluationRules;
 using System;
 using System.Collections.Generic;
+using CoreUtilities.Helpers.Enums;
+using CoreUtilities.Interfaces.EvaluationRules;
 
 /// <summary>
 /// A rule for operating on two <see cref="BaseRule{TInput, TEvaluate}"/> derivatives and indicating whether one or
@@ -11,17 +11,22 @@ using System.Collections.Generic;
 /// </summary>
 /// <typeparam name="TInput">The type to be given.</typeparam>
 /// <typeparam name="TEvaluate">The property type to evaluate.</typeparam>
-public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEvaluate : IRuleConfigurer<TInput>
+public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
+    where TEvaluate : IRuleConfigurer<TInput>
 {
     /// <summary>
     /// Initialises a new <see cref="OrRule{TInput, TEvaluate}"/>.
     /// </summary>
-    public OrRule() : base(null)
+    public OrRule()
+        : base(null)
     {
-        this.Value1 = Activator.CreateInstance(typeof(TEvaluate));
-        this.Value2 = Activator.CreateInstance(typeof(TEvaluate));
+        this.Value1 = Activator.CreateInstance<TEvaluate>();
+        this.Value2 = Activator.CreateInstance<TEvaluate>();
         this.SelectedOperation = AvailableOperation.EqualTo;
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<Enum> SupportedOperations => new List<Enum>() { };
 
     /// <inheritdoc />
     public override bool Evaluate(TInput input)
@@ -44,11 +49,5 @@ public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEval
         return string.Empty;
     }
 
-    public override object DeserialiseValue(string value)
-    {
-        return ((TEvaluate)Activator.CreateInstance(typeof(TEvaluate))!).Deserialise(value);
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<Enum> SupportedOperations => new List<Enum>() { };
+    public override object DeserialiseValue(string value) => Activator.CreateInstance<TEvaluate>()!.Deserialise(value);
 }

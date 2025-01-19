@@ -9,13 +9,7 @@ using System.Windows.Data;
 /// </summary>
 public class DoubleInverterConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return (double)value * -1;
-    }
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * -1;
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }

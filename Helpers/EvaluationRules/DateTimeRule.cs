@@ -1,10 +1,10 @@
 ﻿namespace CoreUtilities.Helpers.EvaluationRules;
 
-using CoreUtilities.Helpers.Enums;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using CoreUtilities.Helpers.Enums;
 
 /// <summary>
 /// A rule for operating on DateTime values.
@@ -17,7 +17,26 @@ public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
     /// </summary>
     /// <param name="getPropertyFunc">The <see cref="Func{T, TResult}"/> used to obtain the property from the
     /// <typeparamref name="TInput"/> to be evaluated with.</param>
-    public DateTimeRule(Func<TInput, DateTime> getPropertyFunc) : base(getPropertyFunc) { }
+    public DateTimeRule(Func<TInput, DateTime> getPropertyFunc)
+        : base(getPropertyFunc) { }
+
+    /// <inheritdoc />
+    public override IEnumerable<string> AvailableProperties
+        => typeof(TInput)
+            .GetProperties()
+            .Where(x => x.PropertyType == typeof(DateTime))
+            .Select(x => x.Name);
+
+    /// <inheritdoc />
+    public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
+    {
+        AvailableOperation.EqualTo,
+        AvailableOperation.NotEqualTo,
+        AvailableOperation.GreaterThan,
+        AvailableOperation.LessThan,
+        AvailableOperation.InBetween,
+        AvailableOperation.OutsideOf,
+    };
 
     /// <inheritdoc />
     public override bool Evaluate(TInput input)
@@ -80,32 +99,15 @@ public class DateTimeRule<TInput> : BaseRule<TInput, DateTime>
             case AvailableOperation.DoesNotContain:
                 throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
         }
+
         base.ConfigureForSelectedOperation();
     }
 
-    public override string SerialiseValue(object value)
-    {
-        return ((DateTime)value).ToString();
-    }
+    public override string SerialiseValue(object value) => ((DateTime)value).ToString();
 
     public override object? DeserialiseValue(string value)
     {
         var success = DateTime.TryParse(value, CultureInfo.InvariantCulture, out var result);
         return success ? result : null;
     }
-
-    /// <inheritdoc />
-    public override IEnumerable<string> AvailableProperties
-        => typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(DateTime)).Select(x => x.Name);
-
-    /// <inheritdoc />
-    public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
-    {
-        AvailableOperation.EqualTo,
-        AvailableOperation.NotEqualTo,
-        AvailableOperation.GreaterThan,
-        AvailableOperation.LessThan,
-        AvailableOperation.InBetween,
-        AvailableOperation.OutsideOf,
-    };
 }

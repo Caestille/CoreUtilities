@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 public static class TaskExtensions
 {
     /// <summary>
-    /// Converts a <see cref="Task{TResult}"/> to a cancellable task, which can be provided with a 
+    /// Converts a <see cref="Task{TResult}"/> to a cancellable task, which can be provided with a
     /// <see cref="CancellationToken"/> to cancel a long running async task manually.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -28,10 +28,12 @@ public static class TaskExtensions
         // 1. If the token has been canceled, it cancels the TCS straightaway
         // 2. Otherwise, it attempts to cancel the TCS whenever
         //    the token indicates cancelled
-        token.Register(() => tcs.TrySetCanceled(token),
+        token.Register(
+            () => tcs.TrySetCanceled(token),
             useSynchronizationContext: false);
 
-        task.ContinueWith(t =>
+        task.ContinueWith(
+            t =>
             {
                 // Complete the TCS per task status
                 // If the TCS has been cancelled, this continuation does nothing
@@ -56,7 +58,7 @@ public static class TaskExtensions
     }
 
     /// <summary>
-    /// Converts a <see cref="Task"/> to a cancellable task, which can be provided with a 
+    /// Converts a <see cref="Task"/> to a cancellable task, which can be provided with a
     /// <see cref="CancellationToken"/> to cancel a long running async task manually.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -75,10 +77,12 @@ public static class TaskExtensions
         // 1. If the token has been canceled, it cancels the TCS straightaway
         // 2. Otherwise, it attempts to cancel the TCS whenever
         //    the token indicates cancelled
-        token.Register(() => tcs.TrySetCanceled(token),
+        token.Register(
+            () => tcs.TrySetCanceled(token),
             useSynchronizationContext: false);
 
-        task.ContinueWith(t =>
+        task.ContinueWith(
+            t =>
             {
                 // Complete the TCS per task status
                 // If the TCS has been cancelled, this continuation does nothing

@@ -1,30 +1,37 @@
 ﻿namespace CoreUtilities.Helpers.HTTP;
 
-using CoreUtilities.Helpers.Extensions;
-using CoreUtilities.Interfaces.HTTP;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using CoreUtilities.Helpers.Extensions;
+using CoreUtilities.Interfaces.HTTP;
 
 /// <summary>
-/// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a 
+/// Implementation of <see cref="IHttpRequestBuilder"/>. Provides conventient ways of building a
 /// <see cref="HttpRequestMessage"/>.
 /// </summary>
 public class HttpRequestBuilder : IHttpRequestBuilder
 {
-    private HttpRequestMessage? currentRequest;
-
-    private string? requestType;
-    private string? requestTo;
     private readonly Dictionary<string, string> unvalidatedHeaders = new Dictionary<string, string>();
     private readonly Dictionary<string, string> content = new Dictionary<string, string>();
+    private HttpRequestMessage? currentRequest;
+    private string? requestType;
+    private string? requestTo;
     private string? headerContentType;
 
     /// <inheritdoc/>
     public IHttpRequestBuilder CreateRequest(IHttpRequestBuilder.HttpCommandType commandType, string requestTo)
     {
-        try { this.currentRequest?.Dispose(); } catch { /* Already disposed */ }
+        try
+        {
+            this.currentRequest?.Dispose();
+        }
+        catch
+        {
+            /* Already disposed */
+        }
+
         this.unvalidatedHeaders.Clear();
         this.content.Clear();
         this.requestTo = requestTo;
@@ -77,6 +84,7 @@ public class HttpRequestBuilder : IHttpRequestBuilder
                 var comma = i == this.content.Count ? " " : ", ";
                 contentSb.Append($"\"{kvp.Key}\": \"{kvp.Value}\"{comma}");
             }
+
             contentSb.Append(" }");
             this.currentRequest.Content = new StringContent(contentSb.ToString());
         }

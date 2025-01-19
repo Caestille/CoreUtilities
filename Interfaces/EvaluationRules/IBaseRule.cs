@@ -1,8 +1,8 @@
 ﻿namespace CoreUtilities.Interfaces.EvaluationRules;
 
-using CoreUtilities.Helpers.Enums;
 using System;
 using System.Collections.Generic;
+using CoreUtilities.Helpers.Enums;
 
 /// <summary>
 /// An interface for classes designed to implement an evaluation step to implement.
@@ -11,19 +11,6 @@ using System.Collections.Generic;
 /// <typeparam name="TEvaluate">The property type of the input to be evaluated.</typeparam>
 public interface IBaseRule<TInput, TEvaluate>
 {
-    /// <summary>
-    /// Given a <typeparamref name="TInput"/>, returns whether the object matches the set rule.
-    /// </summary>
-    /// <param name="input">The <typeparamref name="TInput"/> to be evaluated.</param>
-    /// <returns>A <see cref="bool"/> indicating whether the given value matched the rule.</returns>
-    bool Evaluate(TInput input);
-
-    /// <summary>
-    /// Configured the rule for the selected operation. Should be called when the selected operation changes. Can
-    /// optionally do nothing.
-    /// </summary>
-    void ConfigureForSelectedOperation();
-
     /// <summary>
     /// Potential first value of type <typeparamref name="TEvaluate"/> to evaluate the input against according to
     /// the selected operation.
@@ -63,4 +50,17 @@ public interface IBaseRule<TInput, TEvaluate>
     /// The selected operation the rule will use in its evaluation.
     /// </summary>
     AvailableOperation? SelectedOperation { get; }
+
+    /// <summary>
+    /// Given a <typeparamref name="TInput"/>, returns whether the object matches the set rule.
+    /// </summary>
+    /// <param name="input">The <typeparamref name="TInput"/> to be evaluated.</param>
+    /// <returns>A <see cref="bool"/> indicating whether the given value matched the rule.</returns>
+    bool Evaluate(TInput input);
+
+    /// <summary>
+    /// Configured the rule for the selected operation. Should be called when the selected operation changes. Can
+    /// optionally do nothing.
+    /// </summary>
+    void ConfigureForSelectedOperation();
 }

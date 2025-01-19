@@ -1,9 +1,9 @@
 ﻿namespace CoreUtilities.Helpers.EvaluationRules;
 
-using CoreUtilities.Helpers.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreUtilities.Helpers.Enums;
 
 /// <summary>
 /// A rule operating on numerical values.
@@ -16,7 +16,23 @@ public class ValueRule<TInput> : BaseRule<TInput, double?>
     /// <typeparamref name="TInput"/>, returns a <see cref="double"/> which is the value to be evaluated with.
     /// </summary>
     /// <param name="getPropertyFunc"></param>
-    public ValueRule(Func<TInput, double?> getPropertyFunc) : base(getPropertyFunc) { }
+    public ValueRule(Func<TInput, double?> getPropertyFunc)
+        : base(getPropertyFunc) { }
+
+    /// <inheritdoc />
+    public override IEnumerable<string> AvailableProperties
+        => typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(double)).Select(x => x.Name);
+
+    /// <inheritdoc />
+    public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
+    {
+        AvailableOperation.EqualTo,
+        AvailableOperation.NotEqualTo,
+        AvailableOperation.GreaterThan,
+        AvailableOperation.LessThan,
+        AvailableOperation.InBetween,
+        AvailableOperation.OutsideOf,
+    };
 
     /// <inheritdoc />
     public override bool Evaluate(TInput input)
@@ -84,31 +100,11 @@ public class ValueRule<TInput> : BaseRule<TInput, double?>
             case AvailableOperation.DoesNotContain:
                 throw new NotSupportedException("DoesNotContain rule type is not supported for value type rule");
         }
+
         base.ConfigureForSelectedOperation();
     }
 
-    public override string SerialiseValue(object value)
-    {
-        return ((double)value).ToString();
-    }
+    public override string SerialiseValue(object value) => ((double)value).ToString();
 
-    public override object DeserialiseValue(string value)
-    {
-        return double.Parse(value);
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<string> AvailableProperties
-        => typeof(TInput).GetProperties().Where(x => x.PropertyType == typeof(double)).Select(x => x.Name);
-
-    /// <inheritdoc />
-    public override IEnumerable<Enum> SupportedOperations => new List<Enum>()
-    {
-        AvailableOperation.EqualTo,
-        AvailableOperation.NotEqualTo,
-        AvailableOperation.GreaterThan,
-        AvailableOperation.LessThan,
-        AvailableOperation.InBetween,
-        AvailableOperation.OutsideOf,
-    };
+    public override object DeserialiseValue(string value) => double.Parse(value);
 }

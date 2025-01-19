@@ -6,8 +6,8 @@ using System.Windows.Data;
 
 public class InlineMultiConverter : IMultiValueConverter
 {
-    public delegate object ConvertDelegate(object[] values, Type targetType, object parameter, CultureInfo culture);
-    public delegate object[] ConvertBackDelegate(object value, Type[] targetTypes, object parameter, CultureInfo culture);
+    private ConvertDelegate convert;
+    private ConvertBackDelegate? convertBack;
 
     public InlineMultiConverter(ConvertDelegate convert, ConvertBackDelegate? convertBack = null)
     {
@@ -15,9 +15,9 @@ public class InlineMultiConverter : IMultiValueConverter
         this.convertBack = convertBack;
     }
 
-    private ConvertDelegate convert { get; }
+    public delegate object ConvertDelegate(object[] values, Type targetType, object parameter, CultureInfo culture);
 
-    private ConvertBackDelegate? convertBack { get; }
+    public delegate object[] ConvertBackDelegate(object value, Type[] targetTypes, object parameter, CultureInfo culture);
 
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         => this.convert(values, targetType, parameter, culture);

@@ -1,16 +1,19 @@
-﻿#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+﻿namespace CoreUtilities.Helpers.WPF;
 
-namespace CoreUtilities.Helpers.WPF;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 using System;
 using System.Globalization;
 using System.Threading;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using System.Windows;
 
 public class DynamicResourceBindingExtension : MarkupExtension
 {
+    private BindingProxy bindingProxy;
+    private BindingTrigger bindingTrigger;
+
     public DynamicResourceBindingExtension()
     {
     }
@@ -32,11 +35,6 @@ public class DynamicResourceBindingExtension : MarkupExtension
 
     public object TargetNullValue { get; set; }
 
-
-    private BindingProxy bindingProxy;
-
-    private BindingTrigger bindingTrigger;
-
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
         var dynamicResource = new DynamicResourceExtension(this.ResourceKey);
@@ -46,7 +44,7 @@ public class DynamicResourceBindingExtension : MarkupExtension
         {
             Source = this.bindingProxy,
             Path = new PropertyPath(BindingProxy.DataProperty),
-            Mode = BindingMode.OneWay
+            Mode = BindingMode.OneWay,
         };
 
         var targetInfo = (IProvideValueTarget?)serviceProvider.GetService(typeof(IProvideValueTarget));
@@ -69,19 +67,20 @@ public class DynamicResourceBindingExtension : MarkupExtension
 
         var findTargetBinding = new Binding()
         {
-            RelativeSource = new RelativeSource(RelativeSourceMode.Self)
+            RelativeSource = new RelativeSource(RelativeSourceMode.Self),
         };
 
         this.bindingTrigger = new BindingTrigger();
 
         var wrapperBinding = new MultiBinding()
         {
-            Bindings = {
-            dynamicResourceBinding,
-            findTargetBinding,
-            this.bindingTrigger.Binding
-        },
-            Converter = new InlineMultiConverter(this.WrapperConvert)
+            Bindings =
+            {
+                dynamicResourceBinding,
+                findTargetBinding,
+                this.bindingTrigger.Binding,
+            },
+            Converter = new InlineMultiConverter(this.WrapperConvert),
         };
 
         return wrapperBinding.ProvideValue(serviceProvider);
@@ -111,10 +110,12 @@ public class DynamicResourceBindingExtension : MarkupExtension
         {
             targetFrameworkElement.Resources[this.bindingProxy] = this.bindingProxy;
 
-            SynchronizationContext.Current?.Post((state) =>
-            {
-                this.bindingTrigger.Refresh();
-            }, null);
+            SynchronizationContext.Current?.Post(
+                (state) =>
+                {
+                    this.bindingTrigger.Refresh();
+                },
+                null);
         }
 
         return dynamicResourceBindingResult;

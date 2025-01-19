@@ -1,16 +1,16 @@
 ﻿namespace CoreUtilities.Services.HTTP;
 
-using CoreUtilities.Helpers.Extensions;
-using CoreUtilities.Interfaces.HTTP;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreUtilities.Helpers.Extensions;
+using CoreUtilities.Interfaces.HTTP;
 
 /// <summary>
-/// Implementation of <see cref="IHttpService"/>. Implements handy ways to create and send 
+/// Implementation of <see cref="IHttpService"/>. Implements handy ways to create and send
 /// <see cref="HttpRequestMessage"/>s.
 /// </summary>
 public class HttpInteractionService : IHttpService
@@ -21,7 +21,7 @@ public class HttpInteractionService : IHttpService
     /// <summary>
     /// Constructor for the <see cref="HttpInteractionService"/>.
     /// </summary>
-    /// <param name="builderCreateFunc">A <see cref="Func{T}"/> which returns an instance of a 
+    /// <param name="builderCreateFunc">A <see cref="Func{T}"/> which returns an instance of a
     /// <see cref="IHttpRequestBuilder"/>.</param>
     public HttpInteractionService(Func<IHttpRequestBuilder> builderCreateFunc)
     {
@@ -29,10 +29,7 @@ public class HttpInteractionService : IHttpService
     }
 
     /// <inheritdoc/>
-    public IHttpRequestBuilder GetHttpRequestBuilder()
-    {
-        return this.httpRequestBuilderCreator();
-    }
+    public IHttpRequestBuilder GetHttpRequestBuilder() => this.httpRequestBuilderCreator();
 
     /// <inheritdoc/>
     public async Task<(bool, string)> WaitForAndQueryResponseOverUri(

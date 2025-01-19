@@ -1,5 +1,7 @@
 ﻿namespace CoreUtilities.Converters;
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -16,6 +18,24 @@ using System.Windows.Media;
 /// </summary>
 public class StringWidthGetterConverter : IMultiValueConverter
 {
+    public static Size MeasureString(string? text, double fontSize, FontFamily fontFamily, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch)
+    {
+        if (text != null)
+        {
+            var formattedText = new FormattedText(
+                text,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
+                fontSize,
+                Brushes.Black);
+
+            return new Size(formattedText.Width, formattedText.Height);
+        }
+
+        return new Size(0, 0);
+    }
+
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values[0] is string format
@@ -37,42 +57,25 @@ public class StringWidthGetterConverter : IMultiValueConverter
                     padding = value;
                 }
             }
+
             if (!string.IsNullOrEmpty(format))
             {
                 overrideText = Regex.Replace(format, "[A-z]", "0");
             }
-            double width = MeasureString(
-                !string.IsNullOrEmpty(overrideText)
-                ? overrideText
-                : text, fontSize, fontFamily, fontStyle, fontWeight, fontStretch).Width;
+
+            var width = MeasureString(
+                !string.IsNullOrEmpty(overrideText) ? overrideText : text,
+                fontSize,
+                fontFamily,
+                fontStyle,
+                fontWeight,
+                fontStretch).Width;
+
             return width + padding;
         }
 
         return 0d;
     }
 
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    {
-        return new[] { Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing };
-    }
-
-    public static Size MeasureString(string? text, double fontSize, FontFamily fontFamily, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch)
-    {
-        if (text != null)
-        {
-#pragma warning disable CS0618
-            var formattedText = new FormattedText(
-#pragma warning restore CS0618
-                text,
-                CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight,
-                new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
-                fontSize,
-                Brushes.Black);
-
-            return new Size(formattedText.Width, formattedText.Height);
-        }
-
-        return new Size(0, 0);
-    }
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => new[] { Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing, Binding.DoNothing };
 }

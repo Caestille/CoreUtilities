@@ -1,7 +1,7 @@
 ﻿namespace CoreUtilities.Helpers;
 
-using System.Net.NetworkInformation;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 public static class NetworkHelpers
@@ -9,6 +9,8 @@ public static class NetworkHelpers
     private static string? cachedPublicIp;
 
     private static HttpClient httpClient = new HttpClient();
+
+    public static bool IsInternetConnected => NetworkInterface.GetIsNetworkAvailable();
 
     public static async Task<string> GetPublicIpAsync()
     {
@@ -33,6 +35,4 @@ public static class NetworkHelpers
             return string.Empty;
         }
     }
-
-    public static bool IsInternetConnected => NetworkInterface.GetIsNetworkAvailable();
 }

@@ -15,7 +15,7 @@ public class RangeObservableCollection<T> : ObservableCollection<T>
     private bool suppressNotification;
 
     /// <summary>
-    /// Constructor, creates and empty collection.
+    /// Constructor, creates an empty collection.
     /// </summary>
     public RangeObservableCollection() { }
 
@@ -26,14 +26,6 @@ public class RangeObservableCollection<T> : ObservableCollection<T>
     public RangeObservableCollection(IEnumerable<T> list)
     {
         this.AddRange(list);
-    }
-
-    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-    {
-        if (!this.suppressNotification)
-        {
-            base.OnCollectionChanged(e);
-        }
     }
 
     /// <summary>
@@ -86,8 +78,13 @@ public class RangeObservableCollection<T> : ObservableCollection<T>
     /// Forcibly raises <see cref="INotifyCollectionChanged"/> even if nothing has changed. Useful in some WPF
     /// contexts.
     /// </summary>
-    public void ForceRaiseCollectionChanged()
+    public void ForceRaiseCollectionChanged() => this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        if (!this.suppressNotification)
+        {
+            base.OnCollectionChanged(e);
+        }
     }
 }

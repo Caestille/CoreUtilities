@@ -10,13 +10,7 @@ using System.Windows.Data;
 /// </summary>
 public class PercentFormatterConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return $"{Math.Round((double)value, 0)} %";
-    }
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => $"{Math.Round((double)value, 0)} %";
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

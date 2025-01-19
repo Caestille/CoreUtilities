@@ -34,8 +34,5 @@ public class StringNotEmptyVisibilityConverter : IValueConverter
         return empty ? Visibility.Collapsed : Visibility.Visible;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

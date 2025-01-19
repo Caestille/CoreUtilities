@@ -12,14 +12,6 @@ using CoreUtilities.Helpers.EvaluationRules;
 public interface IRule<TInput>
 {
     /// <summary>
-    /// Executes the rule on a given input, and returns a <see cref="bool"/> indicating whether the value matched
-    /// the rule or not.
-    /// </summary>
-    /// <param name="input">The input to be evaluated.</param>
-    /// <returns></returns>
-    bool Evaluate(TInput input);
-
-    /// <summary>
     /// Gets the potential first value of the rule. Depending on the inheritor, this may not be set.
     /// </summary>
     object? Value1 { get; set; }
@@ -33,6 +25,14 @@ public interface IRule<TInput>
     /// The rule operation/comparison to be executed (e.g.: Less than, more than etc).
     /// </summary>
     AvailableOperation? SelectedOperation { get; set; }
+
+    /// <summary>
+    /// Executes the rule on a given input, and returns a <see cref="bool"/> indicating whether the value matched
+    /// the rule or not.
+    /// </summary>
+    /// <param name="input">The input to be evaluated.</param>
+    /// <returns></returns>
+    bool Evaluate(TInput input);
 
     /// <summary>
     /// Serialises the given value to a string for storage.

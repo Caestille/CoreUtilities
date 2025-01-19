@@ -1,9 +1,9 @@
 ﻿namespace CoreUtilities.Converters;
 
-using CoreUtilities.Helpers.Extensions;
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using CoreUtilities.Helpers.Extensions;
 
 /// <summary>
 /// An <see cref="IValueConverter"/> that given an <see cref="Enum"/>, if it has a description attribute, returns

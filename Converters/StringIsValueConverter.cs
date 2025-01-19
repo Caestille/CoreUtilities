@@ -10,13 +10,7 @@ using System.Windows.Data;
 /// </summary>
 public class StringIsValueConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return (string)value == (string)parameter;
-    }
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (string)value == (string)parameter;
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return Binding.DoNothing;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

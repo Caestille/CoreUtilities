@@ -10,13 +10,7 @@ using System.Windows.Data;
 /// </summary>
 public class IsIntegerConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return System.Convert.ToInt32(value) == int.Parse((string)parameter);
-    }
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => System.Convert.ToInt32(value) == int.Parse((string)parameter);
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }

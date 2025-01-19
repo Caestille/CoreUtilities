@@ -10,7 +10,7 @@ using System.Reflection;
 public static class EnumExtensions
 {
     /// <summary>
-    /// Gets the description attribute for a given <see cref="Enum"/> if it exists, else the enum name itself as a 
+    /// Gets the description attribute for a given <see cref="Enum"/> if it exists, else the enum name itself as a
     /// <see cref="string"/>.
     /// </summary>
     /// <param name="enumObj">The <see cref="Enum"/> to get the description of.</param>

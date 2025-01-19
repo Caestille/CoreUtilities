@@ -19,11 +19,11 @@ public interface IHttpService
     /// <param name="token">A <see cref="CancellationToken"/> used to cancel the query/wait manually.</param>
     /// <returns>A <see cref="Task{TResult}"/> which is the awaitable wrapper for the results of the query.
     /// </returns>
-    Task<(bool, string)> WaitForAndQueryResponseOverUri(
+    Task<(bool Success, string Response)> WaitForAndQueryResponseOverUri(
         string callbackUri, string query, CancellationToken? token = null);
 
     /// <summary>
-    /// Returns an instance of a <see cref="IHttpRequestBuilder"/> for building and then executing 
+    /// Returns an instance of a <see cref="IHttpRequestBuilder"/> for building and then executing
     /// <see cref="HttpRequestMessage"/>s.
     /// </summary>
     /// <returns>A <see cref="IHttpRequestBuilder"/>.</returns>
@@ -35,8 +35,8 @@ public interface IHttpService
     /// </summary>
     /// <param name="request">The request to send.</param>
     /// <param name="token">A <see cref="CancellationToken"/> used to cancel the request/wait manually.</param>
-    /// <returns>A <see cref="Task{TResult}"/> which is the awaitable wrapper containing the status code of the 
+    /// <returns>A <see cref="Task{TResult}"/> which is the awaitable wrapper containing the status code of the
     /// requests and the response string.</returns>
-    Task<(HttpStatusCode, string)> SendAsyncDisposeAndGetResponse(
+    Task<(HttpStatusCode StatusCode, string Response)> SendAsyncDisposeAndGetResponse(
         HttpRequestMessage request, CancellationToken? token = null);
 }
