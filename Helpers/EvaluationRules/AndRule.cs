@@ -14,7 +14,7 @@ using System.Collections.Generic;
 public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate> where TEvaluate : notnull, IRuleConfigurer<TInput>
 {
     /// <summary>
-    /// Initialises a new <see cref="AndRule{TInput, TEvaluate}"/>
+    /// Initialises a new <see cref="AndRule{TInput, TEvaluate}"/>.
     /// </summary>
     public AndRule() : base(null)
     {

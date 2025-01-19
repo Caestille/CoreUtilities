@@ -84,7 +84,7 @@ public static class ColorExtensions
     /// Indicates if two colours RGB components are similar to each other by a given theshold.
     /// </summary>
     /// <param name="colour1">The first <see cref="Color"/>.</param>
-    /// <param name="colour2">The second <see cref="Color"/></param>
+    /// <param name="colour2">The second <see cref="Color"/>.</param>
     /// <param name="threshold">The threshold by which the sum of differences of the RGB components of both colours
     /// must be within for this to return <see cref="true"/>.</param>
     /// <returns>A <see cref="bool"/> indicating whether the input <see cref="Color"/> are similar in colour.
@@ -108,7 +108,7 @@ public static class ColorExtensions
     /// <param name="colourToSet">The <see cref="Color"/> to adjust.</param>
     /// <param name="comparisonAdjustmentFactor">Fudge factor for the threshold comparison.</param>
     /// <param name="threshold">The threshold to compare the perceived brightness of the two <see cref="Color"/>s
-    /// with</param>
+    /// with.</param>
     /// <param name="changeFactor">The factor by which to change the colour of the <paramref name="colourToSet"/>
     /// by if the threshold condition is met.</param>
     public static void AdjustBrightnessIfNearColour(

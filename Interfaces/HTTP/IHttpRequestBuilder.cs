@@ -57,6 +57,6 @@ public interface IHttpRequestBuilder
     /// <summary>
     /// Build the <see cref="HttpRequestMessage"/> and returns it ready for sending.
     /// </summary>
-    /// <returns>A <see cref="HttpRequestMessage"/.></returns>
+    /// <returns>A <see cref="HttpRequestMessage"/.></returns>.
     HttpRequestMessage Build();
 }

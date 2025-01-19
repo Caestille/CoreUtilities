@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 /// <summary>
 /// An <see cref="IMultiValueConverter"/> which given a <see cref="bool"/> as item 1, and two other bindings in
-/// items 2 and 3, returns items 2 if true, and item 3 if false
+/// items 2 and 3, returns items 2 if true, and item 3 if false.
 /// </summary>
 public class ValueIfTrueValueIfFalseConverter : IMultiValueConverter
 {

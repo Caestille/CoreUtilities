@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Windows.Data;
 
 /// <summary>
-/// An <see cref="IValueConverter"/> which multiples a given <see cref="double"/> by the given converter parameter
+/// An <see cref="IValueConverter"/> which multiples a given <see cref="double"/> by the given converter parameter.
 /// </summary>
 public class ValueMultiplierConverter : IValueConverter
 {
