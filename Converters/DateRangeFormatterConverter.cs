@@ -18,5 +18,5 @@ public class DateRangeFormatterConverter : IMultiValueConverter
         return $"{date1} - {date2}";
     }
 
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => new[] { Binding.DoNothing, Binding.DoNothing };
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [Binding.DoNothing, Binding.DoNothing];
 }
