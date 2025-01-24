@@ -14,9 +14,6 @@ using CoreUtilities.Interfaces.EvaluationRules;
 public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
     where TEvaluate : notnull, IRuleConfigurer<TInput>
 {
-    /// <summary>
-    /// Initialises a new <see cref="AndRule{TInput, TEvaluate}"/>.
-    /// </summary>
     public AndRule()
         : base(null)
     {
@@ -39,6 +36,7 @@ public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
         return false;
     }
 
+    /// <inheritdoc />
     public override string SerialiseValue(object value)
     {
         if (value is TEvaluate val)
@@ -49,5 +47,6 @@ public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
         return string.Empty;
     }
 
+    /// <inheritdoc />
     public override object DeserialiseValue(string value) => Activator.CreateInstance<TEvaluate>()!.Deserialise(value);
 }

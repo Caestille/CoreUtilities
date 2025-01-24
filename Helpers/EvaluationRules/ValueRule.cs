@@ -15,7 +15,7 @@ public class ValueRule<TInput> : BaseRule<TInput, double?>
     /// Initialises a new <see cref="ValueRule{TInput}"/>, accepts a <see cref="Func{T, TResult}"/> which given a
     /// <typeparamref name="TInput"/>, returns a <see cref="double"/> which is the value to be evaluated with.
     /// </summary>
-    /// <param name="getPropertyFunc"></param>
+    /// <param name="getPropertyFunc">A function to get the property for the rule to evaluate.</param>
     public ValueRule(Func<TInput, double?> getPropertyFunc)
         : base(getPropertyFunc) { }
 

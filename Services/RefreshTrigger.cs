@@ -20,8 +20,8 @@ public class RefreshTrigger
     /// Sets the action to invoke and the refresh time.
     /// </summary>
     /// <param name="callback">The <see cref="Action"/> to invoke.</param>
-    /// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.
-    /// </param>
+    /// <param name="refreshTimeMs">The refresh time (ms) after which the action is invoked if not refreshed.</param>
+    /// <param name="name">Caller file path for identification of the using class in debugging.</param>
     public RefreshTrigger(Action callback, int refreshTimeMs, [CallerFilePath] string name = "")
     {
         this.name = name;

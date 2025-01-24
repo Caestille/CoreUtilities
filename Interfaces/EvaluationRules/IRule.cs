@@ -31,7 +31,7 @@ public interface IRule<TInput>
     /// the rule or not.
     /// </summary>
     /// <param name="input">The input to be evaluated.</param>
-    /// <returns></returns>
+    /// <returns>A <see cref="bool"/> indicating whether the given input matches the rule definition.</returns>
     bool Evaluate(TInput input);
 
     /// <summary>
