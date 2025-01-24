@@ -7,7 +7,7 @@ using System.Windows.Data;
 
 /// <summary>
 /// A <see cref="IMultiValueConverter"/> which returns <see cref="Visibility.Visible"/> if any of the values in the
-/// given <see cref="Binding"/>s are <see cref="true"/>, else <see cref="Visibility.Collapsed"/>.
+/// given <see cref="Binding"/>s are <see langword="true"/>, else <see cref="Visibility.Collapsed"/>.
 /// </summary>
 public class VisibleIfOneTrueConverter : IMultiValueConverter
 {

@@ -7,7 +7,7 @@ using System.Windows.Data;
 
 /// <summary>
 /// An <see cref="IValueConverter"/> which returns <see cref="Visibility.Visible"/> if the value provided in the
-/// <see cref="Binding"/> is <see cref="false"/>, else <see cref="Visibility.Collapsed"/>.
+/// <see cref="Binding"/> is <see langword="false"/>, else <see cref="Visibility.Collapsed"/>.
 /// </summary>
 public class VisibleIfFalseConverter : IValueConverter
 {

@@ -75,7 +75,7 @@ public static class ColorExtensions
     /// <param name="colour1">The first <see cref="Color"/>.</param>
     /// <param name="colour2">The second <see cref="Color"/>.</param>
     /// <param name="threshold">The threshold by which the sum of differences of the RGB components of both colours
-    /// must be within for this to return <see cref="true"/>.</param>
+    /// must be within for this to return <see langword="true"/>.</param>
     /// <returns>A <see cref="bool"/> indicating whether the input <see cref="Color"/> are similar in colour.
     /// </returns>
     public static bool ColoursAreClose(this Color colour1, Color colour2, double threshold)

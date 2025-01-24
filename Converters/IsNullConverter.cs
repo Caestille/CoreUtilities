@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 /// <summary>
 /// An <see cref="IValueConverter"/> which when given an <see cref="object"/>, returns a <see cref="bool"/>
-/// indicating whether the <see cref="object"/> is <see cref="null"/> or not.
+/// indicating whether the <see cref="object"/> is <see langword="null"/> or not.
 /// </summary>
 public class IsNullConverter : IValueConverter
 {

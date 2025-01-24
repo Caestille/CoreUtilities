@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Windows.Data;
 
 /// <summary>
-/// A <see cref="IValueConverter"/> which returns <see cref="true"/> if the given value is > 0.
+/// A <see cref="IValueConverter"/> which returns <see langword="true"/> if the given value is > 0.
 /// </summary>
 public class IsGreaterThanZeroConverter : IValueConverter
 {
