@@ -14,14 +14,17 @@ using CoreUtilities.Interfaces.EvaluationRules;
 public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
     where TEvaluate : IRuleConfigurer<TInput>
 {
+    private Func<TEvaluate> createChildFunc;
+
     /// <summary>
     /// Initialises a new <see cref="OrRule{TInput, TEvaluate}"/>.
     /// </summary>
-    public OrRule()
+    public OrRule(Func<TEvaluate> createChildFunc)
         : base(null)
     {
-        this.Value1 = Activator.CreateInstance<TEvaluate>();
-        this.Value2 = Activator.CreateInstance<TEvaluate>();
+        this.createChildFunc = createChildFunc;
+        this.Value1 = createChildFunc();
+        this.Value2 = createChildFunc();
         this.SelectedOperation = AvailableOperation.EqualTo;
     }
 
@@ -49,5 +52,5 @@ public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
         return string.Empty;
     }
 
-    public override object DeserialiseValue(string value) => Activator.CreateInstance<TEvaluate>()!.Deserialise(value);
+    public override object DeserialiseValue(string value) => this.createChildFunc().Deserialise(value);
 }

@@ -14,11 +14,14 @@ using CoreUtilities.Interfaces.EvaluationRules;
 public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
     where TEvaluate : notnull, IRuleConfigurer<TInput>
 {
-    public AndRule()
+    private Func<TEvaluate> createChildFunc;
+
+    public AndRule(Func<TEvaluate> createChildFunc)
         : base(null)
     {
-        this.Value1 = Activator.CreateInstance<TEvaluate>();
-        this.Value2 = Activator.CreateInstance<TEvaluate>();
+        this.createChildFunc = createChildFunc;
+        this.Value1 = createChildFunc();
+        this.Value2 = createChildFunc();
         this.SelectedOperation = AvailableOperation.EqualTo;
     }
 
@@ -48,5 +51,5 @@ public class AndRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
     }
 
     /// <inheritdoc />
-    public override object DeserialiseValue(string value) => Activator.CreateInstance<TEvaluate>()!.Deserialise(value);
+    public override object DeserialiseValue(string value) => this.createChildFunc().Deserialise(value);
 }
