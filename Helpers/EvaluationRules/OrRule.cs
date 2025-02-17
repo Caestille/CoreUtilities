@@ -19,6 +19,7 @@ public class OrRule<TInput, TEvaluate> : BaseRule<TInput, TEvaluate>
     /// <summary>
     /// Initialises a new <see cref="OrRule{TInput, TEvaluate}"/>.
     /// </summary>
+    /// <param name="createChildFunc">The function the or rule can use to create it's child components.</param>
     public OrRule(Func<TEvaluate> createChildFunc)
         : base(null)
     {
