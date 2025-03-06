@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// Interface for service implementing useful HTTP interactions in an easy to use manner.
 /// </summary>
-public interface IHttpService
+public interface IHttpRequestService
 {
     /// <summary>
     /// Executes a query and waits (indefinitely) for a response over a given URI, unless cancelled via a given
@@ -26,8 +26,10 @@ public interface IHttpService
     /// Returns an instance of a <see cref="IHttpRequestBuilder"/> for building and then executing
     /// <see cref="HttpRequestMessage"/>s.
     /// </summary>
+    /// <param name="httpMethod">The http method.</param>
+    /// <param name="requestUri">The URI to send the request to.</param>
     /// <returns>A <see cref="IHttpRequestBuilder"/>.</returns>
-    IHttpRequestBuilder GetHttpRequestBuilder();
+    IHttpRequestBuilder CreateRequestBuilder(string httpMethod, string requestUri);
 
     /// <summary>
     /// Send a <see cref="HttpRequestMessage"/>, and waits for a response in an async manner. The request is then
@@ -37,6 +39,6 @@ public interface IHttpService
     /// <param name="token">A <see cref="CancellationToken"/> used to cancel the request/wait manually.</param>
     /// <returns>A <see cref="Task{TResult}"/> which is the awaitable wrapper containing the status code of the
     /// requests and the response string.</returns>
-    Task<(HttpStatusCode StatusCode, string Response)> SendAsyncDisposeAndGetResponse(
+    Task<(HttpStatusCode StatusCode, string Response)> SendAsync(
         HttpRequestMessage request, CancellationToken? token = null);
 }

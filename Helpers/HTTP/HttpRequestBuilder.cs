@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using CoreUtilities.Helpers.Extensions;
 using CoreUtilities.Interfaces.HTTP;
 
 /// <summary>
@@ -15,29 +14,16 @@ public class HttpRequestBuilder : IHttpRequestBuilder
 {
     private readonly Dictionary<string, string> unvalidatedHeaders = new Dictionary<string, string>();
     private readonly Dictionary<string, string> content = new Dictionary<string, string>();
+
     private HttpRequestMessage? currentRequest;
     private string? requestType;
     private string? requestTo;
-    private string? headerContentType;
+    private string headerContentType = string.Empty;
 
-    /// <inheritdoc/>
-    public IHttpRequestBuilder CreateRequest(IHttpRequestBuilder.HttpCommandType commandType, string requestTo)
+    public HttpRequestBuilder(string httpMethod, string requestTo)
     {
-        try
-        {
-            this.currentRequest?.Dispose();
-        }
-        catch
-        {
-            /* Already disposed */
-        }
-
-        this.unvalidatedHeaders.Clear();
-        this.content.Clear();
+        this.requestType = httpMethod;
         this.requestTo = requestTo;
-        this.requestType = commandType.GetEnumDescription();
-        this.headerContentType = string.Empty;
-        return this;
     }
 
     /// <inheritdoc/>

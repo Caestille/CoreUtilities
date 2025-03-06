@@ -7,29 +7,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreUtilities.Helpers.Extensions;
+using CoreUtilities.Helpers.HTTP;
 using CoreUtilities.Interfaces.HTTP;
 
 /// <summary>
-/// Implementation of <see cref="IHttpService"/>. Implements handy ways to create and send
+/// Implementation of <see cref="IHttpRequestService"/>. Implements handy ways to create and send
 /// <see cref="HttpRequestMessage"/>s.
 /// </summary>
-public class HttpInteractionService : IHttpService
+public class HttpRequestService : IHttpRequestService
 {
     private readonly HttpClient httpClient = new HttpClient();
-    private readonly Func<IHttpRequestBuilder> httpRequestBuilderCreator;
-
-    /// <summary>
-    /// Constructor for the <see cref="HttpInteractionService"/>.
-    /// </summary>
-    /// <param name="builderCreateFunc">A <see cref="Func{T}"/> which returns an instance of a
-    /// <see cref="IHttpRequestBuilder"/>.</param>
-    public HttpInteractionService(Func<IHttpRequestBuilder> builderCreateFunc)
-    {
-        this.httpRequestBuilderCreator = builderCreateFunc;
-    }
 
     /// <inheritdoc/>
-    public IHttpRequestBuilder GetHttpRequestBuilder() => this.httpRequestBuilderCreator();
+    public IHttpRequestBuilder CreateRequestBuilder(string httpMethod, string requestUri)
+        => new HttpRequestBuilder(httpMethod, requestUri);
 
     /// <inheritdoc/>
     public async Task<(bool, string)> WaitForAndQueryResponseOverUri(
@@ -66,25 +57,23 @@ public class HttpInteractionService : IHttpService
     }
 
     /// <inheritdoc/>
-    public async Task<(HttpStatusCode, string)> SendAsyncDisposeAndGetResponse(
-        HttpRequestMessage request, CancellationToken? token)
+    public async Task<(HttpStatusCode, string)> SendAsync(HttpRequestMessage request, CancellationToken? token)
     {
-        HttpResponseMessage? response = null;
         try
         {
-            response = await this.httpClient.SendAsync(request).AsCancellable(token ?? CancellationToken.None);
+            var response = await this.httpClient.SendAsync(request).AsCancellable(token ?? CancellationToken.None);
+            return (response.StatusCode, await response.Content.ReadAsStringAsync());
         }
         catch (TaskCanceledException)
         {
             // Task was cancelled
             // TODO: Logging
+
+            return (HttpStatusCode.ServiceUnavailable, string.Empty);
         }
         finally
         {
             request.Dispose();
         }
-
-        return (response != null ? response.StatusCode : HttpStatusCode.ServiceUnavailable,
-            response != null ? await response.Content.ReadAsStringAsync() : string.Empty);
     }
 }
