@@ -10,7 +10,17 @@ public static class NetworkHelpers
 
     private static HttpClient httpClient = new HttpClient();
 
-    public static bool IsInternetConnected => NetworkInterface.GetIsNetworkAvailable();
+    public static bool IsInternetConnected()
+    {
+        try
+        {
+            return new Ping().Send("www.google.com.mx").Status == IPStatus.Success;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     public static async Task<string> GetPublicIpAsync()
     {
