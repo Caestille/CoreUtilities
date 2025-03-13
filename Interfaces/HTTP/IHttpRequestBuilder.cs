@@ -1,6 +1,5 @@
 ﻿namespace CoreUtilities.Interfaces.HTTP;
 
-using System.ComponentModel;
 using System.Net.Http;
 
 /// <summary>

@@ -1,6 +1,5 @@
 ﻿namespace CoreUtilities.Services.HTTP;
 
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
